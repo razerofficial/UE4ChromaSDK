@@ -4,6 +4,12 @@
 
 #include "ModuleManager.h"
 
+//expose HMODULE
+#if PLATFORM_WINDOWS
+#include "AllowWindowsPlatformTypes.h"
+#include "HideWindowsPlatformTypes.h"
+#endif
+
 class FChromaSDKPluginModule : public IModuleInterface
 {
 public:
@@ -11,4 +17,9 @@ public:
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
+
+private:
+#if PLATFORM_WINDOWS
+	HMODULE _mLibraryChroma = nullptr;
+#endif
 };
