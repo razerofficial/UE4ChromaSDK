@@ -2,3 +2,8 @@ DerivedDataCache/
 Intermediate/
 Saved/Logs/
 Saved/Config/CrashReportClient/
+Saved/
+.vs/
+UE4ChromaSDK.VC.VC.opendb
+UE4ChromaSDK.VC.db
+Binaries/
