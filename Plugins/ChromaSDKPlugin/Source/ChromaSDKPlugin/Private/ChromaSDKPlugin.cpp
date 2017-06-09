@@ -42,7 +42,7 @@ void FChromaSDKPluginModule::StartupModule()
 	_mLibraryChroma = LoadLibrary(CHROMASDKDLL);
 	if (_mLibraryChroma == NULL)
 	{
-		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin failed to load!"));
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin failed to load!"));
 		return;
 	}
 	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded."));
@@ -51,6 +51,11 @@ void FChromaSDKPluginModule::StartupModule()
 #pragma warning(disable: 4191)
 	_mMethodInit = (CHROMA_SDK_INIT)GetProcAddress(_mLibraryChroma, "Init");
 	if (ValidateGetProcAddress(_mMethodInit == nullptr, FString("Init")))
+	{
+		return;
+	}
+	_mMethodUnInit = (CHROMA_SDK_UNINIT)GetProcAddress(_mLibraryChroma, "UnInit");
+	if (ValidateGetProcAddress(_mMethodUnInit == nullptr, FString("UnInit")))
 	{
 		return;
 	}
@@ -130,6 +135,38 @@ void FChromaSDKPluginModule::ShutdownModule()
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin unloaded."));
+#endif
+}
+
+int FChromaSDKPluginModule::ChromaSDKInit()
+{
+#if PLATFORM_WINDOWS
+	if (_mMethodInit == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin Init method is not set!"));
+		return -1;
+	}
+
+	return _mMethodInit();
+#else
+	UE_LOG(LogTemp, Error, TEXT("ChromaSDKInit is not supported on this platform!"));
+	return -1;
+#endif
+}
+
+int FChromaSDKPluginModule::ChromaSDKUnInit()
+{
+#if PLATFORM_WINDOWS
+	if (_mMethodUnInit == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin UnInit method is not set!"));
+		return -1;
+	}
+
+	return _mMethodUnInit();
+#else
+	UE_LOG(LogTemp, Error, TEXT("ChromaSDKUnInit is not supported on this platform!"));
+	return -1;
 #endif
 }
 

@@ -27,6 +27,12 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Execute Sample function", Keywords = "ChromaSDKPlugin sample test testing"), Category = "ChromaSDKPluginTesting")
-	static float ChromaSDKPluginSampleFunction(float Param);
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsPlatformWindows", Keywords = "Returns true on the Windows Platform"), Category = "ChromaSDK")
+	static bool IsPlatformWindows();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", Keywords = "Initialize the ChromaSDK"), Category = "ChromaSDK")
+	static int ChromaSDKInit();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "UnInit", Keywords = "Uninitialize the ChromaSDK"), Category = "ChromaSDK")
+	static int ChromaSDKUnInit();
 };

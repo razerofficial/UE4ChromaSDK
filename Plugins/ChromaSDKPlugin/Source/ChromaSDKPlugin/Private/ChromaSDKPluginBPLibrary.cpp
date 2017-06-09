@@ -9,8 +9,21 @@ UChromaSDKPluginBPLibrary::UChromaSDKPluginBPLibrary(const FObjectInitializer& O
 
 }
 
-float UChromaSDKPluginBPLibrary::ChromaSDKPluginSampleFunction(float Param)
+bool UChromaSDKPluginBPLibrary::IsPlatformWindows()
 {
-	return -1;
+#if PLATFORM_WINDOWS
+	return true;
+#else
+	return false;
+#endif
 }
 
+int UChromaSDKPluginBPLibrary::ChromaSDKInit()
+{
+	return FChromaSDKPluginModule::Get().ChromaSDKInit();
+}
+
+int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
+{
+	return FChromaSDKPluginModule::Get().ChromaSDKUnInit();
+}
