@@ -12,6 +12,13 @@
 #define CHROMASDKDLL        _T("RzChromaSDK.dll")
 #endif
 
+using namespace ChromaSDK;
+using namespace ChromaSDK::Keyboard;
+using namespace ChromaSDK::Keypad;
+using namespace ChromaSDK::Mouse;
+using namespace ChromaSDK::Mousepad;
+using namespace ChromaSDK::Headset;
+
 #endif
 
 void FChromaSDKPluginModule::StartupModule()
@@ -26,6 +33,34 @@ void FChromaSDKPluginModule::StartupModule()
 		return;
 	}
 	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded."));
+
+	// GetProcAddress will throw 4191 because it's an unsafe type cast
+#pragma warning(disable: 4191)
+	_mMethodInit = (CHROMA_SDK_INIT)GetProcAddress(_mLibraryChroma, "Init");
+	if (_mMethodInit == nullptr)
+	{
+		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin failed to find Init method!"));
+		return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin found Init method."));
+	}
+	_mMethodQueryDevice = (CHROMA_SDK_QUERYDEVICE)GetProcAddress(_mLibraryChroma, "QueryDevice");
+	_mMethodUnInit = (CHROMA_SDK_UNINIT)GetProcAddress(_mLibraryChroma, "UnInit");
+
+	_mMethodCreateKeyboardEffect = (CHROMA_SDK_CREATEKEYBOARDEFFECT)GetProcAddress(_mLibraryChroma, "CreateKeyboardEffect");
+	_mMethodCreateMouseEffect = (CHROMA_SDK_CREATEMOUSEEFFECT)GetProcAddress(_mLibraryChroma, "CreateMouseEffect");
+	_mMethodCreateHeadsetEffect = (CHROMA_SDK_CREATEHEADSETEFFECT)GetProcAddress(_mLibraryChroma, "CreateHeadsetEffect");
+	_mMethodCreateMousepadEffect = (CHROMA_SDK_CREATEMOUSEPADEFFECT)GetProcAddress(_mLibraryChroma, "CreateMousepadEffect");
+	_mMethodCreateKeypadEffect = (CHROMA_SDK_CREATEKEYPADEFFECT)GetProcAddress(_mLibraryChroma, "CreateKeypadEffect");
+
+	_mMethodCreateEffect = (CHROMA_SDK_CREATEEFFECT)GetProcAddress(_mLibraryChroma, "CreateEffect");
+	_mMethodSetEffect = (CHROMA_SDK_SETEFFECT)GetProcAddress(_mLibraryChroma, "SetEffect");
+	_mMethodDeleteEffect = (CHROMA_SDK_DELETEEFFECT)GetProcAddress(_mLibraryChroma, "DeleteEffect");
+
+	RZRESULT Result = RZRESULT_INVALID;
+#pragma warning(default: 4191)
 #endif
 }
 
