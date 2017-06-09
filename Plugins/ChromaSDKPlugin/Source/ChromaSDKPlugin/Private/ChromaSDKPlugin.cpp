@@ -21,6 +21,19 @@ using namespace ChromaSDK::Headset;
 
 #endif
 
+bool FChromaSDKPluginModule::ValidateGetProcAddress(bool condition, FString methodName)
+{
+	if (condition)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin failed to load %s!"), *methodName);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded %s."), *methodName);
+	}
+	return condition;
+}
+
 void FChromaSDKPluginModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
@@ -37,27 +50,67 @@ void FChromaSDKPluginModule::StartupModule()
 	// GetProcAddress will throw 4191 because it's an unsafe type cast
 #pragma warning(disable: 4191)
 	_mMethodInit = (CHROMA_SDK_INIT)GetProcAddress(_mLibraryChroma, "Init");
-	if (_mMethodInit == nullptr)
+	if (ValidateGetProcAddress(_mMethodInit == nullptr, FString("Init")))
 	{
-		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin failed to find Init method!"));
 		return;
 	}
-	else
+	_mMethodQueryDevice = (CHROMA_SDK_QUERY_DEVICE)GetProcAddress(_mLibraryChroma, "QueryDevice");
+	if (ValidateGetProcAddress(_mMethodQueryDevice == nullptr, FString("QueryDevice")))
 	{
-		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin found Init method."));
+		return;
 	}
-	_mMethodQueryDevice = (CHROMA_SDK_QUERYDEVICE)GetProcAddress(_mLibraryChroma, "QueryDevice");
 	_mMethodUnInit = (CHROMA_SDK_UNINIT)GetProcAddress(_mLibraryChroma, "UnInit");
+	if (ValidateGetProcAddress(_mMethodUnInit == nullptr, FString("UnInit")))
+	{
+		return;
+	}
 
-	_mMethodCreateKeyboardEffect = (CHROMA_SDK_CREATEKEYBOARDEFFECT)GetProcAddress(_mLibraryChroma, "CreateKeyboardEffect");
-	_mMethodCreateMouseEffect = (CHROMA_SDK_CREATEMOUSEEFFECT)GetProcAddress(_mLibraryChroma, "CreateMouseEffect");
-	_mMethodCreateHeadsetEffect = (CHROMA_SDK_CREATEHEADSETEFFECT)GetProcAddress(_mLibraryChroma, "CreateHeadsetEffect");
-	_mMethodCreateMousepadEffect = (CHROMA_SDK_CREATEMOUSEPADEFFECT)GetProcAddress(_mLibraryChroma, "CreateMousepadEffect");
-	_mMethodCreateKeypadEffect = (CHROMA_SDK_CREATEKEYPADEFFECT)GetProcAddress(_mLibraryChroma, "CreateKeypadEffect");
+	_mMethodCreateKeyboardEffect = (CHROMA_SDK_CREATE_KEYBOARD_EFFECT)GetProcAddress(_mLibraryChroma, "CreateKeyboardEffect");
+	if (ValidateGetProcAddress(_mMethodCreateKeyboardEffect == nullptr, FString("CreateKeyboardEffect")))
+	{
+		return;
+	}
+	_mMethodCreateMouseEffect = (CHROMA_SDK_CREATE_MOUSE_EFFECT)GetProcAddress(_mLibraryChroma, "CreateMouseEffect");
+	if (ValidateGetProcAddress(_mMethodCreateMouseEffect == nullptr, FString("CreateMouseEffect")))
+	{
+		return;
+	}
+	_mMethodCreateHeadsetEffect = (CHROMA_SDK_CREATE_HEADSET_EFFECT)GetProcAddress(_mLibraryChroma, "CreateHeadsetEffect");
+	if (ValidateGetProcAddress(_mMethodCreateHeadsetEffect == nullptr, FString("CreateHeadsetEffect")))
+	{
+		return;
+	}
+	_mMethodCreateMousepadEffect = (CHROMA_SDK_CREATE_MOUSEPAD_EFFECT)GetProcAddress(_mLibraryChroma, "CreateMousepadEffect");
+	if (ValidateGetProcAddress(_mMethodCreateMousepadEffect == nullptr, FString("CreateMousepadEffect")))
+	{
+		return;
+	}
+	_mMethodCreateKeypadEffect = (CHROMA_SDK_CREATE_KEYPAD_EFFECT)GetProcAddress(_mLibraryChroma, "CreateKeypadEffect");
+	if (ValidateGetProcAddress(_mMethodCreateKeypadEffect == nullptr, FString("CreateKeypadEffect")))
+	{
+		return;
+	}
+	_mMethodCreateChromaLinkEffect = (CHROMA_SDK_CREATE_CHROMA_LINK_EFFECT)GetProcAddress(_mLibraryChroma, "CreateChromaLinkEffect");
+	if (ValidateGetProcAddress(_mMethodCreateChromaLinkEffect == nullptr, FString("CreateChromaLinkEffect")))
+	{
+		return;
+	}
 
-	_mMethodCreateEffect = (CHROMA_SDK_CREATEEFFECT)GetProcAddress(_mLibraryChroma, "CreateEffect");
-	_mMethodSetEffect = (CHROMA_SDK_SETEFFECT)GetProcAddress(_mLibraryChroma, "SetEffect");
-	_mMethodDeleteEffect = (CHROMA_SDK_DELETEEFFECT)GetProcAddress(_mLibraryChroma, "DeleteEffect");
+	_mMethodCreateEffect = (CHROMA_SDK_CREATE_EFFECT)GetProcAddress(_mLibraryChroma, "CreateEffect");
+	if (ValidateGetProcAddress(_mMethodCreateEffect == nullptr, FString("CreateEffect")))
+	{
+		return;
+	}
+	_mMethodSetEffect = (CHROMA_SDK_SET_EFFECT)GetProcAddress(_mLibraryChroma, "SetEffect");
+	if (ValidateGetProcAddress(_mMethodSetEffect == nullptr, FString("SetEffect")))
+	{
+		return;
+	}
+	_mMethodDeleteEffect = (CHROMA_SDK_DELETE_EFFECT)GetProcAddress(_mLibraryChroma, "DeleteEffect");
+	if (ValidateGetProcAddress(_mMethodDeleteEffect == nullptr, FString("DeleteEffect")))
+	{
+		return;
+	}
 
 	RZRESULT Result = RZRESULT_INVALID;
 #pragma warning(default: 4191)
