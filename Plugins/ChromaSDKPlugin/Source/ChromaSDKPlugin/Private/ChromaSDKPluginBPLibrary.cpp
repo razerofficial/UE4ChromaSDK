@@ -30,7 +30,7 @@ int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
 	return FChromaSDKPluginModule::Get().ChromaSDKUnInit();
 }
 
-FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FColor& color)
+FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color)
 {
 	FChromaSDKEffectResult data;
 	

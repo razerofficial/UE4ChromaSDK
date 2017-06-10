@@ -97,7 +97,7 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	static int ChromaSDKUnInit();
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateEffectStatic", Keywords = "Create a static color effect"), Category = "ChromaSDK")
-	static FChromaSDKEffectResult ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FColor& color);
+	static FChromaSDKEffectResult ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PrintEffectId", Keywords = "Print Effect GUID"), Category = "ChromaSDK")
 	static void ChromaSDKPrintEffectId(const FChromaSDKGuid& effectId);
