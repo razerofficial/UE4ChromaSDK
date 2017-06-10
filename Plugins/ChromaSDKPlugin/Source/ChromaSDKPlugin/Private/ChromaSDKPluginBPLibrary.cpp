@@ -58,3 +58,19 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 
 	return data;
 }
+
+void UChromaSDKPluginBPLibrary::ChromaSDKPrintEffectId(const FChromaSDKGuid& effectId)
+{
+	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin EffectId: %d-%d-%d-%d-%d-%d-%d-%d-%d-%d-%d"), 
+		effectId.Data1, //1
+		effectId.Data2, //2
+		effectId.Data3, //3
+		effectId.Data4[0], //4
+		effectId.Data4[1], //5
+		effectId.Data4[2], //6
+		effectId.Data4[3], //7
+		effectId.Data4[4], //8
+		effectId.Data4[5], //9
+		effectId.Data4[6], //10
+		effectId.Data4[7]); //11
+}
