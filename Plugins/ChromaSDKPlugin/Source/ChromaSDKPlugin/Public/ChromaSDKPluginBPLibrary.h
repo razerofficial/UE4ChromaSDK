@@ -22,6 +22,66 @@
 *	For more info on custom blueprint nodes visit documentation:
 *	https://wiki.unrealengine.com/Custom_Blueprint_Node_Creation
 */
+
+UENUM(BlueprintType)
+enum class EChromaSDKDeviceEnum : uint8
+{
+	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
+	DE_Headset		UMETA(DisplayName = "Headset"),
+	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
+	DE_Keypad		UMETA(DisplayName = "Keypad"),
+	DE_Mouse		UMETA(DisplayName = "Mouse"),
+	DE_Mousepad	UMETA(DisplayName = "Mousepad")
+};
+
+USTRUCT(BlueprintType)
+struct FChromaSDKGuid
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	int Data1;
+
+	UPROPERTY(BlueprintReadOnly)
+	int Data2;
+
+	UPROPERTY(BlueprintReadOnly)
+	int Data3;
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<int> Data4;
+
+	//Constructor
+	FChromaSDKGuid()
+	{
+		Data1 = 0;
+		Data2 = 0;
+		Data3 = 0;
+		for (int i = 0; i < 8; ++i)
+		{
+			Data4.Add(0);
+		}
+	}
+};
+
+USTRUCT(BlueprintType)
+struct FChromaSDKEffectResult
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	int Result;
+
+	UPROPERTY(BlueprintReadOnly)
+	FChromaSDKGuid EffectId;
+
+	//Constructor
+	FChromaSDKEffectResult()
+	{
+		Result = 0;
+	}
+};
+
 UCLASS()
 class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 {
@@ -35,4 +95,7 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "UnInit", Keywords = "Uninitialize the ChromaSDK"), Category = "ChromaSDK")
 	static int ChromaSDKUnInit();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateEffectStatic", Keywords = "Create a static color effect"), Category = "ChromaSDK")
+	static FChromaSDKEffectResult ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FColor& color);
 };

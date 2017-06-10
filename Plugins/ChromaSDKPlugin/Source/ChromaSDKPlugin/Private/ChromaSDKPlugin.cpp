@@ -138,9 +138,10 @@ void FChromaSDKPluginModule::ShutdownModule()
 #endif
 }
 
+#if PLATFORM_WINDOWS
+
 int FChromaSDKPluginModule::ChromaSDKInit()
 {
-#if PLATFORM_WINDOWS
 	if (_mMethodInit == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin Init method is not set!"));
@@ -148,15 +149,10 @@ int FChromaSDKPluginModule::ChromaSDKInit()
 	}
 
 	return _mMethodInit();
-#else
-	UE_LOG(LogTemp, Error, TEXT("ChromaSDKInit is not supported on this platform!"));
-	return -1;
-#endif
 }
 
 int FChromaSDKPluginModule::ChromaSDKUnInit()
 {
-#if PLATFORM_WINDOWS
 	if (_mMethodUnInit == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin UnInit method is not set!"));
@@ -164,11 +160,31 @@ int FChromaSDKPluginModule::ChromaSDKUnInit()
 	}
 
 	return _mMethodUnInit();
-#else
-	UE_LOG(LogTemp, Error, TEXT("ChromaSDKUnInit is not supported on this platform!"));
-	return -1;
-#endif
 }
+
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateEffect(RZDEVICEID deviceId, ChromaSDK::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateEffect(deviceId, effect, pParam, pEffectId);
+}
+
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateKeyboardEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateKeyboardEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateKeyboardEffect(effect, pParam, pEffectId);
+}
+
+#endif
 
 #undef LOCTEXT_NAMESPACE
 	

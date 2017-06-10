@@ -47,9 +47,13 @@ public:
 		return FModuleManager::LoadModuleChecked<FChromaSDKPluginModule>("ChromaSDKPlugin");
 	}
 
+#if PLATFORM_WINDOWS
 	// SDK Methods
 	int ChromaSDKInit();
 	int ChromaSDKUnInit();
+	RZRESULT ChromaSDKCreateEffect(RZDEVICEID deviceId, ChromaSDK::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
+	RZRESULT ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
+#endif
 
 private:
 #if PLATFORM_WINDOWS
