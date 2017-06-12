@@ -3,6 +3,11 @@
 #pragma once
 
 #include "Engine.h"
+#if PLATFORM_WINDOWS
+#include "AllowWindowsPlatformTypes.h"
+#include "RzChromaSDKTypes.h"
+#include "HideWindowsPlatformTypes.h"
+#endif
 #include "ChromaSDKPluginBPLibrary.generated.h"
 
 /* 
@@ -31,7 +36,7 @@ enum class EChromaSDKDeviceEnum : uint8
 	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
 	DE_Keypad		UMETA(DisplayName = "Keypad"),
 	DE_Mouse		UMETA(DisplayName = "Mouse"),
-	DE_Mousepad	UMETA(DisplayName = "Mousepad")
+	DE_Mousepad		UMETA(DisplayName = "Mousepad")
 };
 
 USTRUCT(BlueprintType)
@@ -39,30 +44,26 @@ struct FChromaSDKGuid
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
-	int Data1;
-
-	UPROPERTY(BlueprintReadOnly)
-	int Data2;
-
-	UPROPERTY(BlueprintReadOnly)
-	int Data3;
-
-	UPROPERTY(BlueprintReadOnly)
-	TArray<int> Data4;
+#if PLATFORM_WINDOWS
+	RZEFFECTID Data;
+#endif
 
 	//Constructor
 	FChromaSDKGuid()
 	{
-		Data1 = 0;
-		Data2 = 0;
-		Data3 = 0;
+#if PLATFORM_WINDOWS
+		Data = RZEFFECTID();
+		Data.Data1 = 0;
+		Data.Data2 = 0;
+		Data.Data3 = 0;
 		for (int i = 0; i < 8; ++i)
 		{
-			Data4.Add(0);
+			Data.Data4[i] = 0;
 		}
+#endif
 	}
 };
+
 
 USTRUCT(BlueprintType)
 struct FChromaSDKEffectResult
@@ -79,6 +80,7 @@ struct FChromaSDKEffectResult
 	FChromaSDKEffectResult()
 	{
 		Result = 0;
+		EffectId = FChromaSDKGuid();
 	}
 };
 
@@ -96,9 +98,18 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "UnInit", Keywords = "Uninitialize the ChromaSDK"), Category = "ChromaSDK")
 	static int ChromaSDKUnInit();
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "DebugGetString", Keywords = "Get Debug String From Effect Id"), Category = "ChromaSDK")
+	static FString DebugToString(const FChromaSDKGuid& effectId);
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateEffectStatic", Keywords = "Create a static color effect"), Category = "ChromaSDK")
 	static FChromaSDKEffectResult ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PrintEffectId", Keywords = "Print Effect GUID"), Category = "ChromaSDK")
-	static void ChromaSDKPrintEffectId(const FChromaSDKGuid& effectId);
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetEffect", Keywords = "Set Effect with Effect Id"), Category = "ChromaSDK")
+	static int ChromaSDKSetEffect(const FChromaSDKGuid& effectId);
+
+#if PLATFORM_WINDOWS
+private:
+	static void ToString(const RZEFFECTID& effectId, FString& effectString);
+	static void ToEffect(const FString& effectString, RZEFFECTID& effectId);
+#endif
 };

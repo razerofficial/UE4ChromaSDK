@@ -184,6 +184,17 @@ RZRESULT FChromaSDKPluginModule::ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboa
 	return _mMethodCreateKeyboardEffect(effect, pParam, pEffectId);
 }
 
+RZRESULT FChromaSDKPluginModule::ChromaSDKSetEffect(RZEFFECTID effectId)
+{
+	if (_mMethodSetEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin SetEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodSetEffect(effectId);
+}
+
 #endif
 
 #undef LOCTEXT_NAMESPACE

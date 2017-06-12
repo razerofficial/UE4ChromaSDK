@@ -53,6 +53,7 @@ public:
 	int ChromaSDKUnInit();
 	RZRESULT ChromaSDKCreateEffect(RZDEVICEID deviceId, ChromaSDK::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
 	RZRESULT ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
+	RZRESULT ChromaSDKSetEffect(RZEFFECTID effectId);
 #endif
 
 private:
