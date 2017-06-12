@@ -48,9 +48,14 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 	FChromaSDKEffectResult data = FChromaSDKEffectResult();
 
 #if PLATFORM_WINDOWS
+
+	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin:: Color R=%f G=%f B=%f"), color.R, color.G, color.B);
 	
 	ChromaSDK::Keyboard::STATIC_EFFECT_TYPE pParam = {};
-	pParam.Color = RGB(color.R, color.G, color.B);
+	int red = color.R * 255;
+	int green = color.G * 255;
+	int blue = color.B * 255;
+	pParam.Color = RGB(red, green, blue);
 	int result = 0;
 	RZEFFECTID effectId;
 	switch (device)
