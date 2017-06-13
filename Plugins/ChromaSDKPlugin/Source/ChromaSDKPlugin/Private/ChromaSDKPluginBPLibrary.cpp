@@ -21,6 +21,18 @@ bool UChromaSDKPluginBPLibrary::IsPlatformWindows()
 #endif
 }
 
+FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
+{
+	FChromaSDKColors result = FChromaSDKColors();
+	return result;
+}
+
+TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
+{
+	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
+	return result;
+}
+
 int UChromaSDKPluginBPLibrary::ChromaSDKInit()
 {
 	return FChromaSDKPluginModule::Get().ChromaSDKInit();
@@ -150,6 +162,18 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 
 #endif
 
+	return data;
+}
+
+FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors)
+{
+	FChromaSDKEffectResult data = FChromaSDKEffectResult();
+	return data;
+}
+
+FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum& device, const TArray<FChromaSDKColors>& colors)
+{
+	FChromaSDKEffectResult data = FChromaSDKEffectResult();
 	return data;
 }
 
