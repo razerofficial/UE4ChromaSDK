@@ -43,40 +43,105 @@ FString UChromaSDKPluginBPLibrary::DebugToString(const FChromaSDKGuid& effectId)
 #endif
 }
 
+FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectNone(const EChromaSDKDeviceEnum& device)
+{
+	FChromaSDKEffectResult data = FChromaSDKEffectResult();
+
+#if PLATFORM_WINDOWS
+
+	int result = 0;
+	RZEFFECTID effectId;
+	switch (device)
+	{
+	case EChromaSDKDeviceEnum::DE_ChromaLink:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::CHROMA_NONE, NULL, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Headset:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::CHROMA_NONE, NULL, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Keyboard:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_NONE, NULL, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Keypad:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeypadEffect(ChromaSDK::Keypad::CHROMA_NONE, NULL, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Mouse:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::CHROMA_NONE, NULL, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Mousepad:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, NULL, &effectId);
+		break;
+	default:
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectNone Unsupported device used!"));
+		break;
+	}
+	data.EffectId.Data = effectId;
+	data.Result = result;
+
+#endif
+
+	return data;
+}
+
 FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color)
 {
 	FChromaSDKEffectResult data = FChromaSDKEffectResult();
 
 #if PLATFORM_WINDOWS
 
-	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin:: Color R=%f G=%f B=%f"), color.R, color.G, color.B);
-	
-	ChromaSDK::Keyboard::STATIC_EFFECT_TYPE pParam = {};
+	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin:: Color R=%f G=%f B=%f"), color.R, color.G, color.B);	
 	int red = color.R * 255;
 	int green = color.G * 255;
 	int blue = color.B * 255;
-	pParam.Color = RGB(red, green, blue);
+	
 	int result = 0;
 	RZEFFECTID effectId;
 	switch (device)
 	{
 	case EChromaSDKDeviceEnum::DE_ChromaLink:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::CHROMA_STATIC, &pParam, &effectId);
+		{
+			ChromaSDK::ChromaLink::STATIC_EFFECT_TYPE pParam = {};
+			pParam.Color = RGB(red, green, blue);
+			result = FChromaSDKPluginModule::Get().ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::CHROMA_STATIC, &pParam, &effectId);
+		}
 		break;
 	case EChromaSDKDeviceEnum::DE_Headset:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::CHROMA_STATIC, &pParam, &effectId);
+		{
+			ChromaSDK::Headset::STATIC_EFFECT_TYPE pParam = {};
+			pParam.Color = RGB(red, green, blue);
+			result = FChromaSDKPluginModule::Get().ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::CHROMA_STATIC, &pParam, &effectId);
+		}
 		break;
 	case EChromaSDKDeviceEnum::DE_Keyboard:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_STATIC, &pParam, &effectId);
+		{
+			ChromaSDK::Keyboard::STATIC_EFFECT_TYPE pParam = {};
+			pParam.Color = RGB(red, green, blue);
+			result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_STATIC, &pParam, &effectId);
+		}
 		break;
 	case EChromaSDKDeviceEnum::DE_Keypad:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeypadEffect(ChromaSDK::Keypad::CHROMA_STATIC, &pParam, &effectId);
+		{
+			ChromaSDK::Keypad::STATIC_EFFECT_TYPE pParam = {};
+			pParam.Color = RGB(red, green, blue);
+			result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeypadEffect(ChromaSDK::Keypad::CHROMA_STATIC, &pParam, &effectId);
+		}
 		break;
 	case EChromaSDKDeviceEnum::DE_Mouse:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::CHROMA_STATIC, &pParam, &effectId);
+		{
+			ChromaSDK::Mouse::STATIC_EFFECT_TYPE pParam = {};
+			pParam.Color = RGB(red, green, blue);
+			result = FChromaSDKPluginModule::Get().ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::CHROMA_STATIC, &pParam, &effectId);
+		}
 		break;
 	case EChromaSDKDeviceEnum::DE_Mousepad:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, &pParam, &effectId);
+		{
+			ChromaSDK::Mousepad::STATIC_EFFECT_TYPE pParam = {};
+			pParam.Color = RGB(red, green, blue);
+			result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, &pParam, &effectId);
+		}
+		break;
+	default:
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectStatic Unsupported device used!"));
 		break;
 	}
 	data.EffectId.Data = effectId;
