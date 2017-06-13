@@ -13,11 +13,12 @@
 #endif
 
 using namespace ChromaSDK;
+using namespace ChromaSDK::ChromaLink;
+using namespace ChromaSDK::Headset;
 using namespace ChromaSDK::Keyboard;
 using namespace ChromaSDK::Keypad;
 using namespace ChromaSDK::Mouse;
 using namespace ChromaSDK::Mousepad;
-using namespace ChromaSDK::Headset;
 
 #endif
 
@@ -70,6 +71,16 @@ void FChromaSDKPluginModule::StartupModule()
 		return;
 	}
 
+	_mMethodCreateChromaLinkEffect = (CHROMA_SDK_CREATE_CHROMA_LINK_EFFECT)GetProcAddress(_mLibraryChroma, "CreateChromaLinkEffect");
+	if (ValidateGetProcAddress(_mMethodCreateChromaLinkEffect == nullptr, FString("CreateChromaLinkEffect")))
+	{
+		return;
+	}
+	_mMethodCreateHeadsetEffect = (CHROMA_SDK_CREATE_HEADSET_EFFECT)GetProcAddress(_mLibraryChroma, "CreateHeadsetEffect");
+	if (ValidateGetProcAddress(_mMethodCreateHeadsetEffect == nullptr, FString("CreateHeadsetEffect")))
+	{
+		return;
+	}
 	_mMethodCreateKeyboardEffect = (CHROMA_SDK_CREATE_KEYBOARD_EFFECT)GetProcAddress(_mLibraryChroma, "CreateKeyboardEffect");
 	if (ValidateGetProcAddress(_mMethodCreateKeyboardEffect == nullptr, FString("CreateKeyboardEffect")))
 	{
@@ -80,11 +91,6 @@ void FChromaSDKPluginModule::StartupModule()
 	{
 		return;
 	}
-	_mMethodCreateHeadsetEffect = (CHROMA_SDK_CREATE_HEADSET_EFFECT)GetProcAddress(_mLibraryChroma, "CreateHeadsetEffect");
-	if (ValidateGetProcAddress(_mMethodCreateHeadsetEffect == nullptr, FString("CreateHeadsetEffect")))
-	{
-		return;
-	}
 	_mMethodCreateMousepadEffect = (CHROMA_SDK_CREATE_MOUSEPAD_EFFECT)GetProcAddress(_mLibraryChroma, "CreateMousepadEffect");
 	if (ValidateGetProcAddress(_mMethodCreateMousepadEffect == nullptr, FString("CreateMousepadEffect")))
 	{
@@ -92,11 +98,6 @@ void FChromaSDKPluginModule::StartupModule()
 	}
 	_mMethodCreateKeypadEffect = (CHROMA_SDK_CREATE_KEYPAD_EFFECT)GetProcAddress(_mLibraryChroma, "CreateKeypadEffect");
 	if (ValidateGetProcAddress(_mMethodCreateKeypadEffect == nullptr, FString("CreateKeypadEffect")))
-	{
-		return;
-	}
-	_mMethodCreateChromaLinkEffect = (CHROMA_SDK_CREATE_CHROMA_LINK_EFFECT)GetProcAddress(_mLibraryChroma, "CreateChromaLinkEffect");
-	if (ValidateGetProcAddress(_mMethodCreateChromaLinkEffect == nullptr, FString("CreateChromaLinkEffect")))
 	{
 		return;
 	}
@@ -173,6 +174,28 @@ RZRESULT FChromaSDKPluginModule::ChromaSDKCreateEffect(RZDEVICEID deviceId, Chro
 	return _mMethodCreateEffect(deviceId, effect, pParam, pEffectId);
 }
 
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateChromaLinkEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateChromaLinkEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateChromaLinkEffect(effect, pParam, pEffectId);
+}
+
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateHeadsetEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateHeadsetEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateHeadsetEffect(effect, pParam, pEffectId);
+}
+
 RZRESULT FChromaSDKPluginModule::ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
 {
 	if (_mMethodCreateKeyboardEffect == nullptr)
@@ -182,6 +205,39 @@ RZRESULT FChromaSDKPluginModule::ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboa
 	}
 
 	return _mMethodCreateKeyboardEffect(effect, pParam, pEffectId);
+}
+
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateKeypadEffect(ChromaSDK::Keypad::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateKeypadEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateKeypadEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateKeypadEffect(effect, pParam, pEffectId);
+}
+
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateMouseEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateMouseEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateMouseEffect(effect, pParam, pEffectId);
+}
+
+RZRESULT FChromaSDKPluginModule::ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId)
+{
+	if (_mMethodCreateMousepadEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin CreateMousepadEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodCreateMousepadEffect(effect, pParam, pEffectId);
 }
 
 RZRESULT FChromaSDKPluginModule::ChromaSDKSetEffect(RZEFFECTID effectId)

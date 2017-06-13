@@ -60,8 +60,23 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 	RZEFFECTID effectId;
 	switch (device)
 	{
+	case EChromaSDKDeviceEnum::DE_ChromaLink:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::CHROMA_STATIC, &pParam, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Headset:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::CHROMA_STATIC, &pParam, &effectId);
+		break;
 	case EChromaSDKDeviceEnum::DE_Keyboard:
 		result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_STATIC, &pParam, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Keypad:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateKeypadEffect(ChromaSDK::Keypad::CHROMA_STATIC, &pParam, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Mouse:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::CHROMA_STATIC, &pParam, &effectId);
+		break;
+	case EChromaSDKDeviceEnum::DE_Mousepad:
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, &pParam, &effectId);
 		break;
 	}
 	data.EffectId.Data = effectId;
