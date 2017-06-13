@@ -194,12 +194,21 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(
 
 	int result = 0;
 	RZEFFECTID effectId = RZEFFECTID();
+	int maxLeds = 0;
 	switch (device)
 	{
 	case EChromaSDKDevice1DEnum::DE_ChromaLink:
 	{
+		maxLeds = ChromaSDK::ChromaLink::MAX_LEDS;
+		if (maxLeds != colors.Colors.Num())
+		{
+			UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Array size mismatch elements: %d==%d!"),
+				maxLeds,
+				colors.Colors.Num());
+			break;
+		}
 		ChromaSDK::ChromaLink::CUSTOM_EFFECT_TYPE pParam = {};
-		for (int i = 0; i < ChromaSDK::ChromaLink::MAX_LEDS; i++)
+		for (int i = 0; i < maxLeds; i++)
 		{
 			const FLinearColor& color = colors.Colors[i];
 			int red = color.R * 255;
@@ -212,8 +221,16 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(
 	break;
 	case EChromaSDKDevice1DEnum::DE_Headset:
 	{
+		maxLeds = ChromaSDK::Headset::MAX_LEDS;
+		if (maxLeds != colors.Colors.Num())
+		{
+			UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Array size mismatch elements: %d==%d!"),
+				maxLeds,
+				colors.Colors.Num());
+			break;
+		}
 		ChromaSDK::Headset::CUSTOM_EFFECT_TYPE pParam = {};
-		for (int i = 0; i < ChromaSDK::Headset::MAX_LEDS; i++)
+		for (int i = 0; i < maxLeds; i++)
 		{
 			const FLinearColor& color = colors.Colors[i];
 			int red = color.R * 255;
@@ -226,8 +243,16 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(
 	break;
 	case EChromaSDKDevice1DEnum::DE_Mousepad:
 	{
+		maxLeds = ChromaSDK::Mousepad::MAX_LEDS;
+		if (maxLeds != colors.Colors.Num())
+		{
+			UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Array size mismatch elements: %d==%d!"),
+				maxLeds,
+				colors.Colors.Num());
+			break;
+		}
 		ChromaSDK::Mousepad::CUSTOM_EFFECT_TYPE pParam = {};
-		for (int i = 0; i < ChromaSDK::Mousepad::MAX_LEDS; i++)
+		for (int i = 0; i < maxLeds; i++)
 		{
 			const FLinearColor& color = colors.Colors[i];
 			int red = color.R * 255;
