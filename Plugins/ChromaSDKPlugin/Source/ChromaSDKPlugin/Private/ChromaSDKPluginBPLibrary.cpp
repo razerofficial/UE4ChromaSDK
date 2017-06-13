@@ -24,12 +24,33 @@ bool UChromaSDKPluginBPLibrary::IsPlatformWindows()
 FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
 {
 	FChromaSDKColors result = FChromaSDKColors();
+	for (int i = 0; i < elements; ++i)
+	{
+		float red = FMath::RandRange(0.0f, 1.0f);
+		float green = FMath::RandRange(0.0f, 1.0f);
+		float blue = FMath::RandRange(0.0f, 1.0f);
+		FLinearColor color = FLinearColor(red, green, blue);
+		result.Colors.Add(color);
+	}
 	return result;
 }
 
 TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
 {
 	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
+	for (int i = 0; i < maxRows; ++i)
+	{
+		FChromaSDKColors column = FChromaSDKColors();
+		for (int j = 0; j < maxRows; ++j)
+		{
+			float red = FMath::RandRange(0.0f, 1.0f);
+			float green = FMath::RandRange(0.0f, 1.0f);
+			float blue = FMath::RandRange(0.0f, 1.0f);
+			FLinearColor color = FLinearColor(red, green, blue);
+			column.Colors.Add(color);
+		}
+		result.Add(column);
+	}
 	return result;
 }
 
@@ -168,6 +189,64 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors)
 {
 	FChromaSDKEffectResult data = FChromaSDKEffectResult();
+
+#if PLATFORM_WINDOWS
+
+	int result = 0;
+	RZEFFECTID effectId;
+	switch (device)
+	{
+	case EChromaSDKDevice1DEnum::DE_ChromaLink:
+	{
+		ChromaSDK::ChromaLink::CUSTOM_EFFECT_TYPE pParam = {};
+		for (int i = 0; i < ChromaSDK::ChromaLink::MAX_LEDS; i++)
+		{
+			const FLinearColor& color = colors.Colors[i];
+			int red = color.R * 255;
+			int green = color.G * 255;
+			int blue = color.B * 255;
+			pParam.Color[i] = RGB(red, green, blue);
+		}
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::CHROMA_CUSTOM, &pParam, &effectId);
+	}
+	break;
+	case EChromaSDKDevice1DEnum::DE_Headset:
+	{
+		ChromaSDK::Headset::CUSTOM_EFFECT_TYPE pParam = {};
+		for (int i = 0; i < ChromaSDK::Headset::MAX_LEDS; i++)
+		{
+			const FLinearColor& color = colors.Colors[i];
+			int red = color.R * 255;
+			int green = color.G * 255;
+			int blue = color.B * 255;
+			pParam.Color[i] = RGB(red, green, blue);
+		}
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::CHROMA_CUSTOM, &pParam, &effectId);
+	}
+	break;
+	case EChromaSDKDevice1DEnum::DE_Mousepad:
+	{
+		ChromaSDK::Mousepad::CUSTOM_EFFECT_TYPE pParam = {};
+		for (int i = 0; i < ChromaSDK::Mousepad::MAX_LEDS; i++)
+		{
+			const FLinearColor& color = colors.Colors[i];
+			int red = color.R * 255;
+			int green = color.G * 255;
+			int blue = color.B * 255;
+			pParam.Color[i] = RGB(red, green, blue);
+		}
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_CUSTOM, &pParam, &effectId);
+	}
+	break;
+	default:
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Unsupported device used!"));
+		break;
+	}
+	data.EffectId.Data = effectId;
+	data.Result = result;
+
+#endif
+
 	return data;
 }
 
