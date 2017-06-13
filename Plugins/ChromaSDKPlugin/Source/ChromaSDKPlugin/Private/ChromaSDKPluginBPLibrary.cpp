@@ -69,7 +69,7 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectNone(cons
 		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::CHROMA_NONE, NULL, &effectId);
 		break;
 	case EChromaSDKDeviceEnum::DE_Mousepad:
-		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, NULL, &effectId);
+		result = FChromaSDKPluginModule::Get().ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_NONE, NULL, &effectId);
 		break;
 	default:
 		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectNone Unsupported device used!"));
@@ -130,6 +130,7 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 		{
 			ChromaSDK::Mouse::STATIC_EFFECT_TYPE pParam = {};
 			pParam.Color = RGB(red, green, blue);
+			pParam.LEDId = ChromaSDK::Mouse::RZLED_ALL;
 			result = FChromaSDKPluginModule::Get().ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::CHROMA_STATIC, &pParam, &effectId);
 		}
 		break;
