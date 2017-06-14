@@ -21,11 +21,11 @@
 
 2 Open the `Plugins Browser tab` using the `Edit->Plugins` menu item
 
-![image_5](/images/image_5.png)
+![image_5](images/image_5.png)
 
 3 Make sure the `ChromeSDKPlugin` is enabled
 
-![image_6](/images/image_6.png)
+![image_6](images/image_6.png)
 
 <a name="blueprint-objects"></a>
 ## Blueprint objects
@@ -34,7 +34,7 @@
 
 `FChromaSDKEffectResult` holds a `ChromaSDK` result and an `effect identifier`.
 
-![image_12](/images/image_12.png)
+![image_12](images/image_12.png)
 
 ```c++
 struct FChromaSDKEffectResult
@@ -51,7 +51,7 @@ struct FChromaSDKEffectResult
 
 `EChromaSDKDeviceEnum` is a list of all ChromaSDK devices.
 
-![image_13](/images/image_13.png)
+![image_13](images/image_13.png)
 
 ```c++
 enum class EChromaSDKDeviceEnum : uint8
@@ -69,7 +69,7 @@ enum class EChromaSDKDeviceEnum : uint8
 
 `EChromaSDKDevice1DEnum` is a device that uses a one-dimensional array for custom effects.
 
-![image_14](/images/image_14.png)
+![image_14](images/image_14.png)
 
 ```c++
 enum class EChromaSDKDevice1DEnum : uint8
@@ -84,7 +84,7 @@ enum class EChromaSDKDevice1DEnum : uint8
 
 `EChromaSDKDevice2DEnum` is a device that uses a two-dimensional array for custom effects.
 
-![image_15](/images/image_15.png)
+![image_15](images/image_15.png)
 
 ```c++
 enum class EChromaSDKDevice2DEnum : uint8
@@ -99,7 +99,7 @@ enum class EChromaSDKDevice2DEnum : uint8
 
 `FChromaSDKColors` holds an array of colors.
 
-![image_16](/images/image_16.png)
+![image_16](images/image_16.png)
 
 ```c++
 struct FChromaSDKColors
@@ -156,30 +156,30 @@ The Example Level displays a UI `Blueprint Widget` with buttons that have `oncli
 
 1 Open the level in `Content/Levels/ExampleLevel`
 
-![image_1](/images/image_1.png)
+![image_1](images/image_1.png)
 
 2 Open the UI `Blueprint Widget` in `Content/Blueprints/ExampleWidget_BP`
 
-![image_2](/images/image_2.png)
+![image_2](images/image_2.png)
 
 3 Open the `Level Blueprint` with the `Blueprints->Open Level Blueprint` menu item
 
-![image_3](/images/image_3.png)
+![image_3](images/image_3.png)
 
 4 The main features of the example level will be labelled with comment blocks
 
-![image_4](/images/image_4.png)
+![image_4](images/image_4.png)
 
 The example begins at `Event BeginPlay` which is executed on launch.
 The `Setup UI` custom event loads the `Blueprint Widget`.
 If the `Windows` platform is detected, the `ChromaSDKInit` custom event is called.
 
-![image_7](/images/image_7.png)
+![image_7](images/image_7.png)
 
 The `SetupUI` custom event loads the UI `Blueprint Widget` and saves a `widget` variable to be referenced by later UI controls.
 The `Blueprint Widget` is added to the viewport and then the `SetupUIButtons` custom event is called.
 
-![image_8](/images/image_8.png)
+![image_8](images/image_8.png)
 
 The `SetupUIButtons` custom event uses the `widget` variable to access the named buttons to bind `onclicked` events.
 When a button is clicked the `Event` delegate is invoked.
@@ -187,16 +187,34 @@ Since the `Event` delegate doesn't take parameters, an unnamed custom event is u
 `FLinearColor` is used to mimize the number of steps when passing colors to events and the SDK.
 This same setup is used for all the static color buttons.
 
-![image_9](/images/image_9.png)
+![image_9](images/image_9.png)
 
 The `SetupUIButtons` custom event calls other custom events to setup the clear button, the random button, and the animation buttons.
 
-![image_10](/images/image_10.png)
+![image_10](images/image_10.png)
 
 The example ends at `Event EndPlay` which executes when the game exits or `ESC` is pressed in the editor.
 If the `Windows` platform is detected, the `ChromaSDKUninit` custom event is called.
 
-![image_11](/images/image_11.png)
+![image_11](images/image_11.png)
 
 <a name="getting-started"></a>
 ## Getting Started
+
+**Note: `ChromaSDKPlugin` calls should be made on the Windows platform.**
+
+### Init
+
+**int UChromaSDKPluginBPLibrary::ChromaSDKInit()**
+
+`Init` returns the result of calling ChromaSDK::Init(). Initializes the ChromaSDK. A result of zero indicates success. Upon success, effects can be created, set, and deleted.
+    
+![image_17](images/image_17.png)
+
+### UnInit
+
+**int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()**
+
+`UnInit` returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK.
+
+![image_18](images/image_18.png)
