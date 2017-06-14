@@ -3,7 +3,9 @@
 **Table of Contents**
 
 * [Frameworks supported](#frameworks-supported)
-* [Packaging](#packaging)
+* [Usage](#usage)
+* [Blueprint objects](#blueprint-objects)
+* [Blueprint functions](#blueprint-functions)
 * [Examples](#examples)
 * [Getting Started](#getting-started)
 
@@ -12,8 +14,8 @@
 - Windows ChromaSDK (32-bit)
 - Windows ChromaSDK (64-bit)
 
-<a name="packaging"></a>
-## Packaging
+<a name="usage"></a>
+## Usage
 
 1 Copy `ChromaSDKPlugin` to the `ProjectFolder\Plugins\ChromaSDKPlugin` folder
 
@@ -24,6 +26,126 @@
 3 Make sure the `ChromeSDKPlugin` is enabled
 
 ![image_6](/images/image_6.png)
+
+<a name="blueprint-objects"></a>
+## Blueprint objects
+
+### FChromaSDKEffectResult
+
+`FChromaSDKEffectResult` holds a `ChromaSDK` result and an `effect identifier`.
+
+![image_12](/images/image_12.png)
+
+```c++
+struct FChromaSDKEffectResult
+{
+	UPROPERTY(BlueprintReadOnly)
+	int Result;
+
+	UPROPERTY(BlueprintReadOnly)
+	FChromaSDKGuid EffectId;
+}
+```
+
+### EChromaSDKDeviceEnum
+
+`EChromaSDKDeviceEnum` is a list of all ChromaSDK devices.
+
+![image_13](/images/image_13.png)
+
+```c++
+enum class EChromaSDKDeviceEnum : uint8
+{
+	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
+	DE_Headset		UMETA(DisplayName = "Headset"),
+	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
+	DE_Keypad		UMETA(DisplayName = "Keypad"),
+	DE_Mouse		UMETA(DisplayName = "Mouse"),
+	DE_Mousepad		UMETA(DisplayName = "Mousepad")
+};
+```
+
+### EChromaSDKDevice1DEnum
+
+`EChromaSDKDevice1DEnum` is a device that uses a one-dimensional array for custom effects.
+
+![image_14](/images/image_14.png)
+
+```c++
+enum class EChromaSDKDevice1DEnum : uint8
+{
+	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
+	DE_Headset		UMETA(DisplayName = "Headset"),
+	DE_Mousepad		UMETA(DisplayName = "Mousepad")
+};
+```
+
+### EChromaSDKDevice2DEnum
+
+`EChromaSDKDevice2DEnum` is a device that uses a two-dimensional array for custom effects.
+
+![image_15](/images/image_15.png)
+
+```c++
+enum class EChromaSDKDevice2DEnum : uint8
+{
+	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
+	DE_Keypad		UMETA(DisplayName = "Keypad"),
+	DE_Mouse		UMETA(DisplayName = "Mouse"),
+};
+```
+
+### FChromaSDKColors
+
+`FChromaSDKColors` holds an array of colors.
+
+![image_16](/images/image_16.png)
+
+```c++
+struct FChromaSDKColors
+{
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FLinearColor> Colors;
+};
+```
+
+<a name="blueprint-functions"></a>
+## Blueprint functions
+
+### ChromaSDKPlugin BP Library
+
+1. bool UChromaSDKPluginBPLibrary::IsPlatformWindows()
+    * Returns true if the platform is windows. Although this call works on all platforms, all the remaining BP methods only work on the Windows platform
+    
+2. int UChromaSDKPluginBPLibrary::ChromaSDKInit()
+    * Returns the result of calling ChromaSDK::Init(). Initializes the ChromaSDK.
+    
+3. int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
+    * Returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK.
+
+4. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectNone(const EChromaSDKDeviceEnum& device)
+    * Returns the FChromaSDKEffectResult after creating a `CHROMA_NONE` effect given the device. This effect clears the lighting effect for a device.
+
+5. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color)
+    * Returns the FChromaSDKEffectResult after creating a `CHROMA_STATIC` effect given the device and color. This effect sets the lighting effect to a static color for a device.
+
+6. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors)
+    * Returns the FChromaSDKEffectResult after creating a `CHROMA_CUSTOM` effect given the device and one-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
+
+7. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum& device, const TArray<FChromaSDKColors>& colors)
+    * Returns the FChromaSDKEffectResult after creating a (`CHROMA_CUSTOM` or `CHROMA_CUSTOM2`) effect given the device and two-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
+
+8. int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid& effectId)
+    * Returns the result of calling ChromaSDK::SetEffect given the effect identifier. Activates the given effect.
+    
+9. int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effectId)
+    * Returns the result of calling ChromaSDK::DeleteEffect given the effect identifier. Deletes the given effect.
+
+10. FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
+    * Returns a one-dimensional color array of random colors given the number of elements to create.
+    
+11. TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
+    * Returns a two-dimensional color array of random colors given the number of rows and columns to create.
 
 <a name="examples"></a>
 ## Examples
