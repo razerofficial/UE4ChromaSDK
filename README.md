@@ -56,7 +56,7 @@ struct FChromaSDKEffectResult
 ```c++
 enum class EChromaSDKDeviceEnum : uint8
 {
-	DE_ChromaLink       UMETA(DisplayName = "ChromaLink"),
+	DE_ChromaLink           UMETA(DisplayName = "ChromaLink"),
 	DE_Headset		UMETA(DisplayName = "Headset"),
 	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
 	DE_Keypad		UMETA(DisplayName = "Keypad"),
@@ -74,7 +74,7 @@ enum class EChromaSDKDeviceEnum : uint8
 ```c++
 enum class EChromaSDKDevice1DEnum : uint8
 {
-	DE_ChromaLink	    UMETA(DisplayName = "ChromaLink"),
+	DE_ChromaLink	        UMETA(DisplayName = "ChromaLink"),
 	DE_Headset		UMETA(DisplayName = "Headset"),
 	DE_Mousepad		UMETA(DisplayName = "Mousepad")
 };
@@ -123,22 +123,22 @@ struct FChromaSDKColors
 3. int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
     * Returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK.
 
-4. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectNone(const EChromaSDKDeviceEnum& device)
+4. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectNone(const EChromaSDKDeviceEnum&amp; device)
     * Returns the FChromaSDKEffectResult after creating a `CHROMA_NONE` effect given the device. This effect clears the lighting effect for a device.
 
-5. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color)
+5. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum&amp; device, const FLinearColor&amp; color)
     * Returns the FChromaSDKEffectResult after creating a `CHROMA_STATIC` effect given the device and color. This effect sets the lighting effect to a static color for a device.
 
-6. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors)
+6. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum&amp; device, const FChromaSDKColors&amp; colors)
     * Returns the FChromaSDKEffectResult after creating a `CHROMA_CUSTOM` effect given the device and one-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
 
-7. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum& device, const TArray&lt;FChromaSDKColors&gt;& colors)
+7. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum&amp; device, const TArray&lt;FChromaSDKColors&gt;&amp; colors)
     * Returns the FChromaSDKEffectResult after creating a (`CHROMA_CUSTOM` or `CHROMA_CUSTOM2`) effect given the device and two-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
 
-8. int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid& effectId)
+8. int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid&amp; effectId)
     * Returns the result of calling ChromaSDK::SetEffect given the effect identifier. Activates the given effect.
     
-9. int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effectId)
+9. int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid&amp; effectId)
     * Returns the result of calling ChromaSDK::DeleteEffect given the effect identifier. Deletes the given effect.
 
 10. FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
