@@ -9,13 +9,21 @@
 
 <a name="frameworks-supported"></a>
 ## Frameworks supported
-- ChromaSDK (32-bit)
-- ChromaSDK (64-bi)
+- Windows ChromaSDK (32-bit)
+- Windows ChromaSDK (64-bit)
 
 <a name="packaging"></a>
 ## Packaging
 
-Copy `ChromaSDKPlugin` to your `ProjectFolder\Plugins\ChromaSDKPlugin` folder.
+1 Copy `ChromaSDKPlugin` to the `ProjectFolder\Plugins\ChromaSDKPlugin` folder
+
+2 Open the `Plugins Browser tab` using the `Edit->Plugins` menu item
+
+![image_5](/images/image_5.png)
+
+3 Make sure the `ChromeSDKPlugin` is enabled
+
+![image_6](/images/image_6.png)
 
 <a name="examples"></a>
 ## Examples
