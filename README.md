@@ -203,7 +203,7 @@ If the `Windows` platform is detected, the `ChromaSDKUninit` custom event is cal
 
 **Note: `ChromaSDKPlugin` calls should be made on the Windows platform.**
 
-`DebugPrintResult` is a custom event to check for result codes and print a message. The custom event takes parameters to include in the print message. A result code of zero is commonly used in the `API` to mean success. A success message is printed if detected. If an error message is printed if the result code is not zero.
+`DebugPrintResult` is an example custom event to check for result codes and print a message. The custom event takes parameters to include in the print message. A result code of zero is commonly used in the `API` to mean success. A success message is printed if detected. If an error message is printed if the result code is not zero.
 
 ![image_19](images/image_19.png)
 
@@ -222,3 +222,79 @@ If the `Windows` platform is detected, the `ChromaSDKUninit` custom event is cal
 `UnInit` returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK. A result of zero indicates success.
 
 ![image_18](images/image_18.png)
+
+### CreateEffectNone
+
+**FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectNone(const EChromaSDKDeviceEnum&amp; device)**
+
+`CreateEffectNone` returns the `FChromaSDKEffectResult` after creating a `CHROMA_NONE` effect given the device. This effect clears the lighting effect for a device. A result of zero indicates success.
+
+![image_20](images/image_20.png)
+
+After effects are created, this example shows expanding the result to check the result for success. The `effect identifier` can be used to activate the effect with `SetEffect` or delete the effect with `DeleteEffect`.
+
+![image_21](images/image_21.png)
+
+After an effect has been set, check the result for success. Either success or failure, the `effect identifier` can be deleted with `DeleteEffect`.
+
+![image_22](images/image_22.png)
+
+After an effect has been deleted, check the result for success. After effects have been created they can be used and then deleted or kept around to be reused. Be sure to delete effect identifiers before exiting for proper cleanup.
+
+![image_23](images/image_23.png)
+
+### CreateEffectStatic
+
+**FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum&amp; device, const FLinearColor&amp; color)**
+
+`CreateEffectStatic` returns the `FChromaSDKEffectResult` after creating a `CHROMA_STATIC` effect given the device and color. This effect sets the lighting effect to a static color for a device.
+
+![image_24](images/image_24.png)
+
+### CreateEffectCustom1D
+
+**FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum&amp; device, const FChromaSDKColors&amp; colors)**
+
+`CreateEffectCustom1D` returns the FChromaSDKEffectResult after creating a `CHROMA_CUSTOM` effect given the device and one-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
+
+![image_25](images/image_25.png)
+
+### CreateEffectCustom2D
+
+**FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum&amp; device, const TArray&lt;FChromaSDKColors&gt;&amp; colors)**
+
+`CreateEffectCustom2D` returns the FChromaSDKEffectResult after creating a (`CHROMA_CUSTOM` or `CHROMA_CUSTOM2`) effect given the device and two-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
+
+![image_26](images/image_26.png)
+
+### SetEffect
+
+**int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid&amp; effectId)**
+
+`SetEffect` returns the result of calling ChromaSDK::SetEffect given the effect identifier. Activates the given effect.
+
+![image_21](images/image_21.png)
+    
+### DeleteEffect
+
+**int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid&amp; effectId)**
+
+`DeleteEffect` returns the result of calling ChromaSDK::DeleteEffect given the effect identifier. Deletes the given effect.
+
+![image_22](images/image_22.png)
+
+### CreateRandomColors1D
+
+**FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)**
+
+`CreateRandomColors1D` returns a one-dimensional color array of random colors given the number of elements to create.
+
+![image_25](images/image_25.png)
+    
+### CreateRandomColors2D
+
+**TArray&lt;FChromaSDKColors&gt; UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)**
+
+`CreateRandomColors2D` returns a two-dimensional color array of random colors given the number of rows and columns to create.
+
+![image_26](images/image_26.png)
