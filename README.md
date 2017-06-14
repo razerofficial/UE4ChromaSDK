@@ -56,7 +56,7 @@ struct FChromaSDKEffectResult
 ```c++
 enum class EChromaSDKDeviceEnum : uint8
 {
-	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
+	DE_ChromaLink       UMETA(DisplayName = "ChromaLink"),
 	DE_Headset		UMETA(DisplayName = "Headset"),
 	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
 	DE_Keypad		UMETA(DisplayName = "Keypad"),
@@ -74,7 +74,7 @@ enum class EChromaSDKDeviceEnum : uint8
 ```c++
 enum class EChromaSDKDevice1DEnum : uint8
 {
-	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
+	DE_ChromaLink	    UMETA(DisplayName = "ChromaLink"),
 	DE_Headset		UMETA(DisplayName = "Headset"),
 	DE_Mousepad		UMETA(DisplayName = "Mousepad")
 };
@@ -132,7 +132,7 @@ struct FChromaSDKColors
 6. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors)
     * Returns the FChromaSDKEffectResult after creating a `CHROMA_CUSTOM` effect given the device and one-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
 
-7. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum& device, const TArray<FChromaSDKColors>& colors)
+7. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum& device, const TArray&lt;FChromaSDKColors&gt;& colors)
     * Returns the FChromaSDKEffectResult after creating a (`CHROMA_CUSTOM` or `CHROMA_CUSTOM2`) effect given the device and two-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
 
 8. int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid& effectId)
@@ -144,7 +144,7 @@ struct FChromaSDKColors
 10. FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
     * Returns a one-dimensional color array of random colors given the number of elements to create.
     
-11. TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
+11. TArray&lt;FChromaSDKColors&gt; UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
     * Returns a two-dimensional color array of random colors given the number of rows and columns to create.
 
 <a name="examples"></a>
