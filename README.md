@@ -203,6 +203,10 @@ If the `Windows` platform is detected, the `ChromaSDKUninit` custom event is cal
 
 **Note: `ChromaSDKPlugin` calls should be made on the Windows platform.**
 
+`DebugPrintResult` is a custom event to check for result codes and print a message. The custom event takes parameters to include in the print message. A result code of zero is commonly used in the `API` to mean success. A success message is printed if detected. If an error message is printed if the result code is not zero.
+
+![image_19](images/image_19.png)
+
 ### Init
 
 **int UChromaSDKPluginBPLibrary::ChromaSDKInit()**
@@ -215,6 +219,6 @@ If the `Windows` platform is detected, the `ChromaSDKUninit` custom event is cal
 
 **int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()**
 
-`UnInit` returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK.
+`UnInit` returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK. A result of zero indicates success.
 
 ![image_18](images/image_18.png)
