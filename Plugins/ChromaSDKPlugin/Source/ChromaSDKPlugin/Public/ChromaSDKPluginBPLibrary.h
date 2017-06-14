@@ -152,6 +152,9 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetEffect", Keywords = "Set Effect with Effect Id"), Category = "ChromaSDK")
 	static int ChromaSDKSetEffect(const FChromaSDKGuid& effectId);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "DeleteEffect", Keywords = "Delete Effect with Effect Id"), Category = "ChromaSDK")
+	static int ChromaSDKDeleteEffect(const FChromaSDKGuid& effectId);
+
 #if PLATFORM_WINDOWS
 private:
 	static void ToString(const RZEFFECTID& effectId, FString& effectString);

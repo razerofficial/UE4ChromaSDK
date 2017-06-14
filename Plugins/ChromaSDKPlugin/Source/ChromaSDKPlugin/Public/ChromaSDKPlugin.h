@@ -59,6 +59,7 @@ public:
 	RZRESULT ChromaSDKCreateMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
 	RZRESULT ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
 	RZRESULT ChromaSDKSetEffect(RZEFFECTID effectId);
+	RZRESULT ChromaSDKDeleteEffect(RZEFFECTID effectId);
 #endif
 
 private:

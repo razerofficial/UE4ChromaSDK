@@ -401,6 +401,15 @@ int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid& effectId
 #endif
 }
 
+int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effectId)
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().ChromaSDKDeleteEffect(effectId.Data);
+#else
+	return -1;
+#endif
+}
+
 #if PLATFORM_WINDOWS
 void UChromaSDKPluginBPLibrary::ToString(const RZEFFECTID& effectId, FString& effectString)
 {

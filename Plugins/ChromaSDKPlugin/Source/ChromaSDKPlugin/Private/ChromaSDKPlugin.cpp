@@ -251,6 +251,17 @@ RZRESULT FChromaSDKPluginModule::ChromaSDKSetEffect(RZEFFECTID effectId)
 	return _mMethodSetEffect(effectId);
 }
 
+RZRESULT FChromaSDKPluginModule::ChromaSDKDeleteEffect(RZEFFECTID effectId)
+{
+	if (_mMethodDeleteEffect == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin DeleteEffect method is not set!"));
+		return -1;
+	}
+
+	return _mMethodDeleteEffect(effectId);
+}
+
 #endif
 
 #undef LOCTEXT_NAMESPACE
