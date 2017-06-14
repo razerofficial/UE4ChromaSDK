@@ -21,8 +21,88 @@ bool UChromaSDKPluginBPLibrary::IsPlatformWindows()
 #endif
 }
 
-FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
+int UChromaSDKPluginBPLibrary::GetMaxLeds(const EChromaSDKDevice1DEnum& device)
 {
+#if PLATFORM_WINDOWS
+	switch (device)
+	{
+	case EChromaSDKDevice1DEnum::DE_ChromaLink:
+		return ChromaSDK::ChromaLink::MAX_LEDS;
+	case EChromaSDKDevice1DEnum::DE_Headset:
+		return ChromaSDK::Headset::MAX_LEDS;
+	case EChromaSDKDevice1DEnum::DE_Mousepad:
+		return ChromaSDK::Mousepad::MAX_LEDS;
+	}
+#endif
+	return 0;
+}
+
+int UChromaSDKPluginBPLibrary::GetMaxRow(const EChromaSDKDevice2DEnum& device)
+{
+#if PLATFORM_WINDOWS
+	switch (device)
+	{
+	case EChromaSDKDevice2DEnum::DE_Keyboard:
+		return ChromaSDK::Keyboard::MAX_ROW;
+	case EChromaSDKDevice2DEnum::DE_Keypad:
+		return ChromaSDK::Keypad::MAX_ROW;
+	case EChromaSDKDevice2DEnum::DE_Mouse:
+		return ChromaSDK::Mouse::MAX_ROW;
+	}
+#endif
+	return 0;
+}
+
+int UChromaSDKPluginBPLibrary::GetMaxColumn(const EChromaSDKDevice2DEnum& device)
+{
+	int result = 0;
+#if PLATFORM_WINDOWS
+	switch (device)
+	{
+	case EChromaSDKDevice2DEnum::DE_Keyboard:
+		return ChromaSDK::Keyboard::MAX_COLUMN;
+	case EChromaSDKDevice2DEnum::DE_Keypad:
+		return ChromaSDK::Keypad::MAX_COLUMN;
+	case EChromaSDKDevice2DEnum::DE_Mouse:
+		return ChromaSDK::Mouse::MAX_COLUMN;
+	}
+#endif
+	return result;
+}
+
+FChromaSDKColors UChromaSDKPluginBPLibrary::CreateColors1D(const EChromaSDKDevice1DEnum& device)
+{
+	int elements = GetMaxLeds(device);
+	FChromaSDKColors result = FChromaSDKColors();
+	for (int i = 0; i < elements; ++i)
+	{
+		FLinearColor color = FLinearColor(0, 0, 0);
+		result.Colors.Add(color);
+	}
+	return result;
+}
+
+TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateColors2D(const EChromaSDKDevice2DEnum& device)
+{
+	int maxRows = GetMaxRow(device);
+	int maxColumns = GetMaxColumn(device);
+	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
+	for (int i = 0; i < maxRows; ++i)
+	{
+		FChromaSDKColors row = FChromaSDKColors();
+		for (int j = 0; j < maxColumns; ++j)
+		{
+			FLinearColor color = FLinearColor(0, 0, 0);
+			row.Colors.Add(color);
+		}
+		result.Add(row);
+	}
+	return result;
+}
+
+FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChromaSDKDevice1DEnum& device)
+{
+	int elements = GetMaxLeds(device);
 	FChromaSDKColors result = FChromaSDKColors();
 	for (int i = 0; i < elements; ++i)
 	{
@@ -35,8 +115,10 @@ FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
 	return result;
 }
 
-TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
+TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(const EChromaSDKDevice2DEnum& device)
 {
+	int maxRows = GetMaxRow(device);
+	int maxColumns = GetMaxColumn(device);
 	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
 	for (int i = 0; i < maxRows; ++i)
 	{
@@ -52,6 +134,25 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(int max
 		result.Add(row);
 	}
 	return result;
+}
+
+void UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, const TArray<FChromaSDKColors>& colors)
+{
+#if PLATFORM_WINDOWS
+	int maxRow = ChromaSDK::Keyboard::MAX_ROW;
+	int maxColumn = ChromaSDK::Keyboard::MAX_COLUMN;
+	if (maxRow != colors.Num() ||
+		colors.Num() == 0 ||
+		maxColumn != colors[0].Colors.Num())
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::SetKeyboardKeyColor Array size mismatch row: %d==%d column: %d==%d!"),
+			maxRow,
+			colors.Num(),
+			maxColumn,
+			colors.Num() > 0 ? colors[0].Colors.Num() : 0);
+		return;
+	}
+#endif
 }
 
 int UChromaSDKPluginBPLibrary::ChromaSDKInit()
