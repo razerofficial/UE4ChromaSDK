@@ -17,4 +17,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TArray<FChromaSDKColorFrame1D> Frames;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	FRuntimeFloatCurve Curve;
 };
