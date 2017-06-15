@@ -109,6 +109,23 @@ struct FChromaSDKColors
 };
 ```
 
+### EChromaSDKKeyboardKey
+
+`EChromaSDKKeyboardKey` represents a key on the keyboard.
+
+![image_30](images/image_30.png)
+
+```c++
+enum class EChromaSDKKeyboardKey : uint8
+{
+	KK_ESC                           UMETA(DisplayName = "Esc (VK_ESCAPE)"),
+	KK_F1                            UMETA(DisplayName = "F1 (VK_F1)"),
+	...
+	KK_KOR_7                         UMETA(DisplayName = "(0xFF)"),
+	KK_INVALID                       UMETA(DisplayName = "Invalid keys.")
+};
+```
+
 <a name="blueprint-functions"></a>
 ## Blueprint functions
 
