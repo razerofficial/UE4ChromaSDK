@@ -8,6 +8,7 @@
 * [Blueprint functions](#blueprint-functions)
 * [Examples](#examples)
 * [Getting Started](#getting-started)
+* [Assets](#assets)
 
 <a name="frameworks-supported"></a>
 ## Frameworks supported
@@ -376,3 +377,10 @@ After an effect has been deleted, check the result for success. After effects ha
 `MouseLedColor` returns a modified two-dimensional color array with the led color changed.
 
 ![image_32](images/image_32.png)
+
+<a name="assets"></a>
+## Assets
+
+In the `Content Browser` under the `Add New->Miscellaneous` menu item is where animation assets can be created for `ChromaSDKPluginAnimation1DObject` and `ChromaSDKPluginAnimation2DObject`.
+
+![image_33](images/image_33.png)
