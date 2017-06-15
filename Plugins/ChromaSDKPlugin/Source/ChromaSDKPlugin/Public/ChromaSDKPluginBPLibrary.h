@@ -6,6 +6,7 @@
 #if PLATFORM_WINDOWS
 #include "AllowWindowsPlatformTypes.h"
 #include "RzChromaSDKTypes.h"
+#include <map>
 #include "HideWindowsPlatformTypes.h"
 #endif
 #include "ChromaSDKPluginBPLibrary.generated.h"
@@ -273,7 +274,7 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	static TArray<FChromaSDKColors> CreateRandomColors2D(const EChromaSDKDevice2DEnum& device);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetKeyboardKeyColor", Keywords = "Set the key to the supplied color"), Category = "ChromaSDK")
-	static void SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, const TArray<FChromaSDKColors>& colors);
+	static TArray<FChromaSDKColors> SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, TArray<FChromaSDKColors> colors);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", Keywords = "Initialize the ChromaSDK"), Category = "ChromaSDK")
 	static int ChromaSDKInit();
@@ -306,5 +307,6 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 private:
 	static void ToString(const RZEFFECTID& effectId, FString& effectString);
 	static void ToEffect(const FString& effectString, RZEFFECTID& effectId);
+	static std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> _sKeyboardEnumMap;
 #endif
 };
