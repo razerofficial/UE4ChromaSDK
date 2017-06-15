@@ -153,7 +153,7 @@ struct FChromaSDKColors
 13. TArray&lt;FChromaSDKColors&gt; CreateRandomColors2D(const EChromaSDKDevice2DEnum&amp; device)
     * Returns a two-dimensional random color array given the device.
 
-14. TArray&lt;FChromaSDKColors&gt; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt; colors)
+14. const TArray&lt;FChromaSDKColors&gt;&amp; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt;&amp; colors)
     * Returns a modified two-dimensional color array with the key color changed.
 
 <a name="examples"></a>
@@ -326,7 +326,7 @@ After an effect has been deleted, check the result for success. After effects ha
 
 ### SetKeyboardKeyColor
 
-**TArray&lt;FChromaSDKColors&gt; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt; colors)**
+**const TArray&lt;FChromaSDKColors&gt;&amp; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt;&amp; colors)**
 
 `SetKeyboardKeyColor` returns a modified two-dimensional color array with the key color changed.
 
