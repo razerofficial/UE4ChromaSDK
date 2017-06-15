@@ -298,11 +298,15 @@ After an effect has been deleted, check the result for success. After effects ha
 
 `CreateColors1D` returns a blank one-dimensional color array given the device.
 
+![image_28](images/image_28.png)
+
 ### CreateColors2D
 
 **TArray&lt;FChromaSDKColors&gt; CreateColors2D(const EChromaSDKDevice2DEnum&amp; device)**
 
 `CreateColors2D` returns a blank two-dimensional color array given the device.
+
+![image_29](images/image_29.png)
 
 ### CreateRandomColors1D
 
