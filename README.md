@@ -136,7 +136,7 @@ enum class EChromaSDKKeyboardKey : uint8
 enum class EChromaSDKMouseLed : uint8
 {
 	ML_SCROLLWHEEL		UMETA(DisplayName = "Scroll Wheel LED"),
-	ML_LOGO				UMETA(DisplayName = "Logo LED"),
+	ML_LOGO			UMETA(DisplayName = "Logo LED"),
 	...
 	ML_RIGHT_SIDE6		UMETA(DisplayName = "Right LED 6"),
 	ML_RIGHT_SIDE7		UMETA(DisplayName = "Right LED 7")
