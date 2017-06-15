@@ -141,11 +141,20 @@ struct FChromaSDKColors
 9. int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid&amp; effectId)
     * Returns the result of calling ChromaSDK::DeleteEffect given the effect identifier. Deletes the given effect.
 
-10. FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)
-    * Returns a one-dimensional color array of random colors given the number of elements to create.
-    
-11. TArray&lt;FChromaSDKColors&gt; UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)
-    * Returns a two-dimensional color array of random colors given the number of rows and columns to create.
+10. FChromaSDKColors CreateColors1D(const EChromaSDKDevice1DEnum&amp; device)
+    * Returns a blank one-dimensional color array given the device.
+
+11. TArray&lt;FChromaSDKColors&gt; CreateColors2D(const EChromaSDKDevice2DEnum&amp; device)
+    * Returns a blank two-dimensional color array given the device.
+
+12. FChromaSDKColors CreateRandomColors1D(const EChromaSDKDevice1DEnum&amp; device)
+    * Returns a one-dimensional random color array given the device.
+
+13. TArray&lt;FChromaSDKColors&gt; CreateRandomColors2D(const EChromaSDKDevice2DEnum&amp; device)
+    * Returns a two-dimensional random color array given the device.
+
+14. TArray&lt;FChromaSDKColors&gt; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt; colors)
+    * Returns a modified two-dimensional color array with the key color changed.
 
 <a name="examples"></a>
 ## Examples
@@ -283,18 +292,38 @@ After an effect has been deleted, check the result for success. After effects ha
 
 ![image_22](images/image_22.png)
 
+### CreateColors1D
+
+**FChromaSDKColors CreateColors1D(const EChromaSDKDevice1DEnum&amp; device)**
+
+`CreateColors1D` returns a blank one-dimensional color array given the device.
+
+### CreateColors2D
+
+**TArray&lt;FChromaSDKColors&gt; CreateColors2D(const EChromaSDKDevice2DEnum&amp; device)**
+
+`CreateColors2D` returns a blank two-dimensional color array given the device.
+
 ### CreateRandomColors1D
 
-**FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(int elements)**
+**FChromaSDKColors CreateRandomColors1D(const EChromaSDKDevice1DEnum&amp; device)**
 
-`CreateRandomColors1D` returns a one-dimensional color array of random colors given the number of elements to create.
+`CreateRandomColors1D` returns a one-dimensional random color array given the device.
 
 ![image_25](images/image_25.png)
     
 ### CreateRandomColors2D
 
-**TArray&lt;FChromaSDKColors&gt; UChromaSDKPluginBPLibrary::CreateRandomColors2D(int maxRows, int maxColumns)**
+**TArray&lt;FChromaSDKColors&gt; CreateRandomColors2D(const EChromaSDKDevice2DEnum&amp; device)**
 
-`CreateRandomColors2D` returns a two-dimensional color array of random colors given the number of rows and columns to create.
+`CreateRandomColors2D` returns a two-dimensional random color array given the device.
 
 ![image_26](images/image_26.png)
+
+### SetKeyboardKeyColor
+
+**TArray&lt;FChromaSDKColors&gt; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt; colors)**
+
+`SetKeyboardKeyColor` returns a modified two-dimensional color array with the key color changed.
+
+![image_27](images/image_27.png)
