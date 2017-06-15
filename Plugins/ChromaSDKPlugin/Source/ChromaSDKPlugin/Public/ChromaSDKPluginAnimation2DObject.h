@@ -5,16 +5,16 @@
 #include "ChromaSDKPluginTypes.h"
 #include "ChromaSDKPluginAnimation2DObject.generated.h"
 
-UCLASS(Blueprintable, Category = "Lighting")
+UCLASS(Blueprintable, Category = "Animation")
 class UChromaSDKPluginAnimation2DObject : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	EChromaSDKDevice2DEnum Device;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	TArray<FChromaSDKColorFrame2D> Frames;
 };
