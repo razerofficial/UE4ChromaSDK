@@ -7,14 +7,22 @@
 using namespace ChromaSDK;
 
 #if PLATFORM_WINDOWS
+
+// keyboard map
 std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> UChromaSDKPluginBPLibrary::_sKeyboardEnumMap =
 	std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY>();
+
+// mouse map
+std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2> UChromaSDKPluginBPLibrary::_sMouseEnumMap =
+	std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2>();
+
 #endif
 
 UChromaSDKPluginBPLibrary::UChromaSDKPluginBPLibrary(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
 {
 #if PLATFORM_WINDOWS
+	// keyboard mapping
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_ESC] = Keyboard::RZKEY::RZKEY_ESC;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_F1] = Keyboard::RZKEY::RZKEY_F1;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_F2] = Keyboard::RZKEY::RZKEY_F2;
@@ -139,6 +147,30 @@ UChromaSDKPluginBPLibrary::UChromaSDKPluginBPLibrary(const FObjectInitializer& O
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_KOR_6] = Keyboard::RZKEY::RZKEY_KOR_6;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_KOR_7] = Keyboard::RZKEY::RZKEY_KOR_7;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_INVALID] = Keyboard::RZKEY::RZKEY_INVALID;
+
+	// mouse mapping
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_SCROLLWHEEL] = Mouse::RZLED2::RZLED2_SCROLLWHEEL;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LOGO] = Mouse::RZLED2::RZLED2_LOGO;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_BACKLIGHT] = Mouse::RZLED2::RZLED2_BACKLIGHT;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE1] = Mouse::RZLED2::RZLED2_LEFT_SIDE1;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE2] = Mouse::RZLED2::RZLED2_LEFT_SIDE2;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE3] = Mouse::RZLED2::RZLED2_LEFT_SIDE3;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE4] = Mouse::RZLED2::RZLED2_LEFT_SIDE4;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE5] = Mouse::RZLED2::RZLED2_LEFT_SIDE5;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE6] = Mouse::RZLED2::RZLED2_LEFT_SIDE6;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_LEFT_SIDE7] = Mouse::RZLED2::RZLED2_LEFT_SIDE7;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_BOTTOM1] = Mouse::RZLED2::RZLED2_BOTTOM1;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_BOTTOM2] = Mouse::RZLED2::RZLED2_BOTTOM2;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_BOTTOM3] = Mouse::RZLED2::RZLED2_BOTTOM3;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_BOTTOM4] = Mouse::RZLED2::RZLED2_BOTTOM4;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_BOTTOM5] = Mouse::RZLED2::RZLED2_BOTTOM5;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE1] = Mouse::RZLED2::RZLED2_RIGHT_SIDE1;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE2] = Mouse::RZLED2::RZLED2_RIGHT_SIDE2;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE3] = Mouse::RZLED2::RZLED2_RIGHT_SIDE3;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE4] = Mouse::RZLED2::RZLED2_RIGHT_SIDE4;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE5] = Mouse::RZLED2::RZLED2_RIGHT_SIDE5;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE6] = Mouse::RZLED2::RZLED2_RIGHT_SIDE6;
+	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE7] = Mouse::RZLED2::RZLED2_RIGHT_SIDE7;
 #endif
 }
 
@@ -285,6 +317,29 @@ const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(c
 
 	ChromaSDK::Keyboard::RZKEY rzkey = _sKeyboardEnumMap[key];
 	colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = color;
+#endif
+	return colors;
+}
+
+const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetMouseLedColor(const EChromaSDKMouseLed& led, const FLinearColor& color, TArray<FChromaSDKColors>& colors)
+{
+#if PLATFORM_WINDOWS
+	int maxRow = ChromaSDK::Mouse::MAX_ROW;
+	int maxColumn = ChromaSDK::Mouse::MAX_COLUMN;
+	if (maxRow != colors.Num() ||
+		colors.Num() == 0 ||
+		maxColumn != colors[0].Colors.Num())
+	{
+		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::SetMouseLedColor Array size mismatch row: %d==%d column: %d==%d!"),
+			maxRow,
+			colors.Num(),
+			maxColumn,
+			colors.Num() > 0 ? colors[0].Colors.Num() : 0);
+		return colors;
+	}
+
+	ChromaSDK::Mouse::RZLED2 rzled = _sMouseEnumMap[led];
+	colors[HIBYTE(rzled)].Colors[LOBYTE(rzled)] = color;
 #endif
 	return colors;
 }

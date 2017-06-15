@@ -126,6 +126,23 @@ enum class EChromaSDKKeyboardKey : uint8
 };
 ```
 
+### EChromaSDKMouseLed
+
+`EChromaSDKMouseLed` represents an led on the mouse
+
+![image_31](images/image_31.png)
+
+```c++
+enum class EChromaSDKMouseLed : uint8
+{
+	ML_SCROLLWHEEL		UMETA(DisplayName = "Scroll Wheel LED"),
+	ML_LOGO				UMETA(DisplayName = "Logo LED"),
+	...
+	ML_RIGHT_SIDE6		UMETA(DisplayName = "Right LED 6"),
+	ML_RIGHT_SIDE7		UMETA(DisplayName = "Right LED 7")
+};
+```
+
 <a name="blueprint-functions"></a>
 ## Blueprint functions
 
@@ -172,6 +189,9 @@ enum class EChromaSDKKeyboardKey : uint8
 
 14. const TArray&lt;FChromaSDKColors&gt;&amp; SetKeyboardKeyColor(const EChromaSDKKeyboardKey&amp; key, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt;&amp; colors)
     * Returns a modified two-dimensional color array with the key color changed.
+
+15. const TArray<FChromaSDKColors>& SetMouseLedColor(const EChromaSDKMouseLed& led, const FLinearColor& color, UPARAM(ref) TArray<FChromaSDKColors>& colors)
+    * Returns a modified two-dimensional color array with the led color changed.
 
 <a name="examples"></a>
 ## Examples
@@ -348,3 +368,11 @@ After an effect has been deleted, check the result for success. After effects ha
 `SetKeyboardKeyColor` returns a modified two-dimensional color array with the key color changed.
 
 ![image_27](images/image_27.png)
+
+### SetMouseLedColor
+
+**const TArray&lt;FChromaSDKColors&gt;&amp; SetMouseLedColor(const EChromaSDKMouseLed&amp; led, const FLinearColor&amp; color, TArray&lt;FChromaSDKColors&gt;&amp; colors)**
+
+`MouseLedColor` returns a modified two-dimensional color array with the led color changed.
+
+![image_32](images/image_32.png)

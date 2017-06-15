@@ -185,6 +185,33 @@ enum class EChromaSDKKeyboardKey : uint8
 	KK_INVALID                       UMETA(DisplayName = "Invalid keys.")
 };
 
+UENUM(BlueprintType)
+enum class EChromaSDKMouseLed : uint8
+{
+	ML_SCROLLWHEEL		UMETA(DisplayName = "Scroll Wheel LED"),
+	ML_LOGO				UMETA(DisplayName = "Logo LED"),
+	ML_BACKLIGHT		UMETA(DisplayName = "Backlight LED"),
+	ML_LEFT_SIDE1		UMETA(DisplayName = "Left LED 1"),
+	ML_LEFT_SIDE2		UMETA(DisplayName = "Left LED 2"),
+	ML_LEFT_SIDE3		UMETA(DisplayName = "Left LED 3"),
+	ML_LEFT_SIDE4		UMETA(DisplayName = "Left LED 4"),
+	ML_LEFT_SIDE5		UMETA(DisplayName = "Left LED 5"),
+	ML_LEFT_SIDE6		UMETA(DisplayName = "Left LED 6"),
+	ML_LEFT_SIDE7		UMETA(DisplayName = "Left LED 7"),
+	ML_BOTTOM1			UMETA(DisplayName = "Bottom LED 1"),
+	ML_BOTTOM2			UMETA(DisplayName = "Bottom LED 2"),
+	ML_BOTTOM3			UMETA(DisplayName = "Bottom LED 3"),
+	ML_BOTTOM4			UMETA(DisplayName = "Bottom LED 4"),
+	ML_BOTTOM5			UMETA(DisplayName = "Bottom LED 5"),
+	ML_RIGHT_SIDE1		UMETA(DisplayName = "Right LED 1"),
+	ML_RIGHT_SIDE2		UMETA(DisplayName = "Right LED 2"),
+	ML_RIGHT_SIDE3		UMETA(DisplayName = "Right LED 3"),
+	ML_RIGHT_SIDE4		UMETA(DisplayName = "Right LED 4"),
+	ML_RIGHT_SIDE5		UMETA(DisplayName = "Right LED 5"),
+	ML_RIGHT_SIDE6		UMETA(DisplayName = "Right LED 6"),
+	ML_RIGHT_SIDE7		UMETA(DisplayName = "Right LED 7")
+};
+
 USTRUCT(BlueprintType)
 struct FChromaSDKGuid
 {
@@ -276,6 +303,9 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetKeyboardKeyColor", Keywords = "Set the key to the supplied color"), Category = "ChromaSDK")
 	static const TArray<FChromaSDKColors>& SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, UPARAM(ref) TArray<FChromaSDKColors>& colors);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetMouseLedColor", Keywords = "Set the led to the supplied color"), Category = "ChromaSDK")
+	static const TArray<FChromaSDKColors>& SetMouseLedColor(const EChromaSDKMouseLed& led, const FLinearColor& color, UPARAM(ref) TArray<FChromaSDKColors>& colors);
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", Keywords = "Initialize the ChromaSDK"), Category = "ChromaSDK")
 	static int ChromaSDKInit();
 
@@ -308,5 +338,6 @@ private:
 	static void ToString(const RZEFFECTID& effectId, FString& effectString);
 	static void ToEffect(const FString& effectString, RZEFFECTID& effectId);
 	static std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> _sKeyboardEnumMap;
+	static std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2> _sMouseEnumMap;
 #endif
 };
