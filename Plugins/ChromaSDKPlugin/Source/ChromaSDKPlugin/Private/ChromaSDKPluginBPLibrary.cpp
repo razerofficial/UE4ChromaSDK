@@ -266,7 +266,7 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(const E
 	return result;
 }
 
-TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, TArray<FChromaSDKColors> colors)
+const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, TArray<FChromaSDKColors>& colors)
 {
 #if PLATFORM_WINDOWS
 	int maxRow = ChromaSDK::Keyboard::MAX_ROW;
@@ -285,10 +285,8 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(const EC
 
 	ChromaSDK::Keyboard::RZKEY rzkey = _sKeyboardEnumMap[key];
 	colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = color;
-	return colors;
-#else
-	return TArray<FChromaSDKColors>();
 #endif
+	return colors;
 }
 
 int UChromaSDKPluginBPLibrary::ChromaSDKInit()

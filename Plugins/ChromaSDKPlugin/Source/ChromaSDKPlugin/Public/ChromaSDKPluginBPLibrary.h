@@ -274,7 +274,7 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	static TArray<FChromaSDKColors> CreateRandomColors2D(const EChromaSDKDevice2DEnum& device);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetKeyboardKeyColor", Keywords = "Set the key to the supplied color"), Category = "ChromaSDK")
-	static TArray<FChromaSDKColors> SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, TArray<FChromaSDKColors> colors);
+	static const TArray<FChromaSDKColors>& SetKeyboardKeyColor(const EChromaSDKKeyboardKey& key, const FLinearColor& color, UPARAM(ref) TArray<FChromaSDKColors>& colors);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", Keywords = "Initialize the ChromaSDK"), Category = "ChromaSDK")
 	static int ChromaSDKInit();
