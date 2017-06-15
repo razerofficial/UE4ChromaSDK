@@ -216,7 +216,7 @@ struct FChromaSDKGuid
 	GENERATED_BODY()
 
 #if PLATFORM_WINDOWS
-		RZEFFECTID Data;
+	RZEFFECTID Data;
 #endif
 
 	//Constructor
@@ -241,11 +241,11 @@ struct FChromaSDKEffectResult
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadOnly)
-		int Result;
+	UPROPERTY(BlueprintReadOnly)
+	int Result;
 
 	UPROPERTY(BlueprintReadOnly)
-		FChromaSDKGuid EffectId;
+	FChromaSDKGuid EffectId;
 
 	//Constructor
 	FChromaSDKEffectResult()
@@ -260,8 +260,8 @@ struct FChromaSDKColors
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadOnly)
-		TArray<FLinearColor> Colors;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FLinearColor> Colors;
 
 	//Constructor
 	FChromaSDKColors()
@@ -274,8 +274,8 @@ struct FChromaSDKColorFrame1D
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadOnly)
-		FChromaSDKColors Colors;
+	UPROPERTY(BlueprintReadOnly)
+	FChromaSDKColors Colors;
 
 	//Constructor
 	FChromaSDKColorFrame1D()
@@ -288,8 +288,8 @@ struct FChromaSDKColorFrame2D
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadOnly)
-		TArray<FChromaSDKColors> Colors;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FChromaSDKColors> Colors;
 
 	//Constructor
 	FChromaSDKColorFrame2D()
