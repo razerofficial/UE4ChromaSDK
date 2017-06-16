@@ -20,4 +20,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	FRuntimeFloatCurve Curve;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
+#endif
 };

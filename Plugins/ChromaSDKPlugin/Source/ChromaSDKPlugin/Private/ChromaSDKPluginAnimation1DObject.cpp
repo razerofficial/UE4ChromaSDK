@@ -6,3 +6,10 @@ UChromaSDKPluginAnimation1DObject::UChromaSDKPluginAnimation1DObject(const FObje
 	: Super(ObjectInitializer)
 {
 }
+
+#if WITH_EDITOR
+void UChromaSDKPluginAnimation1DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
+{
+	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation1DObject::PostEditChangeChainProperty"));
+}
+#endif
