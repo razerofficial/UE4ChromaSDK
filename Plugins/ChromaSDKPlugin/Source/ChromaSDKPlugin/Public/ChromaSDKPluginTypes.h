@@ -260,7 +260,7 @@ struct FChromaSDKColors
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	TArray<FLinearColor> Colors;
 
 	//Constructor
@@ -274,7 +274,7 @@ struct FChromaSDKColorFrame1D
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	FChromaSDKColors Colors;
 
 	//Constructor
@@ -288,7 +288,7 @@ struct FChromaSDKColorFrame2D
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	TArray<FChromaSDKColors> Colors;
 
 	//Constructor
