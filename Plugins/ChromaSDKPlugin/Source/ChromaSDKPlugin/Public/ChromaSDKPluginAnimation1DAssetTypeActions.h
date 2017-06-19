@@ -14,7 +14,7 @@ class FChromaSDKPluginAnimation1DAssetTypeActions : public FAssetTypeActions_Bas
 	virtual UClass* GetSupportedClass() const override;
 	virtual uint32 GetCategories() override;
 
-	// Want the preview thumbnail from ForeceFeedbackEffect
+	// Show the play / stop preview
 	virtual bool HasActions(const TArray<UObject*>& InObjects) const override;
 	virtual void GetActions(const TArray<UObject*>& InObjects, FMenuBuilder& MenuBuilder) override;
 	virtual void AssetsActivated(const TArray<UObject*>& InObjects, EAssetTypeActivationMethod::Type ActivationType) override;

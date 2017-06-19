@@ -26,8 +26,6 @@ uint32 FChromaSDKPluginAnimation1DAssetTypeActions::GetCategories()
 	return EAssetTypeCategories::Misc;
 }
 
-// want the preview thumbnail from ForceFeedbackEffect
-
 bool FChromaSDKPluginAnimation1DAssetTypeActions::HasActions(const TArray<UObject*>& InObjects) const
 {
 	return true;
@@ -38,8 +36,8 @@ void FChromaSDKPluginAnimation1DAssetTypeActions::GetActions(const TArray<UObjec
 	TArray<TWeakObjectPtr<UChromaSDKPluginAnimation1DObject>> Effects = GetTypedWeakObjectPtrs<UChromaSDKPluginAnimation1DObject>(InObjects);
 
 	MenuBuilder.AddMenuEntry(
-		LOCTEXT("ForceFeedbackEffect_PlayEffect", "Play"),
-		LOCTEXT("ForceFeedbackEffect_PlayEffectTooltip", "Plays the selected force feedback effect."),
+		LOCTEXT("ChromaAnimation1D_PlayEffect", "Play"),
+		LOCTEXT("ChromaAnimation1D_PlayEffectTooltip", "Plays the selected Chroma animation."),
 		FSlateIcon(FEditorStyle::GetStyleSetName(), "MediaAsset.AssetActions.Play.Small"),
 		FUIAction(
 			FExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation1DAssetTypeActions::ExecutePlayEffect, Effects),
@@ -48,8 +46,8 @@ void FChromaSDKPluginAnimation1DAssetTypeActions::GetActions(const TArray<UObjec
 	);
 
 	MenuBuilder.AddMenuEntry(
-		LOCTEXT("ForceFeedbackEffect_StopEffect", "Stop"),
-		LOCTEXT("ForceFeedbackEffect_StopEffectTooltip", "Stops the selected force feedback effect."),
+		LOCTEXT("ChromaAnimation1D_StopEffect", "Stop"),
+		LOCTEXT("ChromaAnimation1D_StopEffectTooltip", "Stops the selected Chroma animation."),
 		FSlateIcon(FEditorStyle::GetStyleSetName(), "MediaAsset.AssetActions.Stop.Small"),
 		FUIAction(
 			FExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation1DAssetTypeActions::ExecuteStopEffect, Effects),
@@ -101,10 +99,10 @@ TSharedPtr<SWidget> FChromaSDKPluginAnimation1DAssetTypeActions::GetThumbnailOve
 	{
 		if (IsEffectPlaying(EffectList))
 		{
-			return LOCTEXT("Thumbnail_StopForceFeedbackToolTip", "Stop selected force feedback effect");
+			return LOCTEXT("Thumbnail_StopChromaAnimation1DToolTip", "Stop selected Chroma animation");
 		}
 
-		return LOCTEXT("Thumbnail_PlayForceFeedbackToolTip", "Play selected force feedback effect");
+		return LOCTEXT("Thumbnail_PlayChromaAnimation1DToolTip", "Play selected Chroma animation");
 	};
 
 	TSharedRef<SBox> Box = SNew(SBox)
