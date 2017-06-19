@@ -22,6 +22,7 @@ public class ChromaSDKPlugin : ModuleRules
 				"ChromaSDKPlugin/Private",
 				
 				// ... add other private include paths required here ...
+				"AssetTools",
 			}
 			);
 			
@@ -30,9 +31,9 @@ public class ChromaSDKPlugin : ModuleRules
 			new string[]
 			{
 				"Core",
-                "UnrealEd",
 				
 				// ... add other public dependencies that you statically link with here ...
+				"UnrealEd",
 			}
 			);
 			
@@ -46,6 +47,7 @@ public class ChromaSDKPlugin : ModuleRules
 				"SlateCore",
 
 				// ... add private dependencies that you statically link with here ...	
+				"AssetTools",
 			}
 			);
 		

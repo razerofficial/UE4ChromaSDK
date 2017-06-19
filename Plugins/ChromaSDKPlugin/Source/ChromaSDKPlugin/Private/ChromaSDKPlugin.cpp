@@ -1,6 +1,8 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "ChromaSDKPlugin.h"
+#include "ChromaSDKPluginAnimation1DAssetTypeActions.h"
+#include "ChromaSDKPluginAnimation2DAssetTypeActions.h"
 
 #define LOCTEXT_NAMESPACE "FChromaSDKPluginModule"
 
@@ -38,6 +40,14 @@ bool FChromaSDKPluginModule::ValidateGetProcAddress(bool condition, FString meth
 void FChromaSDKPluginModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+
+	// register the asset type
+
+	// Register asset types
+	IAssetTools& assetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	assetTools.RegisterAssetTypeActions(MakeShareable(new FChromaSDKPluginAnimation1DAssetTypeActions));
+	assetTools.RegisterAssetTypeActions(MakeShareable(new FChromaSDKPluginAnimation2DAssetTypeActions));
+	// end of register the asset type
 
 #if PLATFORM_WINDOWS
 	_mLibraryChroma = LoadLibrary(CHROMASDKDLL);
