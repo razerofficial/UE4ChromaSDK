@@ -16,6 +16,9 @@ std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> UChromaSDKPluginBPLi
 std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2> UChromaSDKPluginBPLibrary::_sMouseEnumMap =
 	std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2>();
 
+// initialized
+bool UChromaSDKPluginBPLibrary::_sInitialized = false;
+
 #endif
 
 UChromaSDKPluginBPLibrary::UChromaSDKPluginBPLibrary(const FObjectInitializer& ObjectInitializer)
@@ -346,12 +349,24 @@ const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetMouseLedColor(cons
 
 int UChromaSDKPluginBPLibrary::ChromaSDKInit()
 {
-	return FChromaSDKPluginModule::Get().ChromaSDKInit();
+	int result = FChromaSDKPluginModule::Get().ChromaSDKInit();
+	_sInitialized = result == 0;
+	return result;
 }
 
 int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
 {
-	return FChromaSDKPluginModule::Get().ChromaSDKUnInit();
+	int result = FChromaSDKPluginModule::Get().ChromaSDKUnInit();
+	if (result == 0)
+	{
+		_sInitialized = false;
+	}
+	return result;
+}
+
+bool UChromaSDKPluginBPLibrary::IsInitialized()
+{
+	return _sInitialized;
 }
 
 FString UChromaSDKPluginBPLibrary::DebugToString(const FChromaSDKGuid& effectId)

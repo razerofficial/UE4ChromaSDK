@@ -2,6 +2,7 @@
 
 #include "ChromaSDKPluginAnimation1DAssetTypeActions.h"
 #include "ChromaSDKPluginAnimation1DObject.h"
+#include "ChromaSDKPluginBPLibrary.h"
 
 #define LOCTEXT_NAMESPACE "AssetTypeActions"
 
@@ -155,7 +156,29 @@ bool FChromaSDKPluginAnimation1DAssetTypeActions::IsEffectPlaying(const TArray<T
 /** Handler for when PlayEffect is selected */
 void FChromaSDKPluginAnimation1DAssetTypeActions::ExecutePlayEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation1DObject>> Objects)
 {
+	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
+	if (!initialized)
+	{
+		UChromaSDKPluginBPLibrary::ChromaSDKInit();
+	}
 
+	if (Objects.Num() > 0)
+	{
+		const UChromaSDKPluginAnimation1DObject* animation = Objects[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice1DEnum& device = animation->Device;
+			const TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(device, frames[0].Colors);
+				if (effect.Result == 0)
+				{
+					UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+				}
+			}
+		}
+	}
 }
 
 /** Handler for when StopEffect is selected */
@@ -169,3 +192,5 @@ bool FChromaSDKPluginAnimation1DAssetTypeActions::CanExecutePlayCommand(TArray<T
 {
 	return true;
 }
+
+#undef LOCTEXT_NAMESPACE

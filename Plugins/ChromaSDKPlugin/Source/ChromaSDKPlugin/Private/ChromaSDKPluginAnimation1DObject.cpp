@@ -12,10 +12,15 @@ UChromaSDKPluginAnimation1DObject::UChromaSDKPluginAnimation1DObject(const FObje
 void UChromaSDKPluginAnimation1DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
 {
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation1DObject::PostEditChangeChainProperty"));
+
 	int maxLeds = UChromaSDKPluginBPLibrary::GetMaxLeds(Device);
 	for (int i = 0; i < Frames.Num(); ++i)
 	{
 		FChromaSDKColorFrame1D& frame = Frames[i];
+		if (frame.Duration <= 0.0f)
+		{
+			frame.Duration = 1.0f;
+		}
 		FChromaSDKColors& leds = frame.Colors;
 		if (leds.Colors.Num() != maxLeds)
 		{

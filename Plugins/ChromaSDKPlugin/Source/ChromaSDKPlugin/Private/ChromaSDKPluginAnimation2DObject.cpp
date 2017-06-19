@@ -12,11 +12,16 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
 {
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty"));
+
 	int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(Device);
 	int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(Device);
 	for (int i = 0; i < Frames.Num(); ++i)
 	{
 		FChromaSDKColorFrame2D& frame = Frames[i];
+		if (frame.Duration <= 0.0f)
+		{
+			frame.Duration = 1.0f;
+		}
 		TArray<FChromaSDKColors>& rows = frame.Colors;
 		if (rows.Num() != maxRow)
 		{

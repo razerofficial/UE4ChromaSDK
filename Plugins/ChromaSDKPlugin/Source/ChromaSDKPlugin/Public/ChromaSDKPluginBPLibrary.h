@@ -62,6 +62,9 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetMouseLedColor", Keywords = "Set the led to the supplied color"), Category = "ChromaSDK")
 	static const TArray<FChromaSDKColors>& SetMouseLedColor(const EChromaSDKMouseLed& led, const FLinearColor& color, UPARAM(ref) TArray<FChromaSDKColors>& colors);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsInitialized", Keywords = "Return true if the blueprint library is initialized"), Category = "ChromaSDK")
+	static bool IsInitialized();
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", Keywords = "Initialize the ChromaSDK"), Category = "ChromaSDK")
 	static int ChromaSDKInit();
 
@@ -95,5 +98,7 @@ private:
 	static void ToEffect(const FString& effectString, RZEFFECTID& effectId);
 	static std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> _sKeyboardEnumMap;
 	static std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2> _sMouseEnumMap;
+
+	static bool _sInitialized;
 #endif
 };
