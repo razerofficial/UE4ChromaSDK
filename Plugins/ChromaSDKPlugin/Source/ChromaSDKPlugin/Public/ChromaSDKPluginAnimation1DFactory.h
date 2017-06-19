@@ -3,10 +3,10 @@
 #pragma once
 
 #include "UnrealEd.h"
-#include "ChromaSDKPluginAnimation1DObjectFactory.generated.h"
+#include "ChromaSDKPluginAnimation1DFactory.generated.h"
 
 UCLASS()
-class UChromaSDKPluginAnimation1DObjectFactory : public UFactory
+class UChromaSDKPluginAnimation1DFactory : public UFactory
 {
 	GENERATED_UCLASS_BODY()
 

@@ -12,10 +12,28 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
 {
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty"));
+	int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(Device);
+	int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(Device);
 	for (int i = 0; i < Frames.Num(); ++i)
 	{
 		FChromaSDKColorFrame2D& frame = Frames[i];
-		frame.Colors = UChromaSDKPluginBPLibrary::CreateRandomColors2D(Device);
+		TArray<FChromaSDKColors>& rows = frame.Colors;
+		if (rows.Num() != maxRow)
+		{
+			frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(Device);
+		}
+		else
+		{
+			for (int j = 0; j < maxRow; ++j)
+			{
+				FChromaSDKColors& col = rows[j];
+				if (col.Colors.Num() != maxColumn)
+				{
+					frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(Device);
+					break;
+				}
+			}
+		}
 	}
 }
 #endif

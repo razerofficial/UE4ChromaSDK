@@ -1,10 +1,11 @@
 ﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKPluginAnimation1DObjectFactory.h"
+#include "ChromaSDKPluginAnimation1DFactory.h"
+#include "ChromaSDKPluginAnimation1DObject.h"
 
 #define LOCTEXT_NAMESPACE "ChromaSDKPluginAnimation1DObject"
 
-UChromaSDKPluginAnimation1DObjectFactory::UChromaSDKPluginAnimation1DObjectFactory(const FObjectInitializer& ObjectInitializer)
+UChromaSDKPluginAnimation1DFactory::UChromaSDKPluginAnimation1DFactory(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	bCreateNew = true;
@@ -12,7 +13,7 @@ UChromaSDKPluginAnimation1DObjectFactory::UChromaSDKPluginAnimation1DObjectFacto
 	SupportedClass = UChromaSDKPluginAnimation1DObject::StaticClass();
 }
 
-UObject* UChromaSDKPluginAnimation1DObjectFactory::FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)
+UObject* UChromaSDKPluginAnimation1DFactory::FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)
 {
 	UChromaSDKPluginAnimation1DObject* NewObjectAsset = ConstructObject<UChromaSDKPluginAnimation1DObject>(Class, InParent, Name, Flags | RF_Transactional);
 	return NewObjectAsset;
