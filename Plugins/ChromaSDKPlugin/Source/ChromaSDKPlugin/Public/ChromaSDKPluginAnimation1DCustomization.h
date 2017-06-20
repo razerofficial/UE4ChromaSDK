@@ -15,5 +15,10 @@ public:
 	virtual void CustomizeChildren(TSharedRef<class IPropertyHandle> StructPropertyHandle, class IDetailChildrenBuilder& StructBuilder, IPropertyTypeCustomizationUtils& StructCustomizationUtils) override;
 
 private:
-	TSharedPtr<IPropertyHandle> SomeUPropertyHandle;
+	/** Chroma animation 1D struct handle */
+	TSharedPtr<IPropertyHandle> StructPropertyHandle;
+
+	TSharedPtr<IPropertyHandle> DeviceHandle;
+	TSharedPtr<IPropertyHandle> FramesHandle;
+	TSharedPtr<IPropertyHandle> CurveHandle;
 };
