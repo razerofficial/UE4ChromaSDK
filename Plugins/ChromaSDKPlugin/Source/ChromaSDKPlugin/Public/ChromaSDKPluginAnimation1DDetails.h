@@ -12,5 +12,7 @@ public:
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
-	FReply OnClickedSetButton();
+	FReply OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha);
+
+	FReply OnClickSetButton();
 };
