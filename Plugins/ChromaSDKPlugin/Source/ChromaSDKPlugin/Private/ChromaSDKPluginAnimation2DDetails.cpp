@@ -209,7 +209,8 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 												{
 													// would rather update existing color
 													TSharedRef<SColorBlock> newColor = SNew(SColorBlock)
-														.Color(color);
+														.Color(color)
+														.OnMouseButtonDown(this, &FChromaSDKPluginAnimation2DDetails::OnMouseButtonDownColor);
 
 													border->ClearContent();
 													border->SetContent(newColor);
@@ -226,6 +227,13 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 			}
 		}
 	}
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnMouseButtonDownColor(const FGeometry& geometry, const FPointerEvent& pointer)
+{
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnMouseButtonDownColor row=%d col=%d"), 0, 0);
+
+	return FReply::Handled();
 }
 
 TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem)
