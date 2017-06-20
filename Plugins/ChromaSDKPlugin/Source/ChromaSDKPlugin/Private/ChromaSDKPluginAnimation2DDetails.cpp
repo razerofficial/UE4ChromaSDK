@@ -50,6 +50,80 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	//You can get properties using the detailbuilder
 	//MyProperty= DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(MyClass, MyClassPropertyName));
 
+	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Keyboard preview", "Keyboard preview").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Keyboard preview", "Keyboard preview"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 2.f)
+			.FillColumn(1, 1.f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SOverlay)
+				+ SOverlay::Slot()
+				.HAlign(HAlign_Center)
+				.VAlign(VAlign_Center)
+				[
+					SNew(SBorder)
+					.Padding(1.0f)
+					.BorderBackgroundColor(FLinearColor::Black)
+					[
+						SNew(SColorBlock)
+					]
+				]
+			]
+			+ SGridPanel::Slot(0, 1)
+			[
+				SNew(SOverlay)
+				+ SOverlay::Slot()
+				.HAlign(HAlign_Center)
+				.VAlign(VAlign_Center)
+				[
+					SNew(SBorder)
+					.Padding(1.0f)
+					.BorderBackgroundColor(FLinearColor::Black)
+					[
+						SNew(SColorBlock)
+					]
+				]
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SOverlay)
+				+ SOverlay::Slot()
+				.HAlign(HAlign_Center)
+				.VAlign(VAlign_Center)
+				[
+					SNew(SBorder)
+					.Padding(1.0f)
+					.BorderBackgroundColor(FLinearColor::Black)
+					[
+						SNew(SColorBlock)
+					]
+				]
+			]
+			+ SGridPanel::Slot(1, 1)
+			[
+				SNew(SOverlay)
+				+ SOverlay::Slot()
+				.HAlign(HAlign_Center)
+				.VAlign(VAlign_Center)
+				[
+					SNew(SBorder)
+					.Padding(1.0f)
+					.BorderBackgroundColor(FLinearColor::Black)
+					[
+						SNew(SColorBlock)
+					]
+				]
+			]
+		];
+
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
 		.NameContent()
 		[
