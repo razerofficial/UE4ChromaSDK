@@ -24,6 +24,8 @@ public class ChromaSDKPlugin : ModuleRules
 				// ... add other private include paths required here ...
 				"AssetTools",
 				"EditorStyle",
+				"PropertyEditor",
+				"Editor/DetailCustomizations/Private",
 			}
 			);
 			
@@ -50,6 +52,8 @@ public class ChromaSDKPlugin : ModuleRules
 				// ... add private dependencies that you statically link with here ...	
 				"AssetTools",
 				"EditorStyle",
+				"PropertyEditor",
+				"DetailCustomizations",
 			}
 			);
 		
