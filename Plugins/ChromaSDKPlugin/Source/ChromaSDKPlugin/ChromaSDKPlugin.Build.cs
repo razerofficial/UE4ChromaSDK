@@ -23,9 +23,9 @@ public class ChromaSDKPlugin : ModuleRules
 				
 				// ... add other private include paths required here ...
 				"AssetTools",
+				"Editor/DetailCustomizations/Private",
 				"EditorStyle",
 				"PropertyEditor",
-				"Editor/DetailCustomizations/Private",
 			}
 			);
 			
@@ -36,6 +36,7 @@ public class ChromaSDKPlugin : ModuleRules
 				"Core",
 				
 				// ... add other public dependencies that you statically link with here ...
+				"AppFramework",
 				"UnrealEd",
 			}
 			);

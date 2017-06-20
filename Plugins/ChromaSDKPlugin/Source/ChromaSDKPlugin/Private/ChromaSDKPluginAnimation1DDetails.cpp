@@ -6,6 +6,8 @@
 #include "DetailWidgetRow.h"
 #include "Widgets/Colors/SColorBlock.h"
 #include "Widgets/Input/SButton.h"
+#include "Widgets/Colors/SColorPicker.h"
+#include "SlateApplication.h"
 
 #define LOCTEXT_NAMESPACE "ChromaAnimation1DDetails"
 
@@ -27,8 +29,8 @@ void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Extra info", "Row header name").ToString()))
 		.NameContent()
 		[
-			SNew(SColorBlock)
-			.OnMouseButtonDown(this, &FChromaSDKPluginAnimation1DDetails::OnClickColor, false)
+			SNew(SColorPicker)
+			//.OnMouseButtonDown(this, &FChromaSDKPluginAnimation1DDetails::OnClickColor, false)
 		]
 	.ValueContent().MinDesiredWidth(100)
 		[
@@ -41,6 +43,32 @@ void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 FReply FChromaSDKPluginAnimation1DDetails::OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha)
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation1DDetails::OnClickColor"));
+
+	FColorPickerArgs PickerArgs;
+	{
+		/*
+		PickerArgs.bUseAlpha = !bIgnoreAlpha;
+		PickerArgs.bOnlyRefreshOnMouseUp = false;
+		PickerArgs.bOnlyRefreshOnOk = bRefreshOnlyOnOk;
+		PickerArgs.sRGBOverride = sRGBOverride;
+		PickerArgs.DisplayGamma = TAttribute<float>::Create(TAttribute<float>::FGetter::CreateUObject(GEngine, &UEngine::GetDisplayGamma));
+		PickerArgs.OnColorCommitted = FOnLinearColorValueChanged::CreateSP(this, &FColorStructCustomization::OnSetColorFromColorPicker);
+		PickerArgs.OnColorPickerCancelled = FOnColorPickerCancelled::CreateSP(this, &FColorStructCustomization::OnColorPickerCancelled);
+		PickerArgs.OnInteractivePickBegin = FSimpleDelegate::CreateSP(this, &FColorStructCustomization::OnColorPickerInteractiveBegin);
+		PickerArgs.OnInteractivePickEnd = FSimpleDelegate::CreateSP(this, &FColorStructCustomization::OnColorPickerInteractiveEnd);
+		PickerArgs.InitialColorOverride = InitialColor;
+		PickerArgs.ParentWidget = ColorPickerParentWidget;
+
+		FWidgetPath ParentWidgetPath;
+		if (FSlateApplication::Get().FindPathToWidget(ColorPickerParentWidget.ToSharedRef(), ParentWidgetPath))
+		{
+			PickerArgs.bOpenAsMenu = FSlateApplication::Get().FindMenuInWidgetPath(ParentWidgetPath).IsValid();
+		}
+		*/
+	}
+
+	OpenColorPicker(PickerArgs);
+
 	return FReply::Handled();
 }
 
