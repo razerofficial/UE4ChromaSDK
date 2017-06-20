@@ -28,9 +28,9 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		[
 			SNew(STextBlock)
 			.Text(LOCTEXT("Extra info", "Custom row header name"))
-		.Font(IDetailLayoutBuilder::GetDetailFont())
+			.Font(IDetailLayoutBuilder::GetDetailFont())
 		]
-	.ValueContent().MinDesiredWidth(100)
+		.ValueContent().MinDesiredWidth(100)
 		[
 			SNew(SButton)
 			.Text(LOCTEXT("Button Chroma Set", "Set"))

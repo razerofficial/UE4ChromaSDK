@@ -37,6 +37,7 @@ public class ChromaSDKPlugin : ModuleRules
 				
 				// ... add other public dependencies that you statically link with here ...
 				"AppFramework",
+				"InputCore",
 				"UnrealEd",
 			}
 			);

@@ -12,7 +12,12 @@ public:
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
+	TSharedRef<SWidget> GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem);
+
 	FReply OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha);
 
 	FReply OnClickSetButton();
+
+private:
+	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
 };
