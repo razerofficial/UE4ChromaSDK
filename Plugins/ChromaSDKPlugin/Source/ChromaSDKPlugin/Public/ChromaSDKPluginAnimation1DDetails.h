@@ -3,6 +3,7 @@
 #pragma once
 
 #include "IDetailCustomization.h"
+#include "ChromaSDKPluginTypes.h"
 
 class FChromaSDKPluginAnimation1DDetails : public IDetailCustomization
 {
@@ -12,7 +13,13 @@ public:
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
-	FReply OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha);
+	void OnColorCommitted(FLinearColor color);
 
 	FReply OnClickSetButton();
+
+private:
+
+	TArray<TWeakObjectPtr<UObject>> ObjectsBeingCustomized;
+
+	FLinearColor _mColor;
 };

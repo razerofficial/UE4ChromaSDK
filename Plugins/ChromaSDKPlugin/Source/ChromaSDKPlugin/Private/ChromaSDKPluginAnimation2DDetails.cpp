@@ -81,7 +81,6 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		[
 			SNew(SColorPicker)
 			.OnColorCommitted(this, &FChromaSDKPluginAnimation2DDetails::OnColorCommitted)
-			//.OnMouseButtonDown(this, &FChromaSDKPluginAnimation2DDetails::OnClickColor, false)
 		];
 
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Apply color on the keyboard", "Apply color on the keyboard").ToString()))
@@ -128,49 +127,15 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPt
 	}
 }
 
-
 void FChromaSDKPluginAnimation2DDetails::OnColorCommitted(FLinearColor color)
 {
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnColorCommitted"));
-
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnColorCommitted"));
 	_mColor = color;
-}
-
-FReply FChromaSDKPluginAnimation2DDetails::OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha)
-{
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickColor"));
-
-	FColorPickerArgs PickerArgs;
-	{
-		/*
-		PickerArgs.bUseAlpha = !bIgnoreAlpha;
-		PickerArgs.bOnlyRefreshOnMouseUp = false;
-		PickerArgs.bOnlyRefreshOnOk = bRefreshOnlyOnOk;
-		PickerArgs.sRGBOverride = sRGBOverride;
-		PickerArgs.DisplayGamma = TAttribute<float>::Create(TAttribute<float>::FGetter::CreateUObject(GEngine, &UEngine::GetDisplayGamma));
-		PickerArgs.OnColorCommitted = FOnLinearColorValueChanged::CreateSP(this, &FColorStructCustomization::OnSetColorFromColorPicker);
-		PickerArgs.OnColorPickerCancelled = FOnColorPickerCancelled::CreateSP(this, &FColorStructCustomization::OnColorPickerCancelled);
-		PickerArgs.OnInteractivePickBegin = FSimpleDelegate::CreateSP(this, &FColorStructCustomization::OnColorPickerInteractiveBegin);
-		PickerArgs.OnInteractivePickEnd = FSimpleDelegate::CreateSP(this, &FColorStructCustomization::OnColorPickerInteractiveEnd);
-		PickerArgs.InitialColorOverride = InitialColor;
-		PickerArgs.ParentWidget = ColorPickerParentWidget;
-
-		FWidgetPath ParentWidgetPath;
-		if (FSlateApplication::Get().FindPathToWidget(ColorPickerParentWidget.ToSharedRef(), ParentWidgetPath))
-		{
-		PickerArgs.bOpenAsMenu = FSlateApplication::Get().FindMenuInWidgetPath(ParentWidgetPath).IsValid();
-		}
-		*/
-	}
-
-	OpenColorPicker(PickerArgs);
-
-	return FReply::Handled();
 }
 
 FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 {
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)

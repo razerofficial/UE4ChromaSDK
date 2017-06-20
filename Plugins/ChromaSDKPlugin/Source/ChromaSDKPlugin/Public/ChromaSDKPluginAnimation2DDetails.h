@@ -17,7 +17,6 @@ public:
 	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
 
 	void OnColorCommitted(FLinearColor color);
-	FReply OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha);
 
 	FReply OnClickSetButton();
 
