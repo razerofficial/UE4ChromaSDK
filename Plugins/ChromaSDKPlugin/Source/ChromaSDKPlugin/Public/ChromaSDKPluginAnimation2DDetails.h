@@ -20,9 +20,9 @@ public:
 
 	FReply OnClickSetButton();
 
-	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
-
 private:
+
+	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
 	
 	TArray<TWeakObjectPtr<UObject>> ObjectsBeingCustomized;
 
