@@ -1,6 +1,8 @@
 ﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "ChromaSDKPluginAnimation2DDetails.h"
+#include "ChromaSDKPluginAnimation2DObject.h"
+#include "ChromaSDKPluginBPLibrary.h"
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
@@ -39,6 +41,9 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::CustomizeDetails"));
 
+	ObjectsBeingCustomized.Empty();
+	DetailBuilder.GetObjectsBeingCustomized(/*out*/ ObjectsBeingCustomized);
+
 	// Create a category so this is displayed early in the properties
 	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("CategoryName", LOCTEXT("Extra info", "Extra info"), ECategoryPriority::Important);
 
@@ -75,6 +80,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		.ValueContent().MinDesiredWidth(300)
 		[
 			SNew(SColorPicker)
+			.OnColorCommitted(this, &FChromaSDKPluginAnimation2DDetails::OnColorCommitted)
 			//.OnMouseButtonDown(this, &FChromaSDKPluginAnimation2DDetails::OnClickColor, false)
 		];
 
@@ -122,6 +128,14 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPt
 	}
 }
 
+
+void FChromaSDKPluginAnimation2DDetails::OnColorCommitted(FLinearColor color)
+{
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnColorCommitted"));
+
+	_mColor = color;
+}
+
 FReply FChromaSDKPluginAnimation2DDetails::OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha)
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickColor"));
@@ -157,6 +171,33 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickColor(const FGeometry& MyGeome
 FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetButton"));
+
+	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
+	if (!initialized)
+	{
+		UChromaSDKPluginBPLibrary::ChromaSDKInit();
+	}
+
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				TArray<FChromaSDKColors>& colors = frames[0].Colors;
+				UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(_mSelectedKey, _mColor, colors);
+				FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(device, colors);
+				if (effect.Result == 0)
+				{
+					UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+					UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
+				}
+			}
+		}
+	}
 	return FReply::Handled();
 }
 

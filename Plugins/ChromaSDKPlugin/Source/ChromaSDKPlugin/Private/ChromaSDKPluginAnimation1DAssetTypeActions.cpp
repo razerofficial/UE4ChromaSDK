@@ -173,6 +173,7 @@ void FChromaSDKPluginAnimation1DAssetTypeActions::ExecutePlayEffect(TArray<TWeak
 				if (effect.Result == 0)
 				{
 					UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+					UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
 				}
 			}
 		}
