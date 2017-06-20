@@ -319,7 +319,10 @@ const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(c
 	}
 
 	ChromaSDK::Keyboard::RZKEY rzkey = _sKeyboardEnumMap[key];
-	colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = color;
+	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+	{
+		colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = color;
+	}
 #endif
 	return colors;
 }
