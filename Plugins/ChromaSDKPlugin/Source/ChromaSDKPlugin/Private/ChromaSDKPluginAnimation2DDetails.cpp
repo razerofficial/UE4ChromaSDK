@@ -10,6 +10,7 @@
 #include "Widgets/Colors/SColorPicker.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SComboBox.h"
+#include "Widgets/Layout/SGridPanel.h"
 #include "SlateApplication.h"
 
 #define LOCTEXT_NAMESPACE "ChromaAnimation2DDetails"
@@ -47,54 +48,22 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	// Create a category so this is displayed early in the properties
 	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("CategoryName", LOCTEXT("Extra info", "Extra info"), ECategoryPriority::Important);
 
-	if (ObjectsBeingCustomized.Num() > 0)
-	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			animation->Frames.Num() > 0)
-		{
-			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(EChromaSDKDevice2DEnum::DE_Keyboard);
-			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(EChromaSDKDevice2DEnum::DE_Keyboard);
-			FDetailWidgetRow& widgetRow = MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Keyboard preview", "Keyboard preview").ToString()));
-			widgetRow.NameContent()
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("Keyboard preview", "Keyboard preview"))
-				.Font(IDetailLayoutBuilder::GetDetailFont())
-			];
-			widgetRow.ValueContent().MinDesiredWidth(300);
-			TSharedRef<SGridPanel> grid = SNew(SGridPanel);
-			FChromaSDKColorFrame2D& frame = (*animation).Frames[0];
-			TArray<FChromaSDKColors>& colors = frame.Colors;
-			for (int i = 0; i < maxRow; ++i)
-			{
-				FChromaSDKColors& row = colors[i];
-				for (int j = 0; j < maxColumn; ++j)
-				{
-					FLinearColor& color = row.Colors[j];
-					TSharedRef<SOverlay> overlay = SNew(SOverlay)
-						+ SOverlay::Slot()
-						.HAlign(HAlign_Center)
-						.VAlign(VAlign_Center)
-						[
-							SNew(SBorder)
-							.Padding(1.0f)
-							.BorderBackgroundColor(FLinearColor::Black)
-							[
-								SNew(SColorBlock)
-								.Color(color)
-							]
-						];
-					(*grid).AddSlot(j, i)
-						.AttachWidget(overlay);
-				}
-			}
-			widgetRow.ValueContent()
-			[
-				grid
-			];
-		}
-	}
+	FDetailWidgetRow& widgetRow = MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Keyboard preview", "Keyboard preview").ToString()));
+	widgetRow.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Keyboard preview", "Keyboard preview"))
+		.Font(IDetailLayoutBuilder::GetDetailFont())
+		];
+	widgetRow.ValueContent().MinDesiredWidth(300);
+	TSharedRef<SGridPanel> grid = SNew(SGridPanel);
+	_mGrid = grid;
+	widgetRow.ValueContent()
+	[
+		grid
+	];
+
+	RefreshKeyboard();
 
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
 		.NameContent()
@@ -142,6 +111,49 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.Text(LOCTEXT("Button Chroma Set", "Set"))
 			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetButton)
 		];
+}
+
+void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
+{
+	// clear the grid
+	(*_mGrid).ClearChildren();
+
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr &&
+			animation->Frames.Num() > 0)
+		{
+			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(EChromaSDKDevice2DEnum::DE_Keyboard);
+			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(EChromaSDKDevice2DEnum::DE_Keyboard);
+
+			FChromaSDKColorFrame2D& frame = (*animation).Frames[0];
+			TArray<FChromaSDKColors>& colors = frame.Colors;
+			for (int i = 0; i < maxRow; ++i)
+			{
+				FChromaSDKColors& row = colors[i];
+				for (int j = 0; j < maxColumn; ++j)
+				{
+					FLinearColor& color = row.Colors[j];
+					TSharedRef<SOverlay> overlay = SNew(SOverlay)
+						+ SOverlay::Slot()
+						.HAlign(HAlign_Center)
+						.VAlign(VAlign_Center)
+						[
+							SNew(SBorder)
+							.Padding(1.0f)
+						.BorderBackgroundColor(FLinearColor::Black)
+						[
+							SNew(SColorBlock)
+							.Color(color)
+						]
+						];
+					(*_mGrid).AddSlot(j, i)
+						.AttachWidget(overlay);
+				}
+			}
+		}
+	}
 }
 
 TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem)
@@ -209,6 +221,10 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 			}
 		}
 	}
+
+	// refresh the UI
+	RefreshKeyboard();
+
 	return FReply::Handled();
 }
 

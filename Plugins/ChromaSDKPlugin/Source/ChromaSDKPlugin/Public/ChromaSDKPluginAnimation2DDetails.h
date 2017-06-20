@@ -4,6 +4,7 @@
 
 #include "IDetailCustomization.h"
 #include "ChromaSDKPluginTypes.h"
+#include "Widgets/Layout/SGridPanel.h"
 
 class FChromaSDKPluginAnimation2DDetails : public IDetailCustomization
 {
@@ -12,6 +13,8 @@ public:
 
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
+
+	void RefreshKeyboard();
 
 	TSharedRef<SWidget> GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem);
 	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
@@ -22,8 +25,10 @@ public:
 
 private:
 
+	TSharedPtr<SGridPanel> _mGrid;
+
 	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
-	
+
 	TArray<TWeakObjectPtr<UObject>> ObjectsBeingCustomized;
 
 	EChromaSDKKeyboardKey _mSelectedKey;
