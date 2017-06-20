@@ -12,6 +12,7 @@ TSharedRef<IPropertyTypeCustomization> FChromaSDKPluginAnimation2DCustomization:
 
 void FChromaSDKPluginAnimation2DCustomization::CustomizeHeader(TSharedRef<class IPropertyHandle> StructPropertyHandle, class FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
 {
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DCustomization::CustomizeHeader"));
 }
 
 void FChromaSDKPluginAnimation2DCustomization::CustomizeChildren(TSharedRef<class IPropertyHandle> StructPropertyHandle, class IDetailChildrenBuilder& StructBuilder, IPropertyTypeCustomizationUtils& StructCustomizationUtils)

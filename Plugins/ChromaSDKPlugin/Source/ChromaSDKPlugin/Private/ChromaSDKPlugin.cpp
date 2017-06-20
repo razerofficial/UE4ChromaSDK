@@ -2,7 +2,10 @@
 
 #include "ChromaSDKPlugin.h"
 #include "ChromaSDKPluginAnimation1DAssetTypeActions.h"
+#include "ChromaSDKPluginAnimation1DCustomization.h"
 #include "ChromaSDKPluginAnimation2DAssetTypeActions.h"
+#include "ChromaSDKPluginAnimation2DCustomization.h"
+#include "PropertyEditorModule.h"
 
 #define LOCTEXT_NAMESPACE "FChromaSDKPluginModule"
 
@@ -48,6 +51,14 @@ void FChromaSDKPluginModule::StartupModule()
 	assetTools.RegisterAssetTypeActions(MakeShareable(new FChromaSDKPluginAnimation1DAssetTypeActions));
 	assetTools.RegisterAssetTypeActions(MakeShareable(new FChromaSDKPluginAnimation2DAssetTypeActions));
 	// end of register the asset type
+
+	// Register custom views
+	FPropertyEditorModule& propertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+	propertyModule.RegisterCustomPropertyTypeLayout("ChromaAnimation1D", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DCustomization::MakeInstance));
+	propertyModule.RegisterCustomPropertyTypeLayout("ChromaAnimation2D", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DCustomization::MakeInstance));
+	//PropertyModule.RegisterCustomClassLayout("ChromaAnimation1D", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DCustomization::MakeInstance));
+	//PropertyModule.RegisterCustomClassLayout("ChromaAnimation2D", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DCustomization::MakeInstance));
+	// end of register custom views
 
 #if PLATFORM_WINDOWS
 	_mLibraryChroma = LoadLibrary(CHROMASDKDLL);

@@ -13,6 +13,8 @@ TSharedRef<IPropertyTypeCustomization> FChromaSDKPluginAnimation1DCustomization:
 
 void FChromaSDKPluginAnimation1DCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> InStructPropertyHandle, FDetailWidgetRow& InHeaderRow, IPropertyTypeCustomizationUtils& InStructCustomizationUtils)
 {
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation1DCustomization::CustomizeHeader"));
+
 	StructPropertyHandle = InStructPropertyHandle;
 	IPropertyHandle* handle = StructPropertyHandle.Get();
 	if (handle)
