@@ -56,10 +56,10 @@ void FChromaSDKPluginModule::StartupModule()
 
 	// Register custom views
 	FPropertyEditorModule& propertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
-	propertyModule.RegisterCustomPropertyTypeLayout("ChromaAnimation1D", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DCustomization::MakeInstance));
-	propertyModule.RegisterCustomPropertyTypeLayout("ChromaAnimation2D", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DCustomization::MakeInstance));
-	propertyModule.RegisterCustomClassLayout("ChromaSDKPluginAnimation1DDetails", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DDetails::MakeInstance));
-	propertyModule.RegisterCustomClassLayout("ChromaSDKPluginAnimation2DDetails", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DDetails::MakeInstance));
+	propertyModule.RegisterCustomPropertyTypeLayout("ChromaSDKPluginAnimation1DObject", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DCustomization::MakeInstance));
+	propertyModule.RegisterCustomPropertyTypeLayout("ChromaSDKPluginAnimation2DObject", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DCustomization::MakeInstance));
+	propertyModule.RegisterCustomClassLayout("ChromaSDKPluginAnimation1DObject", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DDetails::MakeInstance));
+	propertyModule.RegisterCustomClassLayout("ChromaSDKPluginAnimation2DObject", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DDetails::MakeInstance));
 	// end of register custom views
 
 #if PLATFORM_WINDOWS
