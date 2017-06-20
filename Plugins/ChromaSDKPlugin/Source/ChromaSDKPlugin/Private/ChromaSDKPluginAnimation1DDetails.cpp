@@ -23,9 +23,9 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation1DDetails::MakeInstanc
 	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKKeyboardKey"), true);
 	if (enumPtr)
 	{
-		for (int64 k = (int64)EChromaSDKKeyboardKey::KK_ESC; k <= (int64)EChromaSDKKeyboardKey::KK_INVALID; ++k)
+		for (int64 k = 0; k < enumPtr->NumEnums(); ++k)
 		{
-			FString text = enumPtr->GetNameByValue(k).ToString();
+			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
 			details.ChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
 		}
 	}
