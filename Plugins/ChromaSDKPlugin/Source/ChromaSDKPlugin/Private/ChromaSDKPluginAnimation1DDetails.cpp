@@ -56,7 +56,7 @@ void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.InitiallySelectedItem(ChromaSDKKeyboardKeys[0])
 			.OptionsSource(&ChromaSDKKeyboardKeys)
 			.OnGenerateWidget(this, &FChromaSDKPluginAnimation1DDetails::GenerateChromaSDKKeyboardKeys)
-			//.OnSelectionChanged(this, &FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys)
+			.OnSelectionChanged(this, &FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys)
 			[
 				SNew(STextBlock)
 				.Text(LOCTEXT("Select a key", "Select a key"))
@@ -95,6 +95,13 @@ TSharedRef<SWidget> FChromaSDKPluginAnimation1DDetails::GenerateChromaSDKKeyboar
 {
 	return SNew(STextBlock)
 		.Text(FText::FromString(*InItem));
+}
+
+void FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
+{
+	FString selectedItem = *Item;
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys Selected=%s"),
+		*selectedItem);
 }
 
 FReply FChromaSDKPluginAnimation1DDetails::OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha)
