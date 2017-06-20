@@ -241,7 +241,7 @@ FChromaSDKColors UChromaSDKPluginBPLibrary::CreateColors1D(const EChromaSDKDevic
 	FChromaSDKColors result = FChromaSDKColors();
 	for (int i = 0; i < elements; ++i)
 	{
-		FLinearColor color = FLinearColor(0, 0, 0);
+		FLinearColor color = FLinearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		result.Colors.Add(color);
 	}
 	return result;
@@ -257,7 +257,7 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateColors2D(const EChroma
 		FChromaSDKColors row = FChromaSDKColors();
 		for (int j = 0; j < maxColumns; ++j)
 		{
-			FLinearColor color = FLinearColor(0, 0, 0);
+			FLinearColor color = FLinearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			row.Colors.Add(color);
 		}
 		result.Add(row);
@@ -274,7 +274,8 @@ FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChromaSD
 		float red = FMath::RandRange(0.0f, 1.0f);
 		float green = FMath::RandRange(0.0f, 1.0f);
 		float blue = FMath::RandRange(0.0f, 1.0f);
-		FLinearColor color = FLinearColor(red, green, blue);
+		float alpha = 1.0f;
+		FLinearColor color = FLinearColor(red, green, blue, alpha);
 		result.Colors.Add(color);
 	}
 	return result;
@@ -293,7 +294,8 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(const E
 			float red = FMath::RandRange(0.0f, 1.0f);
 			float green = FMath::RandRange(0.0f, 1.0f);
 			float blue = FMath::RandRange(0.0f, 1.0f);
-			FLinearColor color = FLinearColor(red, green, blue);
+			float alpha = 1.0f;
+			FLinearColor color = FLinearColor(red, green, blue, alpha);
 			row.Colors.Add(color);
 		}
 		result.Add(row);
