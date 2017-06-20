@@ -3,6 +3,7 @@
 #pragma once
 
 #include "IDetailCustomization.h"
+#include "ChromaSDKPluginTypes.h"
 
 class FChromaSDKPluginAnimation2DDetails : public IDetailCustomization
 {
@@ -12,5 +13,15 @@ public:
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
-	FReply OnClickedSetButton();
+	TSharedRef<SWidget> GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem);
+	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
+
+	FReply OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha);
+
+	FReply OnClickSetButton();
+
+	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
+
+private:
+	EChromaSDKKeyboardKey _mSelectedKey;
 };

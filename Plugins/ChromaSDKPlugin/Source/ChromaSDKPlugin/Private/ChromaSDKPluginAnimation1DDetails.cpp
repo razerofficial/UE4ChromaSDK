@@ -15,22 +15,7 @@
 
 TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation1DDetails::MakeInstance()
 {
-	TSharedRef<FChromaSDKPluginAnimation1DDetails> instance = MakeShareable(new FChromaSDKPluginAnimation1DDetails);
-
-	FChromaSDKPluginAnimation1DDetails& details = instance.Get();
-
-	//populate list of enums
-	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKKeyboardKey"), true);
-	if (enumPtr)
-	{
-		for (int64 k = 0; k < enumPtr->NumEnums(); ++k)
-		{
-			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
-			details.ChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
-		}
-	}
-
-	return instance;
+	return MakeShareable(new FChromaSDKPluginAnimation1DDetails);
 }
 
 void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
@@ -42,26 +27,6 @@ void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 	//You can get properties using the detailbuilder
 	//MyProperty= DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(MyClass, MyClassPropertyName));
-
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Select a key", "Select a key"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SComboBox<TSharedPtr<FString>>)
-			.InitiallySelectedItem(ChromaSDKKeyboardKeys[0])
-			.OptionsSource(&ChromaSDKKeyboardKeys)
-			.OnGenerateWidget(this, &FChromaSDKPluginAnimation1DDetails::GenerateChromaSDKKeyboardKeys)
-			.OnSelectionChanged(this, &FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys)
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("Select a key", "Select a key"))
-			]
-		];
 
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key color", "Select a key color").ToString()))
 		.NameContent()
@@ -89,19 +54,6 @@ void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.Text(LOCTEXT("Button Chroma Set", "Set"))
 			.OnClicked(this, &FChromaSDKPluginAnimation1DDetails::OnClickSetButton)
 		];
-}
-
-TSharedRef<SWidget> FChromaSDKPluginAnimation1DDetails::GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem)
-{
-	return SNew(STextBlock)
-		.Text(FText::FromString(*InItem));
-}
-
-void FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
-{
-	FString selectedItem = *Item;
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation1DDetails::OnChangeChromaSDKKeyboardKeys Selected=%s"),
-		*selectedItem);
 }
 
 FReply FChromaSDKPluginAnimation1DDetails::OnClickColor(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent, bool bCheckAlpha)
