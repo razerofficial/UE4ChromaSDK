@@ -4,7 +4,7 @@
 #include "PropertyHandle.h"
 #include "SlateFontInfoCustomization.h"
 
-#define LOCTEXT_NAMESPACE "ChromaAnimation1DDetails"
+#define LOCTEXT_NAMESPACE "ChromaAnimation1DCustomization"
 
 TSharedRef<IPropertyTypeCustomization> FChromaSDKPluginAnimation1DCustomization::MakeInstance()
 {

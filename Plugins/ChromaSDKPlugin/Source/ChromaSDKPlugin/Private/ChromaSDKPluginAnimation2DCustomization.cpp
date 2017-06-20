@@ -3,7 +3,7 @@
 #include "ChromaSDKPluginAnimation2DCustomization.h"
 #include "SlateFontInfoCustomization.h"
 
-#define LOCTEXT_NAMESPACE "ChromaAnimation2DDetails"
+#define LOCTEXT_NAMESPACE "ChromaAnimation2DCustomization"
 
 TSharedRef<IPropertyTypeCustomization> FChromaSDKPluginAnimation2DCustomization::MakeInstance()
 {
