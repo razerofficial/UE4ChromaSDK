@@ -11,4 +11,6 @@ public:
 
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
+
+	FReply OnClickedSetButton();
 };

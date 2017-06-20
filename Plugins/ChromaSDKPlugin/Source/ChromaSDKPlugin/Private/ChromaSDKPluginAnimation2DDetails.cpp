@@ -4,6 +4,7 @@
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
+#include "Widgets/Input/SButton.h"
 
 #define LOCTEXT_NAMESPACE "ChromaAnimation2DDetails"
 
@@ -29,12 +30,17 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.Text(LOCTEXT("Extra info", "Custom row header name"))
 		.Font(IDetailLayoutBuilder::GetDetailFont())
 		]
-	.ValueContent().MinDesiredWidth(500)
+	.ValueContent().MinDesiredWidth(100)
 		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Extra info", "Custom row content"))
-		.Font(IDetailLayoutBuilder::GetDetailFont())
+			SNew(SButton)
+			.Text(LOCTEXT("Button Chroma Set", "Set"))
+			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickedSetButton)
 		];
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickedSetButton()
+{
+	return FReply::Handled();
 }
 
 #undef LOCTEXT_NAMESPACE
