@@ -2,10 +2,8 @@
 
 #include "ChromaSDKPlugin.h"
 #include "ChromaSDKPluginAnimation1DAssetTypeActions.h"
-#include "ChromaSDKPluginAnimation1DCustomization.h"
 #include "ChromaSDKPluginAnimation1DDetails.h"
 #include "ChromaSDKPluginAnimation2DAssetTypeActions.h"
-#include "ChromaSDKPluginAnimation2DCustomization.h"
 #include "ChromaSDKPluginAnimation2DDetails.h"
 #include "PropertyEditorModule.h"
 
@@ -56,8 +54,6 @@ void FChromaSDKPluginModule::StartupModule()
 
 	// Register custom views
 	FPropertyEditorModule& propertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
-	propertyModule.RegisterCustomPropertyTypeLayout("ChromaSDKPluginAnimation1DObject", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DCustomization::MakeInstance));
-	propertyModule.RegisterCustomPropertyTypeLayout("ChromaSDKPluginAnimation2DObject", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DCustomization::MakeInstance));
 	propertyModule.RegisterCustomClassLayout("ChromaSDKPluginAnimation1DObject", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation1DDetails::MakeInstance));
 	propertyModule.RegisterCustomClassLayout("ChromaSDKPluginAnimation2DObject", FOnGetDetailCustomizationInstance::CreateStatic(&FChromaSDKPluginAnimation2DDetails::MakeInstance));
 	// end of register custom views
