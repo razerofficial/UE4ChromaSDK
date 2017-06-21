@@ -18,5 +18,6 @@ public:
 
 	int Row;
 	int Column;
+	TSharedPtr<SColorBlock> ColorBlock;
 	TSharedPtr<IDetailCustomization> Details;
 };

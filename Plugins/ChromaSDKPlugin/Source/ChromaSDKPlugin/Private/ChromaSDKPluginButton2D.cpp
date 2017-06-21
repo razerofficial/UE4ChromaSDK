@@ -12,6 +12,7 @@ TSharedPtr<SColorBlock> IChromaSDKPluginButton2D::CreateColorBlock(const FLinear
 	TSharedRef<SColorBlock> newColor = SNew(SColorBlock)
 		.Color(color)
 		.OnMouseButtonDown(this, &IChromaSDKPluginButton2D::OnMouseButtonDownColor);
+	ColorBlock = newColor;
 
 	return newColor;
 }

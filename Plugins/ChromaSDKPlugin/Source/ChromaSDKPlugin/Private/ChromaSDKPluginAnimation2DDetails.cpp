@@ -19,8 +19,7 @@
 TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstance()
 {
 	TSharedRef<FChromaSDKPluginAnimation2DDetails> instance = MakeShareable(new FChromaSDKPluginAnimation2DDetails);
-
-	FChromaSDKPluginAnimation2DDetails& details = instance.Get();
+	instance->_mDetails = instance;
 
 	//populate list of enums
 	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKKeyboardKey"), true);
@@ -29,12 +28,12 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstanc
 		for (int k = 0; (k+1) < enumPtr->NumEnums(); ++k)
 		{
 			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
-			details.ChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
+			instance->ChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
 		}
 	}
 
 	//set default key
-	details._mSelectedKey = EChromaSDKKeyboardKey::KK_ESC;
+	instance->_mSelectedKey = EChromaSDKKeyboardKey::KK_ESC;
 
 	return instance;
 }
@@ -43,7 +42,10 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::CustomizeDetails"));
 
-	ObjectsBeingCustomized.Empty();
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		ObjectsBeingCustomized.Empty();
+	}
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ ObjectsBeingCustomized);
 
 	// Create a category so this is displayed early in the properties
@@ -155,9 +157,10 @@ void FChromaSDKPluginAnimation2DDetails::CreateKeyboard()
 void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 {
 	// Remove existing button events
-	//ColorButtons.Clear();
-
-	TSharedRef<FChromaSDKPluginAnimation2DDetails> details = MakeShareable(this);
+	if (ColorButtons.Num() > 0)
+	{
+		ColorButtons.Empty();
+	}
 
 	if (ObjectsBeingCustomized.Num() > 0)
 	{
@@ -217,7 +220,7 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 														IChromaSDKPluginButton2D::MakeInstance();
 													button->Row = i;
 													button->Column = j;
-													button->Details = details;
+													button->Details = _mDetails;
 
 													// would rather update existing color
 													TSharedPtr<SColorBlock> ptrColor = button->CreateColorBlock(color);
@@ -252,7 +255,11 @@ void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
 			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			if (frames.Num() > 0)
+			if (frames.Num() > 0 &&
+				row >= 0 &&
+				row < frames[0].Colors.Num() &&
+				column >= 0 &&
+				column < frames[0].Colors[row].Colors.Num())
 			{
 				TArray<FChromaSDKColors>& colors = frames[0].Colors;
 				colors[row].Colors[column] = _mColor;
