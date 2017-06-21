@@ -15,6 +15,8 @@ public:
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
+	void RefreshFrames();
+
 	void CreateKeyboard();
 	void RefreshKeyboard();
 
@@ -24,6 +26,11 @@ public:
 	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
 
 	void OnColorCommitted(FLinearColor color);
+
+	FReply OnClickPreviousFrame();
+	FReply OnClickNextFrame();
+	FReply OnClickAddFrame();
+	FReply OnClickDeleteFrame();
 
 	FReply OnClickSetButton();
 
@@ -38,6 +45,11 @@ public:
 	FReply OnClickApplyButton();
 
 private:
+
+	int _mCurrentFrame;
+	TSharedPtr<STextBlock> _mTextCurrentFrame;
+	TSharedPtr<STextBlock> _mTextNumberOfFrames;
+	TSharedPtr<STextBlock> _mTextFrameDuration;
 
 	TSharedPtr<FChromaSDKPluginAnimation2DDetails> _mDetails;
 
