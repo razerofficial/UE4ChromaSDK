@@ -217,6 +217,9 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 													TSharedPtr<SColorBlock> ptrColor = button->CreateColorBlock(color);
 													TSharedRef<SColorBlock> newColor = ptrColor.ToSharedRef();
 
+													// store the button event reference
+													ColorButtons.Add(button);
+
 													border->ClearContent();
 													border->SetContent(newColor);
 												}

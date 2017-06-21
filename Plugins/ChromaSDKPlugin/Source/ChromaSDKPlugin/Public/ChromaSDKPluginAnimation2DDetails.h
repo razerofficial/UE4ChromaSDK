@@ -4,6 +4,7 @@
 
 #include "IDetailCustomization.h"
 #include "ChromaSDKPluginTypes.h"
+#include "ChromaSDKPluginButton2D.h"
 #include "Widgets/Layout/SGridPanel.h"
 
 class FChromaSDKPluginAnimation2DDetails : public IDetailCustomization
@@ -27,6 +28,8 @@ public:
 private:
 
 	TSharedPtr<SGridPanel> _mGrid;
+
+	TArray<TSharedRef<IChromaSDKPluginButton2D>> ColorButtons;
 
 	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
 
