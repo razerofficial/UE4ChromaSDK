@@ -121,12 +121,14 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.Text(LOCTEXT("Apply", "Apply"))
 			.Font(IDetailLayoutBuilder::GetDetailFont())
 		]
-		.ValueContent().MinDesiredWidth(30)
+		.ValueContent().MinDesiredWidth(300)
 		[
 			SNew(SGridPanel)
 			.FillColumn(0, 1.0f)
 			.FillColumn(1, 1.0f)
 			.FillColumn(2, 1.0f)
+			.FillColumn(3, 1.0f)
+			.FillColumn(4, 1.0f)
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SButton)
@@ -142,8 +144,20 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			+ SGridPanel::Slot(2, 0)
 			[
 				SNew(SButton)
+				.Text(LOCTEXT("Copy", "Copy"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickCopyButton)
+			]
+			+ SGridPanel::Slot(3, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Paste", "Paste"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPasteButton)
+			]
+			+ SGridPanel::Slot(4, 0)
+			[
+				SNew(SButton)
 				.Text(LOCTEXT("Apply", "Apply"))
-			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
 			]
 		];
 }
@@ -349,6 +363,54 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
 			if (frames.Num() > 0)
 			{
 				frames[0].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+			}
+		}
+	}
+
+	// refresh the UI
+	RefreshKeyboard();
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickCopyButton()
+{
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				_mColors = frames[0].Colors;
+			}
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
+{
+	// refresh the UI
+	RefreshKeyboard();
+
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(device);
+			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0 &&
+				_mColors.Num() == maxRow &&
+				_mColors[0].Colors.Num() == maxColumn)
+			{
+				frames[0].Colors = _mColors;
 			}
 		}
 	}

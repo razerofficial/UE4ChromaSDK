@@ -27,6 +27,10 @@ public:
 
 	FReply OnClickSetButton();
 
+	FReply OnClickCopyButton();
+
+	FReply OnClickPasteButton();
+
 	FReply OnClickClearButton();
 
 	FReply OnClickRandomButton();
@@ -47,4 +51,5 @@ private:
 
 	EChromaSDKKeyboardKey _mSelectedKey;
 	FLinearColor _mColor;
+	TArray<FChromaSDKColors> _mColors;
 };
