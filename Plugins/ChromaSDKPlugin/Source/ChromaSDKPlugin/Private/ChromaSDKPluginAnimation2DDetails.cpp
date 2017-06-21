@@ -49,7 +49,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
 	// Create a category so this is displayed early in the properties
-	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("CategoryName", LOCTEXT("Extra info", "Extra info"), ECategoryPriority::Important);
+	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
 
 	TSharedRef<STextBlock> textCurrentFrame = SNew(STextBlock)
 		.Text(LOCTEXT("0","0"));
