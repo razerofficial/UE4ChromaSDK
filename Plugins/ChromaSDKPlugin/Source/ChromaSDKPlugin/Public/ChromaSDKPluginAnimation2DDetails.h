@@ -17,8 +17,6 @@ public:
 	void CreateKeyboard();
 	void RefreshKeyboard();
 
-	FReply OnMouseButtonDownColor(const FGeometry& geometry, const FPointerEvent& pointer);
-
 	TSharedRef<SWidget> GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem);
 	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
 

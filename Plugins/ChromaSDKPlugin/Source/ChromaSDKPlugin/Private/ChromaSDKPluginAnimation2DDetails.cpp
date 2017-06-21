@@ -2,6 +2,7 @@
 
 #include "ChromaSDKPluginAnimation2DDetails.h"
 #include "ChromaSDKPluginAnimation2DObject.h"
+#include "ChromaSDKPluginButton2D.h"
 #include "ChromaSDKPluginBPLibrary.h"
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
@@ -53,7 +54,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		[
 			SNew(STextBlock)
 			.Text(LOCTEXT("Keyboard preview", "Keyboard preview"))
-		.Font(IDetailLayoutBuilder::GetDetailFont())
+			.Font(IDetailLayoutBuilder::GetDetailFont())
 		];
 	widgetRow.ValueContent().MinDesiredWidth(300);
 	TSharedRef<SGridPanel> grid = SNew(SGridPanel);
@@ -207,10 +208,14 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 												SColorBlock* block = (SColorBlock*)&child4.Get();
 												if (block)
 												{
+													TSharedRef<IChromaSDKPluginButton2D> button =
+														IChromaSDKPluginButton2D::MakeInstance();
+													button->Row = i;
+													button->Column = j;
+
 													// would rather update existing color
-													TSharedRef<SColorBlock> newColor = SNew(SColorBlock)
-														.Color(color)
-														.OnMouseButtonDown(this, &FChromaSDKPluginAnimation2DDetails::OnMouseButtonDownColor);
+													TSharedPtr<SColorBlock> ptrColor = button->CreateColorBlock(color);
+													TSharedRef<SColorBlock> newColor = ptrColor.ToSharedRef();
 
 													border->ClearContent();
 													border->SetContent(newColor);
@@ -227,13 +232,6 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 			}
 		}
 	}
-}
-
-FReply FChromaSDKPluginAnimation2DDetails::OnMouseButtonDownColor(const FGeometry& geometry, const FPointerEvent& pointer)
-{
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnMouseButtonDownColor row=%d col=%d"), 0, 0);
-
-	return FReply::Handled();
 }
 
 TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem)
