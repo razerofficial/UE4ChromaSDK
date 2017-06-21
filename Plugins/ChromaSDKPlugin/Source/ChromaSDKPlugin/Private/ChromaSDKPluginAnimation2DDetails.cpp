@@ -154,6 +154,11 @@ void FChromaSDKPluginAnimation2DDetails::CreateKeyboard()
 
 void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 {
+	// Remove existing button events
+	//ColorButtons.Clear();
+
+	TSharedRef<FChromaSDKPluginAnimation2DDetails> details = MakeShareable(this);
+
 	if (ObjectsBeingCustomized.Num() > 0)
 	{
 		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
@@ -212,6 +217,7 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 														IChromaSDKPluginButton2D::MakeInstance();
 													button->Row = i;
 													button->Column = j;
+													button->Details = details;
 
 													// would rather update existing color
 													TSharedPtr<SColorBlock> ptrColor = button->CreateColorBlock(color);
@@ -235,6 +241,26 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 			}
 		}
 	}
+}
+
+void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
+{
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				TArray<FChromaSDKColors>& colors = frames[0].Colors;
+				colors[row].Colors[column] = _mColor;
+			}
+		}
+	}
+
+	RefreshKeyboard();
 }
 
 TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem)

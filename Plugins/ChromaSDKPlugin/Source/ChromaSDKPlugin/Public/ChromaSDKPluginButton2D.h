@@ -2,7 +2,10 @@
 
 #pragma once
 
+#include "IDetailCustomization.h"
 #include "ChromaSDKPluginTypes.h"
+#include "ChromaSDKPluginAnimation2DDetails.h"
+#include "SharedPointer.h"
 
 class IChromaSDKPluginButton2D : public TSharedFromThis<IChromaSDKPluginButton2D>
 {
@@ -15,4 +18,5 @@ public:
 
 	int Row;
 	int Column;
+	TSharedPtr<IDetailCustomization> Details;
 };

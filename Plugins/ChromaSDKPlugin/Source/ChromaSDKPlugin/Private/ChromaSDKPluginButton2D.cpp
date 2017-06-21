@@ -20,5 +20,13 @@ FReply IChromaSDKPluginButton2D::OnMouseButtonDownColor(const FGeometry& geometr
 {
 	UE_LOG(LogTemp, Log, TEXT("IChromaSDKPluginButton2D::OnMouseButtonDownColor row=%d col=%d"), Row, Column);
 
+	if (Details.IsValid())
+	{
+		FChromaSDKPluginAnimation2DDetails* details = (FChromaSDKPluginAnimation2DDetails*)Details.Get();
+		if (details)
+		{
+			details->OnClickColor(Row, Column);
+		}
+	}
 	return FReply::Handled();
 }

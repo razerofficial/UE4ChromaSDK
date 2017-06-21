@@ -18,6 +18,8 @@ public:
 	void CreateKeyboard();
 	void RefreshKeyboard();
 
+	void OnClickColor(int row, int column);
+
 	TSharedRef<SWidget> GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem);
 	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
 
