@@ -12,14 +12,13 @@ TSharedPtr<SColorBlock> IChromaSDKPluginButton2D::CreateColorBlock(const FLinear
 	TSharedRef<SColorBlock> newColor = SNew(SColorBlock)
 		.Color(color)
 		.OnMouseButtonDown(this, &IChromaSDKPluginButton2D::OnMouseButtonDownColor);
-	ColorBlock = newColor;
 
 	return newColor;
 }
 
 FReply IChromaSDKPluginButton2D::OnMouseButtonDownColor(const FGeometry& geometry, const FPointerEvent& pointer)
 {
-	UE_LOG(LogTemp, Log, TEXT("IChromaSDKPluginButton2D::OnMouseButtonDownColor row=%d col=%d"), Row, Column);
+	//UE_LOG(LogTemp, Log, TEXT("IChromaSDKPluginButton2D::OnMouseButtonDownColor row=%d col=%d"), Row, Column);
 
 	if (Details.IsValid())
 	{
