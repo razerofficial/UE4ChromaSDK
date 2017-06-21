@@ -27,6 +27,12 @@ public:
 
 	FReply OnClickSetButton();
 
+	FReply OnClickClearButton();
+
+	FReply OnClickRandomButton();
+
+	FReply OnClickApplyButton();
+
 private:
 
 	TSharedPtr<FChromaSDKPluginAnimation2DDetails> _mDetails;

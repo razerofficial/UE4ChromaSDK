@@ -78,14 +78,26 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		]
 		.ValueContent().MinDesiredWidth(300)
 		[
-			SNew(SComboBox<TSharedPtr<FString>>)
-			.InitiallySelectedItem(ChromaSDKKeyboardKeys[0])
-			.OptionsSource(&ChromaSDKKeyboardKeys)
-			.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys)
-			.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
+			SNew(SGridPanel)
+			.FillColumn(0, 4.0f)
+			.FillColumn(1, 1.0f)
+			+ SGridPanel::Slot(0, 0)
 			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("Select a key", "Select a key"))
+				SNew(SComboBox<TSharedPtr<FString>>)
+				.InitiallySelectedItem(ChromaSDKKeyboardKeys[0])
+				.OptionsSource(&ChromaSDKKeyboardKeys)
+				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys)
+				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("Select a key", "Select a key"))
+				]
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Set key", "Set key"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetButton)
 			]
 		];
 
@@ -109,11 +121,30 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.Text(LOCTEXT("Apply", "Apply"))
 			.Font(IDetailLayoutBuilder::GetDetailFont())
 		]
-		.ValueContent().MinDesiredWidth(50)
+		.ValueContent().MinDesiredWidth(30)
 		[
-			SNew(SButton)
-			.Text(LOCTEXT("Button Chroma Set", "Set"))
-			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetButton)
+			SNew(SGridPanel)
+			.FillColumn(0, 1.0f)
+			.FillColumn(1, 1.0f)
+			.FillColumn(2, 1.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Clear", "Clear"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickClearButton)
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Random", "Random"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickRandomButton)
+			]
+			+ SGridPanel::Slot(2, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Apply", "Apply"))
+			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
+			]
 		];
 }
 
@@ -306,9 +337,78 @@ void FChromaSDKPluginAnimation2DDetails::OnColorCommitted(FLinearColor color)
 	_mColor = color;
 }
 
+FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
+{
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				frames[0].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+			}
+		}
+	}
+
+	// refresh the UI
+	RefreshKeyboard();
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickRandomButton()
+{
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				frames[0].Colors = UChromaSDKPluginBPLibrary::CreateRandomColors2D(animation->Device);
+			}
+		}
+	}
+
+	// refresh the UI
+	RefreshKeyboard();
+
+	return FReply::Handled();
+}
+
 FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 {
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetButton"));
+
+	if (ObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				TArray<FChromaSDKColors>& colors = frames[0].Colors;
+				UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(_mSelectedKey, _mColor, colors);
+			}
+		}
+	}
+
+	// refresh the UI
+	RefreshKeyboard();
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickApplyButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickApplyButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -326,7 +426,6 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 			if (frames.Num() > 0)
 			{
 				TArray<FChromaSDKColors>& colors = frames[0].Colors;
-				UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(_mSelectedKey, _mColor, colors);
 				FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(device, colors);
 				if (effect.Result == 0)
 				{
@@ -336,9 +435,6 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 			}
 		}
 	}
-
-	// refresh the UI
-	RefreshKeyboard();
 
 	return FReply::Handled();
 }
