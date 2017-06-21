@@ -41,13 +41,13 @@ private:
 
 	TSharedPtr<FChromaSDKPluginAnimation2DDetails> _mDetails;
 
-	TArray<TWeakObjectPtr<UObject>> ObjectsBeingCustomized;
+	TArray<TWeakObjectPtr<UObject>> _mObjectsBeingCustomized;
 
 	TSharedPtr<SGridPanel> _mGrid;
 
-	TArray<TSharedRef<IChromaSDKPluginButton2D>> ColorButtons;
+	TArray<TSharedRef<IChromaSDKPluginButton2D>> _mColorButtons;
 
-	TArray<TSharedPtr<FString>> ChromaSDKKeyboardKeys;
+	TArray<TSharedPtr<FString>> _mChromaSDKKeyboardKeys;
 
 	EChromaSDKKeyboardKey _mSelectedKey;
 	FLinearColor _mColor;

@@ -19,7 +19,7 @@ public:
 
 private:
 
-	TArray<TWeakObjectPtr<UObject>> ObjectsBeingCustomized;
+	TArray<TWeakObjectPtr<UObject>> _mObjectsBeingCustomized;
 
 	FLinearColor _mColor;
 };

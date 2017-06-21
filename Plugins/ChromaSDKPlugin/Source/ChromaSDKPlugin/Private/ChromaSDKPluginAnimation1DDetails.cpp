@@ -24,8 +24,11 @@ void FChromaSDKPluginAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation1DDetails::CustomizeDetails"));
 
-	ObjectsBeingCustomized.Empty();
-	DetailBuilder.GetObjectsBeingCustomized(/*out*/ ObjectsBeingCustomized);
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		_mObjectsBeingCustomized.Empty();
+	}
+	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
 	// Create a category so this is displayed early in the properties
 	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("CategoryName", LOCTEXT("Extra info", "Extra info"), ECategoryPriority::Important);

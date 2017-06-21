@@ -28,7 +28,7 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstanc
 		for (int k = 0; (k+1) < enumPtr->NumEnums(); ++k)
 		{
 			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
-			instance->ChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
+			instance->_mChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
 		}
 	}
 
@@ -42,11 +42,11 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 {
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::CustomizeDetails"));
 
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		ObjectsBeingCustomized.Empty();
+		_mObjectsBeingCustomized.Empty();
 	}
-	DetailBuilder.GetObjectsBeingCustomized(/*out*/ ObjectsBeingCustomized);
+	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
 	// Create a category so this is displayed early in the properties
 	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("CategoryName", LOCTEXT("Extra info", "Extra info"), ECategoryPriority::Important);
@@ -84,8 +84,8 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SComboBox<TSharedPtr<FString>>)
-				.InitiallySelectedItem(ChromaSDKKeyboardKeys[0])
-				.OptionsSource(&ChromaSDKKeyboardKeys)
+				.InitiallySelectedItem(_mChromaSDKKeyboardKeys[0])
+				.OptionsSource(&_mChromaSDKKeyboardKeys)
 				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys)
 				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
 				[
@@ -164,9 +164,9 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 void FChromaSDKPluginAnimation2DDetails::CreateKeyboard()
 {
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr &&
 			animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
 			animation->Frames.Num() > 0)
@@ -202,14 +202,14 @@ void FChromaSDKPluginAnimation2DDetails::CreateKeyboard()
 void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 {
 	// Remove existing button events
-	if (ColorButtons.Num() > 0)
+	if (_mColorButtons.Num() > 0)
 	{
-		ColorButtons.Empty();
+		_mColorButtons.Empty();
 	}
 
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr &&
 			animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
 			animation->Frames.Num() > 0)
@@ -272,7 +272,7 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 													TSharedRef<SColorBlock> newColor = ptrColor.ToSharedRef();
 
 													// store the button event reference
-													ColorButtons.Add(button);
+													_mColorButtons.Add(button);
 
 													border->ClearContent();
 													border->SetContent(newColor);
@@ -293,9 +293,9 @@ void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
 
 void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
 {
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
@@ -353,9 +353,9 @@ void FChromaSDKPluginAnimation2DDetails::OnColorCommitted(FLinearColor color)
 
 FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
 {
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
@@ -375,9 +375,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
 
 FReply FChromaSDKPluginAnimation2DDetails::OnClickCopyButton()
 {
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
@@ -397,9 +397,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
 	// refresh the UI
 	RefreshKeyboard();
 
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
@@ -423,9 +423,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
 
 FReply FChromaSDKPluginAnimation2DDetails::OnClickRandomButton()
 {
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
@@ -447,9 +447,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
 {
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetButton"));
 
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
@@ -478,9 +478,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickApplyButton()
 		UChromaSDKPluginBPLibrary::ChromaSDKInit();
 	}
 
-	if (ObjectsBeingCustomized.Num() > 0)
+	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)ObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			const EChromaSDKDevice2DEnum& device = animation->Device;
