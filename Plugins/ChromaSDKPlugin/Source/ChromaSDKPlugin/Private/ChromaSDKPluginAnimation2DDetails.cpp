@@ -348,12 +348,28 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 bool FChromaSDKPluginAnimation2DDetails::IsEnabledKeyboardKey() const
 {
-	return _mSelectedDevice == EChromaSDKDevice2DEnum::DE_Keyboard;
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			return animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard;
+		}
+	}
+	return false;
 }
 
 bool FChromaSDKPluginAnimation2DDetails::IsEnabledMouseLed() const
 {
-	return _mSelectedDevice == EChromaSDKDevice2DEnum::DE_Mouse;
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			return animation->Device == EChromaSDKDevice2DEnum::DE_Mouse;
+		}
+	}
+	return false;
 }
 
 void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
