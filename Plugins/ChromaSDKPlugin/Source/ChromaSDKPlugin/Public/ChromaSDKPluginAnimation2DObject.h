@@ -25,7 +25,5 @@ public:
 	void Reset(EChromaSDKDevice2DEnum device);
 	void RefreshColors();
 	void RefreshCurve();
-
-	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
 #endif
 };

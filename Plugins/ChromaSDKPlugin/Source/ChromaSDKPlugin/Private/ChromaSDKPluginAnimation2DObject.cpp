@@ -104,22 +104,4 @@ void UChromaSDKPluginAnimation2DObject::RefreshColors()
 	}
 }
 
-void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
-{
-	/*
-	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty %s"),
-		*PropertyChangedEvent.Property->GetName());
-	*/
-
-	Super::PostEditChangeChainProperty(PropertyChangedEvent);
-
-	if (PropertyChangedEvent.Property->GetName() == "Curve" ||
-		PropertyChangedEvent.Property->GetName() == "Frames")
-	{
-		//RefreshCurve();
-	}
-
-	RefreshColors();
-}
-
 #endif

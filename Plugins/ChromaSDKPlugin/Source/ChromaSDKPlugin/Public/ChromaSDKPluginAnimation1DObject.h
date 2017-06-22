@@ -20,8 +20,4 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TArray<FChromaSDKColorFrame1D> Frames;
-
-#if WITH_EDITOR
-	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
-#endif
 };
