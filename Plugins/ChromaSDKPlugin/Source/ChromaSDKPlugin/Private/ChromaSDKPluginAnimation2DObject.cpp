@@ -18,14 +18,15 @@ void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FProp
 
 	if (PropertyChangedEvent.Property->GetName() == "Curve")
 	{
-		for (int i = 1; i < Curve.EditorCurveData.Keys.Num() && i < Frames.Num(); ++i)
+		for (int i = 0; (i+1) < Curve.EditorCurveData.Keys.Num() && i < Frames.Num(); ++i)
 		{
-			FRichCurveKey& previousKey = Curve.EditorCurveData.Keys[i-1];
 			FRichCurveKey& key = Curve.EditorCurveData.Keys[i];
-			key.Value = 1.0f;
+			FRichCurveKey& nextKey = Curve.EditorCurveData.Keys[i + 1];
+			key.Value = 0.0f;
+			nextKey.Value = 0.0f;
 			
-			float t = key.Time - previousKey.Time;
-			Frames[i-1].Duration = t;
+			float t = nextKey.Time - key.Time;
+			Frames[i].Duration = t;
 		}
 	}
 

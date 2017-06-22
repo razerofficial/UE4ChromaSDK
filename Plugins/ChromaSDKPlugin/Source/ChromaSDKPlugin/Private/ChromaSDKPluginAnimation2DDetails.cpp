@@ -274,8 +274,8 @@ void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
 			float time = 0.0f;
 			for (int i = 0; i < animation->Frames.Num(); ++i)
 			{
-				animation->Curve.EditorCurveData.AddKey(time, 1.0f);
 				time += animation->Frames[i].Duration;
+				animation->Curve.EditorCurveData.AddKey(time, 0.0f);
 			}
 			return;
 		}
