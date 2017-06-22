@@ -11,7 +11,23 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 #if WITH_EDITOR
 void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
 {
-	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty"));
+	/*
+	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty %s"),
+		*PropertyChangedEvent.Property->GetName());
+	*/
+
+	if (PropertyChangedEvent.Property->GetName() == "Curve")
+	{
+		for (int i = 1; i < Curve.EditorCurveData.Keys.Num() && i < Frames.Num(); ++i)
+		{
+			FRichCurveKey& previousKey = Curve.EditorCurveData.Keys[i-1];
+			FRichCurveKey& key = Curve.EditorCurveData.Keys[i];
+			key.Value = 1.0f;
+			
+			float t = key.Time - previousKey.Time;
+			Frames[i-1].Duration = t;
+		}
+	}
 
 	int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(Device);
 	int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(Device);

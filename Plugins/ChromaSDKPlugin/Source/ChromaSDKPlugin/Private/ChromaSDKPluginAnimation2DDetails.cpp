@@ -269,6 +269,14 @@ void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
 				duration = animation->Frames[_mCurrentFrame].Duration;
 			}
 			_mTextFrameDuration->SetText(FText::AsNumber(duration));
+
+			animation->Curve.EditorCurveData.Reset();
+			float time = 0.0f;
+			for (int i = 0; i < animation->Frames.Num(); ++i)
+			{
+				animation->Curve.EditorCurveData.AddKey(time, 1.0f);
+				time += animation->Frames[i].Duration;
+			}
 			return;
 		}
 	}
