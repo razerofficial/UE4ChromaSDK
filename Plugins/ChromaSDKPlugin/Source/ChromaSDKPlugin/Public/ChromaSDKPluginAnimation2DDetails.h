@@ -7,6 +7,8 @@
 #include "ChromaSDKPluginButton2D.h"
 #include "Widgets/Layout/SGridPanel.h"
 
+class FDetailWidgetRow;
+
 class FChromaSDKPluginAnimation2DDetails : public IDetailCustomization
 {
 public:
@@ -38,8 +40,14 @@ public:
 	FReply OnClickApplyButton();
 
 	// select a key row
+	bool IsEnabledKeyboardKey() const;
 	void OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
 	FReply OnClickSetKeyButton();
+
+	// select an led row
+	bool IsEnabledMouseLed() const;
+	void OnChangeChromaSDKMouseLeds(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
+	FReply OnClickSetLedButton();
 
 	// set the color row
 	void OnColorCommitted(FLinearColor color);
@@ -70,11 +78,17 @@ private:
 	// grid buttons hold row/column
 	TArray<TSharedRef<IChromaSDKPluginButton2D>> _mColorButtons;
 
-	// the enum dropdown text
+	// select a key, enum dropdown text
 	TArray<TSharedPtr<FString>> _mChromaSDKKeyboardKeys;
 
-	// the selected enum key
+	// select a key, selected enum
 	EChromaSDKKeyboardKey _mSelectedKey;
+
+	// select an led, enum dropdown text
+	TArray<TSharedPtr<FString>> _mChromaSDKMouseLeds;
+
+	// select an led, selected enum
+	EChromaSDKMouseLed _mSelectedLed;
 	
 	// current color in the color picker
 	FLinearColor _mColor;

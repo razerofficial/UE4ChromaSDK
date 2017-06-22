@@ -48,6 +48,19 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstanc
 	//set default key
 	instance->_mSelectedKey = EChromaSDKKeyboardKey::KK_ESC;
 
+	//populate list of led enums
+	const UEnum* ledEnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKMouseLed"), true);
+	if (ledEnumPtr)
+	{
+		for (int k = 0; (k + 1) < ledEnumPtr->NumEnums(); ++k)
+		{
+			FString text = ledEnumPtr->GetDisplayNameTextByValue(k).ToString();
+			instance->_mChromaSDKMouseLeds.Add(MakeShared<FString>(text));
+		}
+	}
+	//set default led
+	instance->_mSelectedLed = EChromaSDKMouseLed::ML_LOGO;
+
 	//set the default frame
 	instance->_mCurrentFrame = 0;
 
@@ -68,9 +81,9 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
-	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
+	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
 
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Device", "Device").ToString()))
+	category.AddCustomRow(FText::FromString(LOCTEXT("Device", "Device").ToString()))
 		.NameContent()
 		[
 			SNew(STextBlock)
@@ -103,7 +116,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		];
 
 
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Apply", "Apply").ToString()))
+	category.AddCustomRow(FText::FromString(LOCTEXT("Apply", "Apply").ToString()))
 		.NameContent()
 		[
 			SNew(STextBlock)
@@ -150,7 +163,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			]
 		];
 
-	FDetailWidgetRow& widgetRow = MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Device preview", "Device preview").ToString()));
+	FDetailWidgetRow& widgetRow = category.AddCustomRow(FText::FromString(LOCTEXT("Device preview", "Device preview").ToString()));
 	widgetRow.NameContent()
 		[
 			SNew(STextBlock)
@@ -167,7 +180,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 	RefreshDevice();
 
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
+	category.AddCustomRow(FText::FromString(LOCTEXT("Select a key", "Select a key").ToString()))
 		.NameContent()
 		[
 			SNew(STextBlock)
@@ -195,11 +208,45 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Set key", "Set key"))
+				.IsEnabled(this, &FChromaSDKPluginAnimation2DDetails::IsEnabledKeyboardKey)
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton)
 			]
 		];
 
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key color", "Select a key color").ToString()))
+	category.AddCustomRow(FText::FromString(LOCTEXT("Select an LED", "Select an LED").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Select an LED", "Select an LED"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 4.0f)
+			.FillColumn(1, 1.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SComboBox<TSharedPtr<FString>>)
+				.InitiallySelectedItem(_mChromaSDKMouseLeds[0])
+				.OptionsSource(&_mChromaSDKMouseLeds)
+				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum)
+				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("Select an LED", "Select an LED"))
+				]
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Set LED", "Set LED"))
+				.IsEnabled(this, &FChromaSDKPluginAnimation2DDetails::IsEnabledMouseLed)
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton)
+			]
+		];
+
+	category.AddCustomRow(FText::FromString(LOCTEXT("Set the color", "Set the color").ToString()))
 		.NameContent()
 		[
 			SNew(STextBlock)
@@ -224,7 +271,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		.Text(LOCTEXT("1.0", "1.0"));
 	_mTextFrameDuration = textFrameDuration;
 
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Animation frames", "Animation frames").ToString()))
+	category.AddCustomRow(FText::FromString(LOCTEXT("Animation frames", "Animation frames").ToString()))
 		.NameContent()
 		[
 			SNew(STextBlock)
@@ -297,6 +344,16 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		];
 
 		RefreshFrames();
+}
+
+bool FChromaSDKPluginAnimation2DDetails::IsEnabledKeyboardKey() const
+{
+	return _mSelectedDevice == EChromaSDKDevice2DEnum::DE_Keyboard;
+}
+
+bool FChromaSDKPluginAnimation2DDetails::IsEnabledMouseLed() const
+{
+	return _mSelectedDevice == EChromaSDKDevice2DEnum::DE_Mouse;
 }
 
 void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
@@ -587,8 +644,10 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices(TSharedPtr<FSt
 void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
 {
 	FString selectedItem = *Item;
+	/*
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Selected=%s"),
 		*selectedItem);
+	*/
 
 	// set the selected enum
 	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKKeyboardKey"), true);
@@ -600,7 +659,32 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPt
 			if (text == selectedItem)
 			{
 				_mSelectedKey = (EChromaSDKKeyboardKey)k;
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Item=%d"), k);
+				//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Item=%d"), k);
+				break;
+			}
+		}
+	}
+}
+
+void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
+{
+	FString selectedItem = *Item;
+	/*
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds Selected=%s"),
+		*selectedItem);
+	*/
+
+	// set the selected enum
+	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKMouseLed"), true);
+	if (enumPtr)
+	{
+		for (int k = 0; (k + 1) < enumPtr->NumEnums(); ++k)
+		{
+			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
+			if (text == selectedItem)
+			{
+				_mSelectedLed = (EChromaSDKMouseLed)k;
+				//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds Item=%d"), k);
 				break;
 			}
 		}
@@ -741,13 +825,37 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton()
 	{
 		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr &&
+			animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
 			_mCurrentFrame >= 0 &&
 			_mCurrentFrame < animation->Frames.Num())
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
 			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
 			TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
 			UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(_mSelectedKey, _mColor, colors);
+		}
+	}
+
+	// refresh the UI
+	RefreshDevice();
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton"));
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr &&
+			animation->Device == EChromaSDKDevice2DEnum::DE_Mouse &&
+			_mCurrentFrame >= 0 &&
+			_mCurrentFrame < animation->Frames.Num())
+		{
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
+			UChromaSDKPluginBPLibrary::SetMouseLedColor(_mSelectedLed, _mColor, colors);
 		}
 	}
 
