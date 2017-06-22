@@ -148,6 +148,14 @@ TSharedPtr<SWidget> FChromaSDKPluginAnimation2DAssetTypeActions::GetThumbnailOve
 /** Return if the specified effect is playing*/
 bool FChromaSDKPluginAnimation2DAssetTypeActions::IsEffectPlaying(const TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>>& Objects) const
 {
+	if (Objects.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)Objects[0].Get();
+		if (animation != nullptr)
+		{
+			return animation->IsPlaying();
+		}
+	}
 	return false;
 }
 
@@ -162,20 +170,14 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::ExecutePlayEffect(TArray<TWeak
 
 	if (Objects.Num() > 0)
 	{
-		const UChromaSDKPluginAnimation2DObject* animation = Objects[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)Objects[0].Get();
 		if (animation != nullptr)
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			const TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			if (frames.Num() > 0)
+			if (!animation->IsLoaded())
 			{
-				FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(device, frames[0].Colors);
-				if (effect.Result == 0)
-				{
-					UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
-					UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
-				}
+				animation->Load();
 			}
+			animation->Play();
 		}
 	}
 }
@@ -183,12 +185,27 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::ExecutePlayEffect(TArray<TWeak
 /** Handler for when StopEffect is selected */
 void FChromaSDKPluginAnimation2DAssetTypeActions::ExecuteStopEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects)
 {
-
+	if (Objects.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)Objects[0].Get();
+		if (animation != nullptr)
+		{
+			return animation->Stop();
+		}
+	}
 }
 
 /** Returns true if only one effect is selected to play */
 bool FChromaSDKPluginAnimation2DAssetTypeActions::CanExecutePlayCommand(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects) const
 {
+	if (Objects.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)Objects[0].Get();
+		if (animation != nullptr)
+		{
+			return !animation->IsPlaying();
+		}
+	}
 	return true;
 }
 

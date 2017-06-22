@@ -2,6 +2,7 @@
 
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
+#include "LogMacros.h"
 
 UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -12,6 +13,155 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 	Frames.Add(frame);
 
 	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
+
+	_mIsPlaying = false;
+	_mTime = 0.0f;
+	_mCurrentFrame = 0;
+}
+
+void UChromaSDKPluginAnimation2DObject::Tick(float deltaTime)
+{
+	_mTime += deltaTime;
+	float nextTime = GetTime(_mCurrentFrame);
+	if (nextTime < _mTime)
+	{
+		++_mCurrentFrame;
+		if (_mCurrentFrame < _mEffects.Num())
+		{
+			//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Tick SetEffect."));
+			FChromaSDKEffectResult& effect = _mEffects[_mCurrentFrame];
+			int result = UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+			if (result != 0)
+			{
+				UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Tick Failed to set effect!"));
+			}
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Tick Animation Complete."));
+			_mIsPlaying = false;
+			_mTime = 0.0f;
+			_mCurrentFrame = 0;
+			_mOnComplete.ExecuteIfBound();
+			_mOnComplete.Clear();
+		}
+	}
+}
+
+bool UChromaSDKPluginAnimation2DObject::IsTickable() const
+{
+	return _mIsPlaying;
+}
+
+bool UChromaSDKPluginAnimation2DObject::IsTickableInEditor() const
+{
+	return true;
+}
+
+bool UChromaSDKPluginAnimation2DObject::IsTickableWhenPaused() const
+{
+	return false;
+}
+
+TStatId UChromaSDKPluginAnimation2DObject::GetStatId() const
+{
+	return TStatId();
+}
+
+float UChromaSDKPluginAnimation2DObject::GetTime(int index)
+{
+	if (index >= 0 &&
+		index < Curve.EditorCurveData.Keys.Num())
+	{
+		return Curve.EditorCurveData.Keys[index].Time;
+	}
+	return 0.033f;
+}
+
+void UChromaSDKPluginAnimation2DObject::Load()
+{
+	if (_mIsLoaded)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Load Animation has already been loaded!"));
+		return;
+	}
+
+	for (int i = 0; i < Frames.Num(); ++i)
+	{
+		FChromaSDKColorFrame2D& frame = Frames[i];
+		FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(Device, frame.Colors);
+		if (effect.Result != 0)
+		{
+			UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Load Failed to create effect!"));
+		}
+		_mEffects.Add(effect);
+	}
+
+	_mIsLoaded = true;
+}
+
+bool UChromaSDKPluginAnimation2DObject::IsLoaded()
+{
+	return _mIsLoaded;
+}
+
+void UChromaSDKPluginAnimation2DObject::Unload()
+{
+	if (!_mIsLoaded)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Unload Animation has already been unloaded!"));
+		return;
+	}
+
+	for (int i = 0; i < _mEffects.Num(); ++i)
+	{
+		FChromaSDKEffectResult& effect = _mEffects[i];
+		int result = UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
+		if (result != 0)
+		{
+			UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Unload Failed to delete effect!"));
+		}
+	}
+	_mEffects.Reset();
+	_mIsLoaded = false;
+}
+
+void UChromaSDKPluginAnimation2DObject::Play()
+{
+	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Play"));
+
+	if (!_mIsLoaded)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Play Animation has not been loaded!"));
+		return;
+	}
+
+	_mTime = 0.0f;
+	_mIsPlaying = true;
+}
+
+void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete onComplete)
+{
+	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete"));
+	_mOnComplete = onComplete;
+	Play();
+}
+
+void UChromaSDKPluginAnimation2DObject::Stop()
+{
+	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Stop"));
+	_mIsPlaying = false;
+	_mTime = 0.0f;
+}
+
+bool UChromaSDKPluginAnimation2DObject::IsPlaying()
+{
+	return _mIsPlaying;
+}
+
+TArray<FChromaSDKColorFrame2D>& UChromaSDKPluginAnimation2DObject::GetFrames()
+{
+	return Frames;
 }
 
 #if WITH_EDITOR

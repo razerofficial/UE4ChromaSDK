@@ -128,10 +128,12 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			SNew(SGridPanel)
 			.FillColumn(0, 1.0f)
 			.FillColumn(1, 1.0f)
-			.FillColumn(2, 1.0f)
+			.FillColumn(2, 2.0f)
 			.FillColumn(3, 1.0f)
 			.FillColumn(4, 1.0f)
 			.FillColumn(5, 1.0f)
+			.FillColumn(6, 1.0f)
+			.FillColumn(7, 1.0f)
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SButton)
@@ -167,6 +169,18 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				SNew(SButton)
 				.Text(LOCTEXT("Apply", "Apply"))
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
+			]
+			+ SGridPanel::Slot(6, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Play", "Play"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPlayButton)
+			]
+			+ SGridPanel::Slot(7, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Stop", "Stop"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickStopButton)
 			]
 		];
 
@@ -947,6 +961,65 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickApplyButton()
 			{
 				UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
 				UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
+			}
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickPlayButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickPlayButton"));
+
+	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
+	if (!initialized)
+	{
+		UChromaSDKPluginBPLibrary::ChromaSDKInit();
+	}
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsPlaying())
+			{
+				UE_LOG(LogTemp, Error, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickPlayButton Animation is already playing!"));
+			}
+			else
+			{
+				if (animation->IsLoaded())
+				{
+					animation->Unload();
+				}
+				animation->Load();
+				animation->Play();
+			}
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickStopButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickStopButton"));
+
+	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
+	if (!initialized)
+	{
+		UChromaSDKPluginBPLibrary::ChromaSDKInit();
+	}
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsPlaying())
+			{
+				animation->Stop();
 			}
 		}
 	}
