@@ -131,6 +131,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.FillColumn(2, 1.0f)
 			.FillColumn(3, 1.0f)
 			.FillColumn(4, 1.0f)
+			.FillColumn(5, 1.0f)
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SButton)
@@ -140,22 +141,28 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			+ SGridPanel::Slot(1, 0)
 			[
 				SNew(SButton)
+				.Text(LOCTEXT("Fill", "Fill"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickFillButton)
+			]
+			+ SGridPanel::Slot(2, 0)
+			[
+				SNew(SButton)
 				.Text(LOCTEXT("Random", "Random"))
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickRandomButton)
 			]
-			+ SGridPanel::Slot(2, 0)
+			+ SGridPanel::Slot(3, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Copy", "Copy"))
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickCopyButton)
 			]
-			+ SGridPanel::Slot(3, 0)
+			+ SGridPanel::Slot(4, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Paste", "Paste"))
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPasteButton)
 			]
-			+ SGridPanel::Slot(4, 0)
+			+ SGridPanel::Slot(5, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Apply", "Apply"))
@@ -728,6 +735,40 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
 			if (frames.Num() > 0)
 			{
 				frames[_mCurrentFrame].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+			}
+		}
+	}
+
+	// refresh the UI
+	RefreshDevice();
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickFillButton()
+{
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr &&
+			_mCurrentFrame >= 0 &&
+			_mCurrentFrame < animation->Frames.Num())
+		{
+			const EChromaSDKDevice2DEnum& device = animation->Device;
+			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+			if (frames.Num() > 0)
+			{
+				FChromaSDKColorFrame2D& frame = frames[_mCurrentFrame];
+				TArray<FChromaSDKColors>& colors = frame.Colors;
+				int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(device);
+				int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
+				for (int i = 0; i < maxRow; ++i)
+				{
+					for (int j = 0; j < maxColumn; ++j)
+					{
+						colors[i].Colors[j] = _mColor;
+					}
+				}
 			}
 		}
 	}

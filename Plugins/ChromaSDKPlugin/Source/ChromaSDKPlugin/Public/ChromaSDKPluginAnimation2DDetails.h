@@ -34,6 +34,7 @@ public:
 
 	// apply row
 	FReply OnClickClearButton();
+	FReply OnClickFillButton();
 	FReply OnClickRandomButton();
 	FReply OnClickCopyButton();
 	FReply OnClickPasteButton();
