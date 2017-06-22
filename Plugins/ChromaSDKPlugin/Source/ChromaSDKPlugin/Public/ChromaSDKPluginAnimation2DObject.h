@@ -41,7 +41,7 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsLoaded", Keywords = "Check if the animation has loaded"), Category = "ChromaSDK")
 	bool IsLoaded();
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Load", Keywords = "Unload the effects"), Category = "ChromaSDK")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Unload", Keywords = "Unload the effects"), Category = "ChromaSDK")
 	void Unload();
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetFrames2D", Keywords = "Get two-dimensional animation frames"), Category = "ChromaSDK")
