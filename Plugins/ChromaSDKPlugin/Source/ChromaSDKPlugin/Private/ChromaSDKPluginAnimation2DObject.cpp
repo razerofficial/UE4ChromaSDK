@@ -128,7 +128,7 @@ void UChromaSDKPluginAnimation2DObject::Unload()
 
 void UChromaSDKPluginAnimation2DObject::Play()
 {
-	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Play"));
+	//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Play"));
 
 	if (!_mIsLoaded)
 	{
@@ -138,20 +138,32 @@ void UChromaSDKPluginAnimation2DObject::Play()
 
 	_mTime = 0.0f;
 	_mIsPlaying = true;
+	_mCurrentFrame = 0;
 }
 
 void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete onComplete)
 {
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete"));
+
+	if (!_mIsLoaded)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete Animation has not been loaded!"));
+		return;
+	}
+
 	_mOnComplete = onComplete;
-	Play();
+	
+	_mTime = 0.0f;
+	_mIsPlaying = true;
+	_mCurrentFrame = 0;
 }
 
 void UChromaSDKPluginAnimation2DObject::Stop()
 {
-	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Stop"));
+	//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Stop"));
 	_mIsPlaying = false;
 	_mTime = 0.0f;
+	_mCurrentFrame = 0;
 }
 
 bool UChromaSDKPluginAnimation2DObject::IsPlaying()
