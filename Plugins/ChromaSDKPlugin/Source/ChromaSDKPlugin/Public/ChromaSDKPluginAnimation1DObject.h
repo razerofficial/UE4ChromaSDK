@@ -13,13 +13,13 @@ class UChromaSDKPluginAnimation1DObject : public UObject
 public:
 
 	UPROPERTY(EditAnywhere, Category = "Animation")
+	FRuntimeFloatCurve Curve;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
 	EChromaSDKDevice1DEnum Device;
 
-	UPROPERTY(EditAnywhere, Category = "Animation")
+	UPROPERTY(EditAnywhere, Category = "Data")
 	TArray<FChromaSDKColorFrame1D> Frames;
-
-	UPROPERTY(EditAnywhere, Category = "Animation")
-	FRuntimeFloatCurve Curve;
 
 #if WITH_EDITOR
 	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;

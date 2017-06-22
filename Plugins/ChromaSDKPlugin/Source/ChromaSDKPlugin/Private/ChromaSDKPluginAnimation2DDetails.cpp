@@ -22,17 +22,29 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstanc
 	TSharedRef<FChromaSDKPluginAnimation2DDetails> instance = MakeShareable(new FChromaSDKPluginAnimation2DDetails);
 	instance->_mDetails = instance;
 
-	//populate list of enums
-	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKKeyboardKey"), true);
-	if (enumPtr)
+	//populate list of device enums
+	const UEnum* deviceEnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKDevice2DEnum"), true);
+	if (deviceEnumPtr)
 	{
-		for (int k = 0; (k+1) < enumPtr->NumEnums(); ++k)
+		for (int k = 0; (k + 1) < deviceEnumPtr->NumEnums(); ++k)
 		{
-			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
+			FString text = deviceEnumPtr->GetDisplayNameTextByValue(k).ToString();
+			instance->_mChromaSDKDevices.Add(MakeShared<FString>(text));
+		}
+	}
+	//set default key
+	instance->_mSelectedDevice = EChromaSDKDevice2DEnum::DE_Keyboard;
+
+	//populate list of key enums
+	const UEnum* keyEnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKKeyboardKey"), true);
+	if (keyEnumPtr)
+	{
+		for (int k = 0; (k+1) < keyEnumPtr->NumEnums(); ++k)
+		{
+			FString text = keyEnumPtr->GetDisplayNameTextByValue(k).ToString();
 			instance->_mChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
 		}
 	}
-
 	//set default key
 	instance->_mSelectedKey = EChromaSDKKeyboardKey::KK_ESC;
 
@@ -49,8 +61,150 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	}
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
-	// Create a category so this is displayed early in the properties
 	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
+
+
+	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Device", "Device").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Device", "Device"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 4.0f)
+			.FillColumn(1, 2.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SComboBox<TSharedPtr<FString>>)
+				.InitiallySelectedItem(_mChromaSDKDevices[0])
+				.OptionsSource(&_mChromaSDKDevices)
+				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum)
+				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("Select a device", "Select a device"))
+				]
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Set device", "Set device"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton)
+			]
+		];
+
+
+	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Apply", "Apply").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Apply", "Apply"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 1.0f)
+			.FillColumn(1, 1.0f)
+			.FillColumn(2, 1.0f)
+			.FillColumn(3, 1.0f)
+			.FillColumn(4, 1.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Clear", "Clear"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickClearButton)
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Random", "Random"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickRandomButton)
+			]
+			+ SGridPanel::Slot(2, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Copy", "Copy"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickCopyButton)
+			]
+			+ SGridPanel::Slot(3, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Paste", "Paste"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPasteButton)
+			]
+			+ SGridPanel::Slot(4, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Apply", "Apply"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
+			]
+		];
+
+	FDetailWidgetRow& widgetRow = MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Device preview", "Device preview").ToString()));
+	widgetRow.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Device preview", "Device preview"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		];
+	widgetRow.ValueContent().MinDesiredWidth(300);
+	TSharedRef<SGridPanel> grid = SNew(SGridPanel);
+	_mGrid = grid;
+	widgetRow.ValueContent()
+	[
+		grid
+	];
+
+	CreateKeyboard();
+
+	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Select a key", "Select a key"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 4.0f)
+			.FillColumn(1, 1.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SComboBox<TSharedPtr<FString>>)
+				.InitiallySelectedItem(_mChromaSDKKeyboardKeys[0])
+				.OptionsSource(&_mChromaSDKKeyboardKeys)
+				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum)
+				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("Select a key", "Select a key"))
+				]
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Set key", "Set key"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton)
+			]
+		];
+
+	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key color", "Select a key color").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Set the color", "Set the color"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SColorPicker)
+			.OnColorCommitted(this, &FChromaSDKPluginAnimation2DDetails::OnColorCommitted)
+		];
 
 	TSharedRef<STextBlock> textCurrentFrame = SNew(STextBlock)
 		.Text(LOCTEXT("0","0"));
@@ -133,115 +287,6 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				SNew(SButton)
 				.Text(LOCTEXT("Delete","Delete"))
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame)
-			]
-		];
-
-	FDetailWidgetRow& widgetRow = MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Keyboard preview", "Keyboard preview").ToString()));
-	widgetRow.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Keyboard preview", "Keyboard preview"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		];
-	widgetRow.ValueContent().MinDesiredWidth(300);
-	TSharedRef<SGridPanel> grid = SNew(SGridPanel);
-	_mGrid = grid;
-	widgetRow.ValueContent()
-	[
-		grid
-	];
-
-	CreateKeyboard();
-
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Select a key", "Select a key"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SGridPanel)
-			.FillColumn(0, 4.0f)
-			.FillColumn(1, 1.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(SComboBox<TSharedPtr<FString>>)
-				.InitiallySelectedItem(_mChromaSDKKeyboardKeys[0])
-				.OptionsSource(&_mChromaSDKKeyboardKeys)
-				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys)
-				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("Select a key", "Select a key"))
-				]
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Set key", "Set key"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetButton)
-			]
-		];
-
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key color", "Select a key color").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Set the color", "Set the color"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SColorPicker)
-			.OnColorCommitted(this, &FChromaSDKPluginAnimation2DDetails::OnColorCommitted)
-		];
-
-	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Apply color on the keyboard", "Apply color on the keyboard").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Apply", "Apply"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SGridPanel)
-			.FillColumn(0, 1.0f)
-			.FillColumn(1, 1.0f)
-			.FillColumn(2, 1.0f)
-			.FillColumn(3, 1.0f)
-			.FillColumn(4, 1.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Clear", "Clear"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickClearButton)
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Random", "Random"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickRandomButton)
-			]
-			+ SGridPanel::Slot(2, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Copy", "Copy"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickCopyButton)
-			]
-			+ SGridPanel::Slot(3, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Paste", "Paste"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPasteButton)
-			]
-			+ SGridPanel::Slot(4, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Apply", "Apply"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
 			]
 		];
 
@@ -570,10 +615,33 @@ void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
 	RefreshKeyboard();
 }
 
-TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateChromaSDKKeyboardKeys(TSharedPtr<FString> InItem)
+TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum(TSharedPtr<FString> InItem)
 {
 	return SNew(STextBlock)
 		.Text(FText::FromString(*InItem));
+}
+
+void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
+{
+	FString selectedItem = *Item;
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices Selected=%s"),
+		*selectedItem);
+
+	// set the selected enum
+	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EChromaSDKDevice2DEnum"), true);
+	if (enumPtr)
+	{
+		for (int k = 0; (k + 1) < enumPtr->NumEnums(); ++k)
+		{
+			FString text = enumPtr->GetDisplayNameTextByValue(k).ToString();
+			if (text == selectedItem)
+			{
+				_mSelectedDevice = (EChromaSDKDevice2DEnum)k;
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices Item=%d"), k);
+				break;
+			}
+		}
+	}
 }
 
 void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
@@ -699,9 +767,29 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickRandomButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickSetButton()
+FReply FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton"));
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr &&
+			animation->Device != _mSelectedDevice)
+		{
+			animation->Reset(_mSelectedDevice);
+
+			// refresh the UI
+			RefreshKeyboard();
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{

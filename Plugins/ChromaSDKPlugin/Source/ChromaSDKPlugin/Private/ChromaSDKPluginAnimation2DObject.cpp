@@ -16,6 +16,21 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 
 #if WITH_EDITOR
 
+void UChromaSDKPluginAnimation2DObject::Reset(EChromaSDKDevice2DEnum device)
+{
+	// change device
+	Device = device;
+
+	// start with 1 frame
+	Frames.Reset();
+	FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
+	frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(Device);
+	Frames.Add(frame);
+
+	Curve.EditorCurveData.Reset();
+	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
+}
+
 void UChromaSDKPluginAnimation2DObject::RefreshCurve()
 {
 	//copy times
