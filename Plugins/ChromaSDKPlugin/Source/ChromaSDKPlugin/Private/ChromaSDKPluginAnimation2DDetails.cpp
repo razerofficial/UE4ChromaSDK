@@ -48,21 +48,27 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstanc
 	//set default key
 	instance->_mSelectedKey = EChromaSDKKeyboardKey::KK_ESC;
 
+	//set the default frame
+	instance->_mCurrentFrame = 0;
+
 	return instance;
 }
 
 void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::CustomizeDetails"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::CustomizeDetails"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
 		_mObjectsBeingCustomized.Empty();
 	}
+
+	//set the default frame
+	_mCurrentFrame = 0;
+
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
 	IDetailCategoryBuilder& MyCategory = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
-
 
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Device", "Device").ToString()))
 		.NameContent()
@@ -159,7 +165,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		grid
 	];
 
-	CreateKeyboard();
+	RefreshDevice();
 
 	MyCategory.AddCustomRow(FText::FromString(LOCTEXT("Select a key on the keyboard", "Select a key on the keyboard").ToString()))
 		.NameContent()
@@ -291,7 +297,6 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		];
 
 		RefreshFrames();
-		RefreshKeyboard();
 }
 
 void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
@@ -353,7 +358,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPreviousFrame()
 			}
 			animation->RefreshCurve();
 			RefreshFrames();
-			RefreshKeyboard();
+			RefreshDevice();
 			return FReply::Handled();
 		}
 	}
@@ -379,7 +384,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickNextFrame()
 			}
 			animation->RefreshCurve();
 			RefreshFrames();
-			RefreshKeyboard();
+			RefreshDevice();
 			return FReply::Handled();
 		}
 	}
@@ -415,7 +420,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickAddFrame()
 			}
 			animation->RefreshCurve();
 			RefreshFrames();
-			RefreshKeyboard();
+			RefreshDevice();
 			return FReply::Handled();
 		}
 	}
@@ -450,7 +455,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 			}
 			animation->RefreshCurve();
 			RefreshFrames();
-			RefreshKeyboard();
+			RefreshDevice();
 			return FReply::Handled();
 		}
 	}
@@ -459,17 +464,46 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 	return FReply::Handled();
 }
 
-void FChromaSDKPluginAnimation2DDetails::CreateKeyboard()
+TSharedRef<SColorBlock> FChromaSDKPluginAnimation2DDetails::SetupColorButton(int row, int column, const FLinearColor& color)
 {
+	TSharedRef<IChromaSDKPluginButton2D> button =
+		IChromaSDKPluginButton2D::MakeInstance();
+	button->Row = row;
+	button->Column = column;
+	button->Details = _mDetails;
+
+	TSharedPtr<SColorBlock> ptrColor = button->CreateColorBlock(color);
+	TSharedRef<SColorBlock> newColor = ptrColor.ToSharedRef();
+
+	// store the button event reference
+	_mColorButtons.Add(button);
+
+	return newColor;
+}
+
+void FChromaSDKPluginAnimation2DDetails::RefreshDevice()
+{
+	// Remove existing button events
+	if (_mColorButtons.Num() > 0)
+	{
+		_mColorButtons.Empty();
+	}
+
+	// clear grid
+	_mGrid->ClearChildren();
+
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
 		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr &&
-			animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
-			animation->Frames.Num() > 0)
+			_mCurrentFrame < animation->Frames.Num())
 		{
-			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(EChromaSDKDevice2DEnum::DE_Keyboard);
-			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(EChromaSDKDevice2DEnum::DE_Keyboard);
+			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(animation->Device);
+			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(animation->Device);
+
+			FChromaSDKColorFrame2D& frame = animation->Frames[_mCurrentFrame];
+			TArray<FChromaSDKColors>& colors = frame.Colors;
+
 			for (int i = 0; i < maxRow; ++i)
 			{
 				for (int j = 0; j < maxColumn; ++j)
@@ -483,106 +517,12 @@ void FChromaSDKPluginAnimation2DDetails::CreateKeyboard()
 							.Padding(1.0f)
 							.BorderBackgroundColor(FLinearColor::Black)
 							[
-								SNew(SColorBlock)
-								.Color(FLinearColor::Black)
+								SetupColorButton(i, j, colors[i].Colors[j])
 							]
 						];
 
 					(*_mGrid).AddSlot(j, i)
 						.AttachWidget(overlay);
-				}
-			}
-		}
-	}
-}
-
-void FChromaSDKPluginAnimation2DDetails::RefreshKeyboard()
-{
-	// Remove existing button events
-	if (_mColorButtons.Num() > 0)
-	{
-		_mColorButtons.Empty();
-	}
-
-	if (_mObjectsBeingCustomized.Num() > 0)
-	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
-		{
-			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(EChromaSDKDevice2DEnum::DE_Keyboard);
-			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(EChromaSDKDevice2DEnum::DE_Keyboard);
-
-			FChromaSDKColorFrame2D& frame = animation->Frames[_mCurrentFrame];
-			TArray<FChromaSDKColors>& colors = frame.Colors;
-
-			FChildren* children1 = _mGrid->GetChildren();
-			if (children1)
-			{
-
-				int index = 0;
-				for (int i = 0; i < maxRow; ++i)
-				{
-					FChromaSDKColors& row = colors[i];
-					for (int j = 0; j < maxColumn; ++j)
-					{
-						FLinearColor& color = row.Colors[j];
-						color.A = 1.0f; //full alpha
-
-						TSharedRef<SWidget> child = children1->GetChildAt(index);
-						SOverlay* overlay = (SOverlay*)&child.Get();
-						if (overlay)
-						{
-							FChildren* children2 = overlay->GetChildren();
-							if (children2 &&
-								children2->Num() > 0)
-							{
-								TSharedRef<SWidget> child2 = children2->GetChildAt(0);
-								SOverlay::FOverlaySlot* slot = (SOverlay::FOverlaySlot*)&child2.Get();
-								if (slot)
-								{
-									FChildren* children3 = overlay->GetChildren();
-									if (children3 &&
-										children3->Num() > 0)
-									{
-										TSharedRef<SWidget> child3 = children3->GetChildAt(0);
-										SBorder* border = (SBorder*)&child3.Get();
-										if (border)
-										{
-											FChildren* children4 = border->GetChildren();
-											if (children4 &&
-												children4->Num() > 0)
-											{
-												TSharedRef<SWidget> child4 = children4->GetChildAt(0);
-												SColorBlock* block = (SColorBlock*)&child4.Get();
-												if (block)
-												{
-													TSharedRef<IChromaSDKPluginButton2D> button =
-														IChromaSDKPluginButton2D::MakeInstance();
-													button->Row = i;
-													button->Column = j;
-													button->Details = _mDetails;
-
-													// would rather update existing color
-													TSharedPtr<SColorBlock> ptrColor = button->CreateColorBlock(color);
-													TSharedRef<SColorBlock> newColor = ptrColor.ToSharedRef();
-
-													// store the button event reference
-													_mColorButtons.Add(button);
-
-													border->ClearContent();
-													border->SetContent(newColor);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-						++index;
-					}
 				}
 			}
 		}
@@ -612,7 +552,7 @@ void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
 		}
 	}
 
-	RefreshKeyboard();
+	RefreshDevice();
 }
 
 TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum(TSharedPtr<FString> InItem)
@@ -693,7 +633,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
 	}
 
 	// refresh the UI
-	RefreshKeyboard();
+	RefreshDevice();
 
 	return FReply::Handled();
 }
@@ -719,7 +659,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickCopyButton()
 FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
 {
 	// refresh the UI
-	RefreshKeyboard();
+	RefreshDevice();
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -741,7 +681,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
 	}
 
 	// refresh the UI
-	RefreshKeyboard();
+	RefreshDevice();
 
 	return FReply::Handled();
 }
@@ -762,7 +702,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickRandomButton()
 	}
 
 	// refresh the UI
-	RefreshKeyboard();
+	RefreshDevice();
 
 	return FReply::Handled();
 }
@@ -779,8 +719,14 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton()
 		{
 			animation->Reset(_mSelectedDevice);
 
+			// reset clipboard
+			_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+
+			// set default frame
+			_mCurrentFrame = 0;
+
 			// refresh the UI
-			RefreshKeyboard();
+			RefreshDevice();
 		}
 	}
 
@@ -806,7 +752,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton()
 	}
 
 	// refresh the UI
-	RefreshKeyboard();
+	RefreshDevice();
 
 	return FReply::Handled();
 }

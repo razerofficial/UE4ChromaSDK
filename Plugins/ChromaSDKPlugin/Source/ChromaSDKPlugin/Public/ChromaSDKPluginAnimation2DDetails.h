@@ -17,8 +17,7 @@ public:
 
 	void RefreshFrames();
 
-	void CreateKeyboard();
-	void RefreshKeyboard();
+	void RefreshDevice();
 
 	// enum dropdown handler
 	TSharedRef<SWidget> GenerateDropdownEnum(TSharedPtr<FString> InItem);
@@ -28,6 +27,7 @@ public:
 	FReply OnClickSetDeviceButton();
 
 	// device preview row
+	TSharedRef<SColorBlock> SetupColorButton(int row, int column, const FLinearColor& color);
 	void OnClickColor(int row, int column);
 
 	// apply row
