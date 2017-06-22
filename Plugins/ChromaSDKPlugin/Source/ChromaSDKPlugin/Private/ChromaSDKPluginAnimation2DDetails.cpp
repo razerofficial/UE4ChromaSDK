@@ -828,7 +828,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
 			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
 			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
 			if (_mColors.Num() == maxRow &&
-				_mColors[_mCurrentFrame].Colors.Num() == maxColumn)
+				_mColors[0].Colors.Num() == maxColumn)
 			{
 				frames[_mCurrentFrame].Colors = _mColors;
 			}
