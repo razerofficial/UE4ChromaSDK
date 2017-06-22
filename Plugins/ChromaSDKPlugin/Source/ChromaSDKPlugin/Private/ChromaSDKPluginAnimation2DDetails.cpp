@@ -7,6 +7,7 @@
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
+#include "PropertyCustomizationHelpers.h"
 #include "Widgets/Colors/SColorBlock.h"
 #include "Widgets/Colors/SColorPicker.h"
 #include "Widgets/Input/SButton.h"
@@ -264,19 +265,21 @@ void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
 			_mTextCurrentFrame->SetText(FText::AsNumber(_mCurrentFrame+1));
 			_mTextNumberOfFrames->SetText(FText::AsNumber(animation->Frames.Num()));
 			float duration = 0.0f;
-			if (_mCurrentFrame < animation->Frames.Num())
+			if (_mCurrentFrame < animation->Frames.Num() &&
+				_mCurrentFrame < animation->Curve.EditorCurveData.Keys.Num())
 			{
-				duration = animation->Frames[_mCurrentFrame].Duration;
+				if (_mCurrentFrame == 0)
+				{
+					duration = animation->Curve.EditorCurveData.Keys[_mCurrentFrame].Time;
+				}
+				else
+				{
+					duration =
+						animation->Curve.EditorCurveData.Keys[_mCurrentFrame].Time -
+						animation->Curve.EditorCurveData.Keys[_mCurrentFrame-1].Time;
+				}
 			}
 			_mTextFrameDuration->SetText(FText::AsNumber(duration));
-
-			animation->Curve.EditorCurveData.Reset();
-			float time = 0.0f;
-			for (int i = 0; i < animation->Frames.Num(); ++i)
-			{
-				time += animation->Frames[i].Duration;
-				animation->Curve.EditorCurveData.AddKey(time, 0.0f);
-			}
 			return;
 		}
 	}
@@ -303,6 +306,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPreviousFrame()
 			{
 				--_mCurrentFrame;
 			}
+			animation->RefreshCurve();
 			RefreshFrames();
 			RefreshKeyboard();
 			return FReply::Handled();
@@ -328,6 +332,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickNextFrame()
 			{
 				++_mCurrentFrame;
 			}
+			animation->RefreshCurve();
 			RefreshFrames();
 			RefreshKeyboard();
 			return FReply::Handled();
@@ -350,7 +355,6 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickAddFrame()
 				_mCurrentFrame = 0;
 			}
 			FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
-			frame.Duration = 1.0f;
 			frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
 			if (_mCurrentFrame == animation->Frames.Num() ||
 				(_mCurrentFrame+1) == animation->Frames.Num())
@@ -364,6 +368,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickAddFrame()
 				animation->Frames.Insert(frame, _mCurrentFrame);
 
 			}
+			animation->RefreshCurve();
 			RefreshFrames();
 			RefreshKeyboard();
 			return FReply::Handled();
@@ -388,7 +393,6 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 			if (animation->Frames.Num() == 1)
 			{
 				// reset frame
-				animation->Frames[0].Duration = 1.0f;
 				animation->Frames[0].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
 			}
 			else if (animation->Frames.Num() > 0)
@@ -399,6 +403,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 					_mCurrentFrame = animation->Frames.Num() - 1;
 				}
 			}
+			animation->RefreshCurve();
 			RefreshFrames();
 			RefreshKeyboard();
 			return FReply::Handled();

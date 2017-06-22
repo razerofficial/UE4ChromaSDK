@@ -6,39 +6,69 @@
 UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	// start with 1 frame
+	FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
+	frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(Device);
+	Frames.Add(frame);
+
+	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
 }
 
 #if WITH_EDITOR
-void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
-{
-	/*
-	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty %s"),
-		*PropertyChangedEvent.Property->GetName());
-	*/
 
-	if (PropertyChangedEvent.Property->GetName() == "Curve")
+void UChromaSDKPluginAnimation2DObject::RefreshCurve()
+{
+	//copy times
+	TArray<float> times = TArray<float>();
+	for (int i = 0; i < Curve.EditorCurveData.Keys.Num(); ++i)
 	{
-		for (int i = 0; (i+1) < Curve.EditorCurveData.Keys.Num() && i < Frames.Num(); ++i)
+		FRichCurveKey& key = Curve.EditorCurveData.Keys[i];
+		float time = key.Time;
+		if (time <= 0.0f)
 		{
-			FRichCurveKey& key = Curve.EditorCurveData.Keys[i];
-			FRichCurveKey& nextKey = Curve.EditorCurveData.Keys[i + 1];
-			key.Value = 0.0f;
-			nextKey.Value = 0.0f;
-			
-			float t = nextKey.Time - key.Time;
-			Frames[i].Duration = t;
+			time = 0.033f;
+		}
+		times.Add(time);
+	}	
+
+	// make sure curve data doesn't have any extra items
+	while (times.Num() > Frames.Num())
+	{
+		int lastIndex = times.Num() - 1;
+		times.RemoveAt(lastIndex);
+	}
+
+	// make sure curve data has the same number of items as frames
+	while (times.Num() < Frames.Num())
+	{
+		if (times.Num() == 0)
+		{
+			times.Add(1.0f);
+		}
+		else
+		{
+			int lastIndex = times.Num() - 1;
+			float time = times[lastIndex] + 1.0f;
+			times.Add(time);
 		}
 	}
 
+	// reset array
+	Curve.EditorCurveData.Reset();
+	for (int i = 0; i < times.Num(); ++i)
+	{
+		float time = times[i];
+		Curve.EditorCurveData.AddKey(time, 0.0f);
+	}
+}
+
+void UChromaSDKPluginAnimation2DObject::RefreshColors()
+{
 	int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(Device);
 	int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(Device);
 	for (int i = 0; i < Frames.Num(); ++i)
 	{
 		FChromaSDKColorFrame2D& frame = Frames[i];
-		if (frame.Duration <= 0.0f)
-		{
-			frame.Duration = 1.0f;
-		}
 		TArray<FChromaSDKColors>& rows = frame.Colors;
 		if (rows.Num() != maxRow)
 		{
@@ -58,4 +88,23 @@ void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FProp
 		}
 	}
 }
+
+void UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
+{
+	/*
+	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PostEditChangeChainProperty %s"),
+		*PropertyChangedEvent.Property->GetName());
+	*/
+
+	Super::PostEditChangeChainProperty(PropertyChangedEvent);
+
+	if (PropertyChangedEvent.Property->GetName() == "Curve" ||
+		PropertyChangedEvent.Property->GetName() == "Frames")
+	{
+		//RefreshCurve();
+	}
+
+	RefreshColors();
+}
+
 #endif

@@ -275,9 +275,6 @@ struct FChromaSDKColorFrame1D
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	float Duration;
-
-	UPROPERTY(EditAnywhere)
 	FChromaSDKColors Colors;
 
 	//Constructor
@@ -290,9 +287,6 @@ USTRUCT(BlueprintType)
 struct FChromaSDKColorFrame2D
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere)
-	float Duration;
 
 	UPROPERTY(EditAnywhere)
 	TArray<FChromaSDKColors> Colors;

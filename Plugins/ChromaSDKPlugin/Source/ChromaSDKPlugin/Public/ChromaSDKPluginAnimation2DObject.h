@@ -22,6 +22,9 @@ public:
 	FRuntimeFloatCurve Curve;
 
 #if WITH_EDITOR
+	void RefreshColors();
+	void RefreshCurve();
+
 	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
 #endif
 };

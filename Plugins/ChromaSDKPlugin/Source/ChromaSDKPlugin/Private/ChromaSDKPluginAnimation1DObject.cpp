@@ -6,6 +6,10 @@
 UChromaSDKPluginAnimation1DObject::UChromaSDKPluginAnimation1DObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	// start with 1 frame
+	FChromaSDKColorFrame1D frame = FChromaSDKColorFrame1D();
+	frame.Colors = UChromaSDKPluginBPLibrary::CreateColors1D(Device);
+	Frames.Add(frame);
 }
 
 #if WITH_EDITOR
@@ -17,10 +21,6 @@ void UChromaSDKPluginAnimation1DObject::PostEditChangeChainProperty(struct FProp
 	for (int i = 0; i < Frames.Num(); ++i)
 	{
 		FChromaSDKColorFrame1D& frame = Frames[i];
-		if (frame.Duration <= 0.0f)
-		{
-			frame.Duration = 1.0f;
-		}
 		FChromaSDKColors& leds = frame.Colors;
 		if (leds.Colors.Num() != maxLeds)
 		{
