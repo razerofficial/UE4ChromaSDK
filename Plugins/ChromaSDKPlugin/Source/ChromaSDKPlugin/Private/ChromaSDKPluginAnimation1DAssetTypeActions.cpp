@@ -99,10 +99,10 @@ TSharedPtr<SWidget> FChromaSDKPluginAnimation1DAssetTypeActions::GetThumbnailOve
 	{
 		if (IsEffectPlaying(EffectList))
 		{
-			return LOCTEXT("Thumbnail_StopChromaAnimation1DToolTip", "Stop selected Chroma animation");
+			return LOCTEXT("Thumbnail_StopChromaAnimationToolTip", "Stop selected Chroma animation");
 		}
 
-		return LOCTEXT("Thumbnail_PlayChromaAnimation1DToolTip", "Play selected Chroma animation");
+		return LOCTEXT("Thumbnail_PlayChromaAnimationToolTip", "Play selected Chroma animation");
 	};
 
 	TSharedRef<SBox> Box = SNew(SBox)
@@ -148,6 +148,14 @@ TSharedPtr<SWidget> FChromaSDKPluginAnimation1DAssetTypeActions::GetThumbnailOve
 /** Return if the specified effect is playing*/
 bool FChromaSDKPluginAnimation1DAssetTypeActions::IsEffectPlaying(const TArray<TWeakObjectPtr<UChromaSDKPluginAnimation1DObject>>& Objects) const
 {
+	if (Objects.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)Objects[0].Get();
+		if (animation != nullptr)
+		{
+			return animation->IsPlaying();
+		}
+	}
 	return false;
 }
 
@@ -162,20 +170,14 @@ void FChromaSDKPluginAnimation1DAssetTypeActions::ExecutePlayEffect(TArray<TWeak
 
 	if (Objects.Num() > 0)
 	{
-		const UChromaSDKPluginAnimation1DObject* animation = Objects[0].Get();
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)Objects[0].Get();
 		if (animation != nullptr)
 		{
-			const EChromaSDKDevice1DEnum& device = animation->Device;
-			const TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
-			if (frames.Num() > 0)
+			if (!animation->IsLoaded())
 			{
-				FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(device, frames[0].Colors);
-				if (effect.Result == 0)
-				{
-					UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
-					UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
-				}
+				animation->Load();
 			}
+			animation->Play();
 		}
 	}
 }
@@ -183,12 +185,27 @@ void FChromaSDKPluginAnimation1DAssetTypeActions::ExecutePlayEffect(TArray<TWeak
 /** Handler for when StopEffect is selected */
 void FChromaSDKPluginAnimation1DAssetTypeActions::ExecuteStopEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation1DObject>> Objects)
 {
-
+	if (Objects.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)Objects[0].Get();
+		if (animation != nullptr)
+		{
+			return animation->Stop();
+		}
+	}
 }
 
 /** Returns true if only one effect is selected to play */
 bool FChromaSDKPluginAnimation1DAssetTypeActions::CanExecutePlayCommand(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation1DObject>> Objects) const
 {
+	if (Objects.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)Objects[0].Get();
+		if (animation != nullptr)
+		{
+			return !animation->IsPlaying();
+		}
+	}
 	return true;
 }
 

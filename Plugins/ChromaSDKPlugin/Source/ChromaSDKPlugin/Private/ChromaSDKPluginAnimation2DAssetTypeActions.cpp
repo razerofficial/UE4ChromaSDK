@@ -36,8 +36,8 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::GetActions(const TArray<UObjec
 	TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Effects = GetTypedWeakObjectPtrs<UChromaSDKPluginAnimation2DObject>(InObjects);
 
 	MenuBuilder.AddMenuEntry(
-		LOCTEXT("ChromaAnimation1D_PlayEffect", "Play"),
-		LOCTEXT("ChromaAnimation1D_PlayEffectTooltip", "Plays the selected Chroma animation."),
+		LOCTEXT("ChromaAnimation2D_PlayEffect", "Play"),
+		LOCTEXT("ChromaAnimation2D_PlayEffectTooltip", "Plays the selected Chroma animation."),
 		FSlateIcon(FEditorStyle::GetStyleSetName(), "MediaAsset.AssetActions.Play.Small"),
 		FUIAction(
 			FExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation2DAssetTypeActions::ExecutePlayEffect, Effects),
@@ -46,8 +46,8 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::GetActions(const TArray<UObjec
 	);
 
 	MenuBuilder.AddMenuEntry(
-		LOCTEXT("ChromaAnimation1D_StopEffect", "Stop"),
-		LOCTEXT("ChromaAnimation1D_StopEffectTooltip", "Stops the selected Chroma animation."),
+		LOCTEXT("ChromaAnimation2D_StopEffect", "Stop"),
+		LOCTEXT("ChromaAnimation2D_StopEffectTooltip", "Stops the selected Chroma animation."),
 		FSlateIcon(FEditorStyle::GetStyleSetName(), "MediaAsset.AssetActions.Stop.Small"),
 		FUIAction(
 			FExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation2DAssetTypeActions::ExecuteStopEffect, Effects),
