@@ -612,6 +612,7 @@ void FChromaSDKPluginAnimation2DDetails::RefreshDevice()
 	{
 		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr &&
+			_mCurrentFrame >= 0 &&
 			_mCurrentFrame < animation->Frames.Num())
 		{
 			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(animation->Device);
@@ -620,25 +621,29 @@ void FChromaSDKPluginAnimation2DDetails::RefreshDevice()
 			FChromaSDKColorFrame2D& frame = animation->Frames[_mCurrentFrame];
 			TArray<FChromaSDKColors>& colors = frame.Colors;
 
-			for (int i = 0; i < maxRow; ++i)
+			if (colors.Num() == maxRow &&
+				colors[0].Colors.Num() == maxColumn)
 			{
-				for (int j = 0; j < maxColumn; ++j)
+				for (int i = 0; i < maxRow; ++i)
 				{
-					TSharedRef<SOverlay> overlay = SNew(SOverlay)
-						+ SOverlay::Slot()
-						.HAlign(HAlign_Center)
-						.VAlign(VAlign_Center)
-						[
-							SNew(SBorder)
-							.Padding(1.0f)
-							.BorderBackgroundColor(FLinearColor::Black)
+					for (int j = 0; j < maxColumn; ++j)
+					{
+						TSharedRef<SOverlay> overlay = SNew(SOverlay)
+							+ SOverlay::Slot()
+							.HAlign(HAlign_Center)
+							.VAlign(VAlign_Center)
 							[
-								SetupColorButton(i, j, colors[i].Colors[j])
-							]
-						];
+								SNew(SBorder)
+								.Padding(1.0f)
+								.BorderBackgroundColor(FLinearColor::Black)
+								[
+									SetupColorButton(i, j, colors[i].Colors[j])
+								]
+							];
 
-					(*_mGrid).AddSlot(j, i)
-						.AttachWidget(overlay);
+						(*_mGrid).AddSlot(j, i)
+							.AttachWidget(overlay);
+					}
 				}
 			}
 		}

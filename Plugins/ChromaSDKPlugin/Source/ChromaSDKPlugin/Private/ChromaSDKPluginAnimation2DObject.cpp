@@ -212,6 +212,7 @@ void UChromaSDKPluginAnimation2DObject::Reset(EChromaSDKDevice2DEnum device)
 	Frames.Add(frame);
 
 	Curve.EditorCurveData.Reset();
+	Curve.EditorCurveData.Keys.Reset();
 	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
 }
 
@@ -254,6 +255,7 @@ void UChromaSDKPluginAnimation2DObject::RefreshCurve()
 
 	// reset array
 	Curve.EditorCurveData.Reset();
+	Curve.EditorCurveData.Keys.Reset();
 	for (int i = 0; i < times.Num(); ++i)
 	{
 		float time = times[i];

@@ -275,7 +275,7 @@ struct FChromaSDKColorFrame1D
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	FChromaSDKColors Colors;
+	TArray<FLinearColor> Colors;
 
 	//Constructor
 	FChromaSDKColorFrame1D()

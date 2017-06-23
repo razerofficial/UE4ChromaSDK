@@ -45,13 +45,13 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	static int GetMaxColumn(const EChromaSDKDevice2DEnum& device);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateColors1D", Keywords = "Create a blank one-dimensional color array"), Category = "ChromaSDK")
-	static FChromaSDKColors CreateColors1D(const EChromaSDKDevice1DEnum& device);
+	static TArray<FLinearColor> CreateColors1D(const EChromaSDKDevice1DEnum& device);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateColors2D", Keywords = "Create a blank two-dimensional color array"), Category = "ChromaSDK")
 	static TArray<FChromaSDKColors> CreateColors2D(const EChromaSDKDevice2DEnum& device);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateRandomColors1D", Keywords = "Create a random one-dimensional color array"), Category = "ChromaSDK")
-	static FChromaSDKColors CreateRandomColors1D(const EChromaSDKDevice1DEnum& device);
+	static TArray<FLinearColor> CreateRandomColors1D(const EChromaSDKDevice1DEnum& device);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateRandomColors2D", Keywords = "Create a random two-dimensional color array"), Category = "ChromaSDK")
 	static TArray<FChromaSDKColors> CreateRandomColors2D(const EChromaSDKDevice2DEnum& device);
@@ -81,7 +81,7 @@ class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 	static FChromaSDKEffectResult ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum& device, const FLinearColor& color);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateEffectCustom1D", Keywords = "Create a custom color effect using one-dimensional array"), Category = "ChromaSDK")
-	static FChromaSDKEffectResult ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors);
+	static FChromaSDKEffectResult ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const TArray<FLinearColor>& colors);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CreateEffectCustom2D", Keywords = "Create a custom color effect using two-dimensional array"), Category = "ChromaSDK")
 	static FChromaSDKEffectResult ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum& device, const TArray<FChromaSDKColors>& colors);

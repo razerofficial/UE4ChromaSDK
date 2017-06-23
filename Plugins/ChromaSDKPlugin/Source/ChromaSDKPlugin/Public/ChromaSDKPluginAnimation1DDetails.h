@@ -77,7 +77,7 @@ private:
 	FLinearColor _mColor;
 
 	// for copy/paste for the grid colors
-	FChromaSDKColors _mColors;
+	TArray<FLinearColor> _mColors;
 
 	// animation controls
 	int _mCurrentFrame;

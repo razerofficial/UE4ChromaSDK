@@ -305,7 +305,8 @@ void FChromaSDKPluginAnimation1DDetails::RefreshFrames()
 			_mTextCurrentFrame->SetText(FText::AsNumber(_mCurrentFrame+1));
 			_mTextNumberOfFrames->SetText(FText::AsNumber(animation->Frames.Num()));
 			float duration = 0.0f;
-			if (_mCurrentFrame < animation->Frames.Num() &&
+			if (_mCurrentFrame >= 0 &&
+				_mCurrentFrame < animation->Frames.Num() &&
 				_mCurrentFrame < animation->Curve.EditorCurveData.Keys.Num())
 			{
 				if (_mCurrentFrame == 0)
@@ -493,30 +494,33 @@ void FChromaSDKPluginAnimation1DDetails::RefreshDevice()
 	{
 		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr &&
+			_mCurrentFrame >= 0 &&
 			_mCurrentFrame < animation->Frames.Num())
 		{
 			int maxLeds = UChromaSDKPluginBPLibrary::GetMaxLeds(animation->Device);
 
 			FChromaSDKColorFrame1D& frame = animation->Frames[_mCurrentFrame];
-			FChromaSDKColors& colors = frame.Colors;
-
-			for (int i = 0; i < maxLeds; ++i)
+			TArray<FLinearColor>& colors = frame.Colors;
+			if (colors.Num() == maxLeds)
 			{
-				TSharedRef<SOverlay> overlay = SNew(SOverlay)
-					+ SOverlay::Slot()
-					.HAlign(HAlign_Center)
-					.VAlign(VAlign_Center)
-					[
-						SNew(SBorder)
-						.Padding(1.0f)
-						.BorderBackgroundColor(FLinearColor::Black)
+				for (int i = 0; i < maxLeds; ++i)
+				{
+					TSharedRef<SOverlay> overlay = SNew(SOverlay)
+						+ SOverlay::Slot()
+						.HAlign(HAlign_Center)
+						.VAlign(VAlign_Center)
 						[
-							SetupColorButton(i, colors.Colors[i])
-						]
-					];
+							SNew(SBorder)
+							.Padding(1.0f)
+							.BorderBackgroundColor(FLinearColor::Black)
+							[
+								SetupColorButton(i, colors[i])
+							]
+						];
 
-				(*_mGrid).AddSlot(i, 0)
-					.AttachWidget(overlay);
+					(*_mGrid).AddSlot(i, 0)
+						.AttachWidget(overlay);
+				}
 			}
 		}
 	}
@@ -535,9 +539,9 @@ void FChromaSDKPluginAnimation1DDetails::OnClickColor(int element)
 			TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
 			if (frames.Num() > 0 &&
 				element >= 0 &&
-				element < frames[_mCurrentFrame].Colors.Colors.Num())
+				element < frames[_mCurrentFrame].Colors.Num())
 			{
-				TArray<FLinearColor>& colors = frames[_mCurrentFrame].Colors.Colors;
+				TArray<FLinearColor>& colors = frames[_mCurrentFrame].Colors;
 				colors[element] = _mColor;
 			}
 		}
@@ -620,11 +624,11 @@ FReply FChromaSDKPluginAnimation1DDetails::OnClickFillButton()
 			if (frames.Num() > 0)
 			{
 				FChromaSDKColorFrame1D& frame = frames[_mCurrentFrame];
-				FChromaSDKColors& colors = frame.Colors;
+				TArray<FLinearColor>& colors = frame.Colors;
 				int maxLeds = UChromaSDKPluginBPLibrary::GetMaxLeds(device);
 				for (int i = 0; i < maxLeds; ++i)
 				{
-					colors.Colors[i] = _mColor;
+					colors[i] = _mColor;
 				}
 			}
 		}
@@ -647,7 +651,8 @@ FReply FChromaSDKPluginAnimation1DDetails::OnClickCopyButton()
 		{
 			const EChromaSDKDevice1DEnum& device = animation->Device;
 			TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
-			_mColors = frames[_mCurrentFrame].Colors;
+			FChromaSDKColorFrame1D& frame = frames[_mCurrentFrame];
+			_mColors = frame.Colors;
 		}
 	}
 
@@ -669,9 +674,10 @@ FReply FChromaSDKPluginAnimation1DDetails::OnClickPasteButton()
 			const EChromaSDKDevice1DEnum& device = animation->Device;
 			int maxLed = UChromaSDKPluginBPLibrary::GetMaxLeds(device);
 			TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
-			if (_mColors.Colors.Num() == maxLed)
+			FChromaSDKColorFrame1D& frame = frames[_mCurrentFrame];
+			if (_mColors.Num() == maxLed)
 			{
-				frames[_mCurrentFrame].Colors = _mColors;
+				frame.Colors = _mColors;
 			}
 		}
 	}
@@ -748,7 +754,8 @@ FReply FChromaSDKPluginAnimation1DDetails::OnClickApplyButton()
 		{
 			const EChromaSDKDevice1DEnum& device = animation->Device;
 			TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
-			FChromaSDKColors& colors = frames[_mCurrentFrame].Colors;
+			FChromaSDKColorFrame1D& frame = frames[_mCurrentFrame];
+			TArray<FLinearColor>& colors = frame.Colors;
 			FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(device, colors);
 			if (effect.Result == 0)
 			{

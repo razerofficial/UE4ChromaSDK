@@ -212,6 +212,7 @@ void UChromaSDKPluginAnimation1DObject::Reset(EChromaSDKDevice1DEnum device)
 	Frames.Add(frame);
 
 	Curve.EditorCurveData.Reset();
+	Curve.EditorCurveData.Keys.Reset();
 	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
 }
 
@@ -254,6 +255,7 @@ void UChromaSDKPluginAnimation1DObject::RefreshCurve()
 
 	// reset array
 	Curve.EditorCurveData.Reset();
+	Curve.EditorCurveData.Keys.Reset();
 	for (int i = 0; i < times.Num(); ++i)
 	{
 		float time = times[i];
@@ -267,8 +269,8 @@ void UChromaSDKPluginAnimation1DObject::RefreshColors()
 	for (int i = 0; i < Frames.Num(); ++i)
 	{
 		FChromaSDKColorFrame1D& frame = Frames[i];
-		FChromaSDKColors& colors = frame.Colors;
-		if (colors.Colors.Num() != maxLeds)
+		TArray<FLinearColor>& colors = frame.Colors;
+		if (colors.Num() != maxLeds)
 		{
 			frame.Colors = UChromaSDKPluginBPLibrary::CreateColors1D(Device);
 		}

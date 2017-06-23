@@ -235,16 +235,16 @@ int UChromaSDKPluginBPLibrary::GetMaxColumn(const EChromaSDKDevice2DEnum& device
 	return result;
 }
 
-FChromaSDKColors UChromaSDKPluginBPLibrary::CreateColors1D(const EChromaSDKDevice1DEnum& device)
+TArray<FLinearColor> UChromaSDKPluginBPLibrary::CreateColors1D(const EChromaSDKDevice1DEnum& device)
 {
 	int elements = GetMaxLeds(device);
-	FChromaSDKColors result = FChromaSDKColors();
+	TArray<FLinearColor> colors = TArray<FLinearColor>();
 	for (int i = 0; i < elements; ++i)
 	{
 		FLinearColor color = FLinearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		result.Colors.Add(color);
+		colors.Add(color);
 	}
-	return result;
+	return colors;
 }
 
 TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateColors2D(const EChromaSDKDevice2DEnum& device)
@@ -265,10 +265,10 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateColors2D(const EChroma
 	return result;
 }
 
-FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChromaSDKDevice1DEnum& device)
+TArray<FLinearColor> UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChromaSDKDevice1DEnum& device)
 {
 	int elements = GetMaxLeds(device);
-	FChromaSDKColors result = FChromaSDKColors();
+	TArray<FLinearColor> colors = TArray<FLinearColor>();
 	for (int i = 0; i < elements; ++i)
 	{
 		float red = FMath::RandRange(0.0f, 1.0f);
@@ -276,9 +276,9 @@ FChromaSDKColors UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChromaSD
 		float blue = FMath::RandRange(0.0f, 1.0f);
 		float alpha = 1.0f;
 		FLinearColor color = FLinearColor(red, green, blue, alpha);
-		result.Colors.Add(color);
+		colors.Add(color);
 	}
-	return result;
+	return colors;
 }
 
 TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(const EChromaSDKDevice2DEnum& device)
@@ -496,7 +496,7 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(co
 	return data;
 }
 
-FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const FChromaSDKColors& colors)
+FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum& device, const TArray<FLinearColor>& colors)
 {
 	FChromaSDKEffectResult data = FChromaSDKEffectResult();
 
@@ -510,17 +510,17 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(
 	case EChromaSDKDevice1DEnum::DE_ChromaLink:
 	{
 		maxLeds = ChromaSDK::ChromaLink::MAX_LEDS;
-		if (maxLeds != colors.Colors.Num())
+		if (maxLeds != colors.Num())
 		{
 			UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Array size mismatch elements: %d==%d!"),
 				maxLeds,
-				colors.Colors.Num());
+				colors.Num());
 			break;
 		}
 		ChromaSDK::ChromaLink::CUSTOM_EFFECT_TYPE pParam = {};
 		for (int i = 0; i < maxLeds; i++)
 		{
-			const FLinearColor& color = colors.Colors[i];
+			const FLinearColor& color = colors[i];
 			int red = color.R * 255;
 			int green = color.G * 255;
 			int blue = color.B * 255;
@@ -532,17 +532,17 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(
 	case EChromaSDKDevice1DEnum::DE_Headset:
 	{
 		maxLeds = ChromaSDK::Headset::MAX_LEDS;
-		if (maxLeds != colors.Colors.Num())
+		if (maxLeds != colors.Num())
 		{
 			UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Array size mismatch elements: %d==%d!"),
 				maxLeds,
-				colors.Colors.Num());
+				colors.Num());
 			break;
 		}
 		ChromaSDK::Headset::CUSTOM_EFFECT_TYPE pParam = {};
 		for (int i = 0; i < maxLeds; i++)
 		{
-			const FLinearColor& color = colors.Colors[i];
+			const FLinearColor& color = colors[i];
 			int red = color.R * 255;
 			int green = color.G * 255;
 			int blue = color.B * 255;
@@ -554,17 +554,17 @@ FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(
 	case EChromaSDKDevice1DEnum::DE_Mousepad:
 	{
 		maxLeds = ChromaSDK::Mousepad::MAX_LEDS;
-		if (maxLeds != colors.Colors.Num())
+		if (maxLeds != colors.Num())
 		{
 			UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin::ChromaSDKCreateEffectCustom1D Array size mismatch elements: %d==%d!"),
 				maxLeds,
-				colors.Colors.Num());
+				colors.Num());
 			break;
 		}
 		ChromaSDK::Mousepad::CUSTOM_EFFECT_TYPE pParam = {};
 		for (int i = 0; i < maxLeds; i++)
 		{
-			const FLinearColor& color = colors.Colors[i];
+			const FLinearColor& color = colors[i];
 			int red = color.R * 255;
 			int green = color.G * 255;
 			int blue = color.B * 255;
