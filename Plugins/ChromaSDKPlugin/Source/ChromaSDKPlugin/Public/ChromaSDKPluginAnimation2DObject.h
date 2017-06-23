@@ -5,8 +5,6 @@
 #include "ChromaSDKPluginTypes.h"
 #include "ChromaSDKPluginAnimation2DObject.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE(FDelegateChomaSDKOnComplete);
-
 UCLASS(Blueprintable, BlueprintType, Category = "Animation")
 class UChromaSDKPluginAnimation2DObject : public UObject, public FTickableGameObject
 {
