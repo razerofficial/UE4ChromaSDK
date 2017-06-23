@@ -2,6 +2,8 @@
 
 #include "ChromaSDKPluginBPLibrary.h"
 #include "ChromaSDKPlugin.h"
+#include "ChromaSDKPluginAnimation1DObject.h"
+#include "ChromaSDKPluginAnimation2DObject.h"
 #include <string>
 
 using namespace ChromaSDK;
@@ -354,6 +356,7 @@ const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetMouseLedColor(cons
 
 int UChromaSDKPluginBPLibrary::ChromaSDKInit()
 {
+	// Init the SDK
 	int result = FChromaSDKPluginModule::Get().ChromaSDKInit();
 	_sInitialized = result == 0;
 	return result;
@@ -361,6 +364,29 @@ int UChromaSDKPluginBPLibrary::ChromaSDKInit()
 
 int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
 {
+	// unload any 1D animation effects
+	for (TObjectIterator<UChromaSDKPluginAnimation1DObject> iterator; iterator; ++iterator)
+	{
+		UChromaSDKPluginAnimation1DObject* item = *iterator;
+		if (item != nullptr &&
+			item->IsLoaded())
+		{
+			item->Unload();
+		}
+	}
+
+	// unload any 2D animation effects
+	for (TObjectIterator<UChromaSDKPluginAnimation2DObject> iterator; iterator; ++iterator)
+	{
+		UChromaSDKPluginAnimation2DObject* item = *iterator;
+		if (item != nullptr &&
+			item->IsLoaded())
+		{
+			item->Unload();
+		}
+	}
+
+	// UnInit the SDK
 	int result = FChromaSDKPluginModule::Get().ChromaSDKUnInit();
 	if (result == 0)
 	{
