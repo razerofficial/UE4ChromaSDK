@@ -126,14 +126,16 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		.ValueContent().MinDesiredWidth(300)
 		[
 			SNew(SGridPanel)
-			.FillColumn(0, 1.0f)
+			.FillColumn(0, 1.5f)
 			.FillColumn(1, 1.0f)
 			.FillColumn(2, 2.0f)
-			.FillColumn(3, 1.0f)
-			.FillColumn(4, 1.0f)
-			.FillColumn(5, 1.0f)
-			.FillColumn(6, 1.0f)
-			.FillColumn(7, 1.0f)
+			.FillColumn(3, 1.5f)
+			.FillColumn(4, 1.5f)
+			.FillColumn(5, 1.5f)
+			.FillColumn(6, 1.5f)
+			.FillColumn(7, 1.5f)
+			.FillColumn(8, 1.5f)
+			.FillColumn(9, 2.0f)
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SButton)
@@ -181,6 +183,18 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				SNew(SButton)
 				.Text(LOCTEXT("Stop", "Stop"))
 				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickStopButton)
+			]
+			+ SGridPanel::Slot(8, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Load", "Load"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickLoadButton)
+			]
+			+ SGridPanel::Slot(9, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Unload", "Unload"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton)
 			]
 		];
 
@@ -493,6 +507,10 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickAddFrame()
 		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
 			if (_mCurrentFrame < 0 ||
 				_mCurrentFrame >= animation->Frames.Num())
 			{
@@ -529,6 +547,10 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
 			if (_mCurrentFrame < 0 ||
 				_mCurrentFrame >= animation->Frames.Num())
 			{
@@ -989,11 +1011,10 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPlayButton()
 			}
 			else
 			{
-				if (animation->IsLoaded())
+				if (!animation->IsLoaded())
 				{
-					animation->Unload();
+					animation->Load();
 				}
-				animation->Load();
 				animation->Play();
 			}
 		}
@@ -1020,6 +1041,56 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickStopButton()
 			if (animation->IsPlaying())
 			{
 				animation->Stop();
+			}
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickLoadButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickLoadButton"));
+
+	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
+	if (!initialized)
+	{
+		UChromaSDKPluginBPLibrary::ChromaSDKInit();
+	}
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (!animation->IsLoaded())
+			{
+				animation->Load();
+			}
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton()
+{
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton"));
+
+	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
+	if (!initialized)
+	{
+		UChromaSDKPluginBPLibrary::ChromaSDKInit();
+	}
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
 			}
 		}
 	}

@@ -41,6 +41,8 @@ public:
 	FReply OnClickApplyButton();
 	FReply OnClickPlayButton();
 	FReply OnClickStopButton();
+	FReply OnClickLoadButton();
+	FReply OnClickUnloadButton();
 
 	// select a key row
 	bool IsEnabledKeyboardKey() const;
