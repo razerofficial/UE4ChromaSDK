@@ -164,7 +164,7 @@ enum class EChromaSDKMouseLed : uint8
 5. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectStatic(const EChromaSDKDeviceEnum&amp; device, const FLinearColor&amp; color)
     * Returns the FChromaSDKEffectResult after creating a `CHROMA_STATIC` effect given the device and color. This effect sets the lighting effect to a static color for a device.
 
-6. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum&amp; device, const FChromaSDKColors&amp; colors)
+6. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum&amp; device, const TArray&lt;FLinearColor&gt;&amp; colors)
     * Returns the FChromaSDKEffectResult after creating a `CHROMA_CUSTOM` effect given the device and one-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
 
 7. FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(const EChromaSDKDevice2DEnum&amp; device, const TArray&lt;FChromaSDKColors&gt;&amp; colors)
@@ -176,13 +176,13 @@ enum class EChromaSDKMouseLed : uint8
 9. int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid&amp; effectId)
     * Returns the result of calling ChromaSDK::DeleteEffect given the effect identifier. Deletes the given effect.
 
-10. FChromaSDKColors CreateColors1D(const EChromaSDKDevice1DEnum&amp; device)
+10. TArray&lt;FLinearColor&gt; CreateColors1D(const EChromaSDKDevice1DEnum&amp; device)
     * Returns a blank one-dimensional color array given the device.
 
 11. TArray&lt;FChromaSDKColors&gt; CreateColors2D(const EChromaSDKDevice2DEnum&amp; device)
     * Returns a blank two-dimensional color array given the device.
 
-12. FChromaSDKColors CreateRandomColors1D(const EChromaSDKDevice1DEnum&amp; device)
+12. TArray&lt;FLinearColor&gt; CreateRandomColors1D(const EChromaSDKDevice1DEnum&amp; device)
     * Returns a one-dimensional random color array given the device.
 
 13. TArray&lt;FChromaSDKColors&gt; CreateRandomColors2D(const EChromaSDKDevice2DEnum&amp; device)
@@ -300,7 +300,7 @@ After an effect has been deleted, check the result for success. After effects ha
 
 ### CreateEffectCustom1D
 
-**FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum&amp; device, const FChromaSDKColors&amp; colors)**
+**FChromaSDKEffectResult UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom1D(const EChromaSDKDevice1DEnum&amp; device, const TArray&lt;FLinearColor&gt;&amp; colors)**
 
 `CreateEffectCustom1D` returns the FChromaSDKEffectResult after creating a `CHROMA_CUSTOM` effect given the device and one-dimensional color array. This effect sets the lighting effect with an array of colors for a device.
 
@@ -332,7 +332,7 @@ After an effect has been deleted, check the result for success. After effects ha
 
 ### CreateColors1D
 
-**FChromaSDKColors CreateColors1D(const EChromaSDKDevice1DEnum&amp; device)**
+**TArray&lt;FLinearColor&gt; CreateColors1D(const EChromaSDKDevice1DEnum&amp; device)**
 
 `CreateColors1D` returns a blank one-dimensional color array given the device.
 
@@ -348,7 +348,7 @@ After an effect has been deleted, check the result for success. After effects ha
 
 ### CreateRandomColors1D
 
-**FChromaSDKColors CreateRandomColors1D(const EChromaSDKDevice1DEnum&amp; device)**
+**TArray&lt;FLinearColor&gt; CreateRandomColors1D(const EChromaSDKDevice1DEnum&amp; device)**
 
 `CreateRandomColors1D` returns a one-dimensional random color array given the device.
 
@@ -384,3 +384,43 @@ After an effect has been deleted, check the result for success. After effects ha
 In the `Content Browser` under the `Add New->Miscellaneous` menu item is where animation assets can be created for `ChromaSDKPluginAnimation1DObject` and `ChromaSDKPluginAnimation2DObject`.
 
 ![image_33](images/image_33.png)
+
+Hovering `ChromaSDK Animations` will show a `Play` or `Stop` thumbnail. Clicking the `Play` thumbnail will play the animation effect when in `play-mode` or `edit-mode`.
+
+![image_34](images/image_34.png)
+
+Right-click a `ChromaSDK Animation` and select `Edit` to open the custom `details view`.
+
+![image_35](images/image_35.png)
+
+The `details view` sets the device type and allows the color animation frames to be edited.
+`1D` animations support `ChromaLink`, `Headset`, and `Mousepad` devices.
+`2D` animations support `Keyboard`, `Keypad`, and `Mouse` devices.
+The `device preview` shows a grid and clicking the elements will set the color from the color wheel.
+The `Curve` adjusts the timings for each animation frame.
+
+![image_36](images/image_36.png)
+
+`ChromaSDK Animation` objects can be referenced from blueprints.
+Create a variable of object type `ChromaSDKPluginAnimation1DObject` or `ChromaSDKPluginAnimation2DObject`.
+Use the variable `SET` so the `animation asset` can be selected from the dropdown.
+
+![image_37](images/image_37.png)
+
+Use `Load` on the `animation` before it can be used.
+Use `IsLoaded` to check if the `animation` has been loaded.
+
+![image_40](images/image_40.png)
+
+After the `ChromaSDK Animation` has been loaded and set in a variable, it can be played.
+
+![image_38](images/image_38.png)
+
+A playing `ChromaSDK Animation` can be stopped.
+
+![image_39](images/image_39.png)
+
+Use `Unload` to unload the animation.
+`ChromaSDKPluginBPLibrary::UnInit` will automatically unload animations.
+
+![image_41](images/image_41.png)
