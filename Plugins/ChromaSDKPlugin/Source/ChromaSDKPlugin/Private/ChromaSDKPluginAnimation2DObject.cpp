@@ -139,6 +139,17 @@ void UChromaSDKPluginAnimation2DObject::Play()
 	_mTime = 0.0f;
 	_mIsPlaying = true;
 	_mCurrentFrame = 0;
+
+	if (_mCurrentFrame < _mEffects.Num())
+	{
+		//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Play SetEffect."));
+		FChromaSDKEffectResult& effect = _mEffects[_mCurrentFrame];
+		int result = UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+		if (result != 0)
+		{
+			UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Tick Failed to set effect!"));
+		}
+	}
 }
 
 void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete onComplete)
@@ -156,6 +167,17 @@ void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnCo
 	_mTime = 0.0f;
 	_mIsPlaying = true;
 	_mCurrentFrame = 0;
+
+	if (_mCurrentFrame < _mEffects.Num())
+	{
+		//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Play SetEffect."));
+		FChromaSDKEffectResult& effect = _mEffects[_mCurrentFrame];
+		int result = UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+		if (result != 0)
+		{
+			UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Tick Failed to set effect!"));
+		}
+	}
 }
 
 void UChromaSDKPluginAnimation2DObject::Stop()
