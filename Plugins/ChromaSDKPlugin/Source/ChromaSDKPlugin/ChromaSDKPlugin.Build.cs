@@ -10,8 +10,7 @@ public class ChromaSDKPlugin : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"ChromaSDKPlugin/Public"
-				
+				"ChromaSDKPlugin/Public",				
 				// ... add public include paths required here ...
 			}
 			);
@@ -37,6 +36,7 @@ public class ChromaSDKPlugin : ModuleRules
 				
 				// ... add other public dependencies that you statically link with here ...
 				"AppFramework",
+				"DesktopPlatform",
 				"InputCore",
 				"UnrealEd",
 			}

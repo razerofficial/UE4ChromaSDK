@@ -63,6 +63,12 @@ public:
 	FReply OnClickAddFrame();
 	FReply OnClickDeleteFrame();
 
+	// import colors from texture image
+	FReply OnClickImportTextureImageButton();
+
+	// import colors from a texture animation
+	FReply OnClickImportTextureAnimationButton();
+
 private:
 
 	// instance reference

@@ -4,9 +4,11 @@
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include "ChromaSDKPluginButton2D.h"
 #include "ChromaSDKPluginBPLibrary.h"
+#include "DesktopPlatformModule.h"
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
+#include "EditorDirectories.h"
 #include "PropertyCustomizationHelpers.h"
 #include "Widgets/Colors/SColorBlock.h"
 #include "Widgets/Colors/SColorPicker.h"
@@ -80,6 +82,34 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	_mCurrentFrame = 0;
 
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
+
+	IDetailCategoryBuilder& import = DetailBuilder.EditCategory("Import", LOCTEXT("Import", "Import"), ECategoryPriority::Important);
+
+	import.AddCustomRow(FText::FromString(LOCTEXT("Import", "Import").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Import", "Import"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 3.0f)
+			.FillColumn(1, 3.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Import image", "Import image"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton)
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Import texture", "Import animation"))
+				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton)
+			]
+		];
 
 	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
 
@@ -577,6 +607,92 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 	}
 
 	_mCurrentFrame = 0;
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
+{
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString texturePath;
+		FString Filter = TEXT("Image Files (*.bmp;*.jpg;*.png)| *.bmp;*.jpg;*.png ||");
+		TArray<FString> OutFiles;
+		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+		if (DesktopPlatform->OpenFileDialog(
+			parentWindowWindowHandle,
+			TEXT("Import texture..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				texturePath = OutFiles[0];
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
+					*texturePath);
+			}
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
+{
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString texturePath;
+		FString Filter = TEXT("Image Files (*.gif)| *.gif ||");
+		TArray<FString> OutFiles;
+		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+		if (DesktopPlatform->OpenFileDialog(
+			parentWindowWindowHandle,
+			TEXT("Import texture..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				texturePath = OutFiles[0];
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
+					*texturePath);
+			}
+		}
+	}
+
+
+	/*
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
+			if (_mCurrentFrame < 0 ||
+				_mCurrentFrame >= animation->Frames.Num())
+			{
+				_mCurrentFrame = 0;
+			}
+			if (_mCurrentFrame < animation->Frames.Num() )
+			{
+			}
+			animation->RefreshCurve();
+			RefreshFrames();
+			RefreshDevice();
+			return FReply::Handled();
+		}
+	}
+	*/
 	return FReply::Handled();
 }
 
