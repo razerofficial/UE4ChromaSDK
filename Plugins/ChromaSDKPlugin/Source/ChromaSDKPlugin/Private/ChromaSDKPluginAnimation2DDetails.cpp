@@ -777,23 +777,32 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path)
 				cbImage,
 				reinterpret_cast<BYTE *> (ImageBits));
 
-			COLORREF* pColor = (COLORREF*)ImageBits;
-
-			_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(EChromaSDKDevice2DEnum::DE_Keyboard);
-			for (int i = 0; i < _mColors.Num() && i < (int)height; i++)
+			if (_mObjectsBeingCustomized.Num() > 0)
 			{
-				for (int j = 0; j < _mColors[i].Colors.Num() && j < (int)width; j++)
+				UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+				if (animation != nullptr)
 				{
-					float red = GetRValue(*pColor) / 255.0f;
-					float green = GetGValue(*pColor) / 255.0f;
-					float blue = GetBValue(*pColor) / 255.0f;
-					FLinearColor color = FLinearColor(red, green, blue, 1.0f);
-					_mColors[i].Colors[j] = color;
-					pColor++;
-					/*
-					UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails r=%f g=%f b=%f"),
-						red, green, blue);
-					*/
+					COLORREF* pColor = (COLORREF*)ImageBits;
+
+					_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+					for (int i = 0; i < _mColors.Num() && i < (int)height; i++)
+					{
+						COLORREF* nextRow = pColor + width;
+						for (int j = 0; j < _mColors[i].Colors.Num() && j < (int)width; j++)
+						{
+							float red = GetBValue(*pColor) / 255.0f;
+							float green = GetGValue(*pColor) / 255.0f;
+							float blue = GetRValue(*pColor) / 255.0f;
+							FLinearColor color = FLinearColor(red, green, blue, 1.0f);
+							_mColors[i].Colors[j] = color;
+							pColor++;
+							/*
+							UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails r=%f g=%f b=%f"),
+								red, green, blue);
+							*/
+						}
+						pColor = nextRow;
+					}
 				}
 			}
 		}
@@ -831,7 +840,14 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path)
 		Factory->Release();
 	}
 
-	//return hDIBBitmap;
+	// done with bitmap
+	if (hDIBBitmap)
+	{
+		ensure(DeleteObject(hDIBBitmap));
+		hDIBBitmap = NULL;
+	}
+
+	OnClickPasteButton();
 
 #endif
 }
