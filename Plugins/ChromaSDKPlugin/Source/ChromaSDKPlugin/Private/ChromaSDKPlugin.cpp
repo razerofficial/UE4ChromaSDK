@@ -35,7 +35,7 @@ bool FChromaSDKPluginModule::ValidateGetProcAddress(bool condition, FString meth
 	}
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded %s."), *methodName);
+		//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded %s."), *methodName);
 	}
 	return condition;
 }

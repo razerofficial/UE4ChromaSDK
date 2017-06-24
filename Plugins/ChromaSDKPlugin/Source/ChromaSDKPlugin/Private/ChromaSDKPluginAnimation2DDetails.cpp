@@ -776,6 +776,26 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path)
 				cbStride,
 				cbImage,
 				reinterpret_cast<BYTE *> (ImageBits));
+
+			COLORREF* pColor = (COLORREF*)ImageBits;
+
+			_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(EChromaSDKDevice2DEnum::DE_Keyboard);
+			for (int i = 0; i < _mColors.Num() && i < (int)height; i++)
+			{
+				for (int j = 0; j < _mColors[i].Colors.Num() && j < (int)width; j++)
+				{
+					float red = GetRValue(*pColor) / 255.0f;
+					float green = GetGValue(*pColor) / 255.0f;
+					float blue = GetBValue(*pColor) / 255.0f;
+					FLinearColor color = FLinearColor(red, green, blue, 1.0f);
+					_mColors[i].Colors[j] = color;
+					pColor++;
+					/*
+					UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails r=%f g=%f b=%f"),
+						red, green, blue);
+					*/
+				}
+			}
 		}
 
 		// Image Extraction failed, clear allocated memory
@@ -810,6 +830,8 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path)
 	{
 		Factory->Release();
 	}
+
+	//return hDIBBitmap;
 
 #endif
 }
