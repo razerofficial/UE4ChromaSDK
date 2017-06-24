@@ -42,8 +42,9 @@ void UChromaSDKPluginAnimation2DObject::Tick(float deltaTime)
 			_mIsPlaying = false;
 			_mTime = 0.0f;
 			_mCurrentFrame = 0;
+
+			// execute the complete event if set
 			_mOnComplete.ExecuteIfBound();
-			_mOnComplete.Clear();
 		}
 	}
 }
@@ -136,6 +137,16 @@ void UChromaSDKPluginAnimation2DObject::Play()
 		return;
 	}
 
+	// clear on play to avoid unsetting on a loop
+	if (_mCompleted)
+	{
+		_mCompleted = false;
+		if (_mOnComplete.IsBound())
+		{
+			_mOnComplete.Clear();
+		}
+	}
+
 	_mTime = 0.0f;
 	_mIsPlaying = true;
 	_mCurrentFrame = 0;
@@ -160,6 +171,16 @@ void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnCo
 	{
 		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete Animation has not been loaded!"));
 		return;
+	}
+
+	// clear on play to avoid unsetting on a loop
+	if (_mCompleted)
+	{
+		_mCompleted = false;
+		if (_mOnComplete.IsBound())
+		{
+			_mOnComplete.Clear();
+		}
 	}
 
 	_mOnComplete = onComplete;
