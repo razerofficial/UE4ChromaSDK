@@ -45,7 +45,7 @@ void UChromaSDKPluginAnimation2DObject::Tick(float deltaTime)
 			_mCurrentFrame = 0;
 
 			// execute the complete event if set
-			_mOnComplete.ExecuteIfBound();
+			_mOnComplete.ExecuteIfBound(this);
 		}
 	}
 }
@@ -164,7 +164,7 @@ void UChromaSDKPluginAnimation2DObject::Play()
 	}
 }
 
-void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete onComplete)
+void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete2D onComplete)
 {
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete"));
 

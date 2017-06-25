@@ -296,5 +296,3 @@ struct FChromaSDKColorFrame2D
 	{
 	}
 };
-
-DECLARE_DYNAMIC_DELEGATE(FDelegateChomaSDKOnComplete);

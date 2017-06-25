@@ -42,7 +42,7 @@ void UChromaSDKPluginAnimation1DObject::Tick(float deltaTime)
 			_mIsPlaying = false;
 			_mTime = 0.0f;
 			_mCurrentFrame = 0;
-			_mOnComplete.ExecuteIfBound();
+			_mOnComplete.ExecuteIfBound(this);
 			_mOnComplete.Clear();
 		}
 	}
@@ -152,7 +152,7 @@ void UChromaSDKPluginAnimation1DObject::Play()
 	}
 }
 
-void UChromaSDKPluginAnimation1DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete onComplete)
+void UChromaSDKPluginAnimation1DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete1D onComplete)
 {
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation1DObject::PlayWithOnComplete"));
 

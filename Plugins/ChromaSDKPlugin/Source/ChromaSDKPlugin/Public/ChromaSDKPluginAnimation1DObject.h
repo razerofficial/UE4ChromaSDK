@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "UObject.h"
 #include "ChromaSDKPluginTypes.h"
 #include "ChromaSDKPluginAnimation1DObject.generated.h"
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FDelegateChomaSDKOnComplete1D, UChromaSDKPluginAnimation1DObject*, animation);
 
 UCLASS(Blueprintable, BlueprintType, Category = "Animation")
 class UChromaSDKPluginAnimation1DObject : public UObject, public FTickableGameObject
@@ -25,7 +28,7 @@ public:
 	void Play();
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Play", Keywords = "Play the animation and fire the OnComplete event"), Category = "ChromaSDK")
-	void PlayWithOnComplete(FDelegateChomaSDKOnComplete onComplete);
+	void PlayWithOnComplete(FDelegateChomaSDKOnComplete1D onComplete);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Stop", Keywords = "Stop the animation"), Category = "ChromaSDK")
 	void Stop();
@@ -63,14 +66,13 @@ private:
 	float GetTime(int index);
 
 	// Callback when animation completes
-	FDelegateChomaSDKOnComplete _mOnComplete;
+	FDelegateChomaSDKOnComplete1D _mOnComplete;
 
 	// Effects needs to be loaded before the animation can be played
 	bool _mIsLoaded;
 
 	bool _mIsPlaying;
 	float _mTime;
-	FTimerDynamicDelegate _mPlayDelegate;
 	int _mCurrentFrame;
 	TArray<FChromaSDKEffectResult> _mEffects;
 };
