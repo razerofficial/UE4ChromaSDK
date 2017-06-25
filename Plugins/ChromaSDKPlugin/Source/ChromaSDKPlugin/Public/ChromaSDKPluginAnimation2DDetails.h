@@ -69,6 +69,9 @@ public:
 	// import colors from a texture animation
 	FReply OnClickImportTextureAnimationButton();
 
+	// reset animation length to override
+	FReply OnClickOverrideButton();
+
 private:
 
 	void ReadImage(const FString& path, bool isAnimation);

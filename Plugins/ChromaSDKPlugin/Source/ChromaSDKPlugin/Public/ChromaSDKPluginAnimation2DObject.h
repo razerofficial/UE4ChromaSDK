@@ -12,6 +12,9 @@ class UChromaSDKPluginAnimation2DObject : public UObject, public FTickableGameOb
 
 public:
 
+	UPROPERTY(EditAnywhere, Category = "Import")
+	float OverrideFrameTime;
+
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	FRuntimeFloatCurve Curve;
 

@@ -121,6 +121,20 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			]
 		];
 
+		import.AddCustomRow(FText::FromString(LOCTEXT("Reset animation length", "Reset animation length").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Reset animation length", "Reset animation length"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SButton)
+			.Text(LOCTEXT("Override", "Override"))
+			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickOverrideButton)
+		];
+
 	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
 
 	category.AddCustomRow(FText::FromString(LOCTEXT("Device", "Device").ToString()))
@@ -345,6 +359,57 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	TSharedRef<STextBlock> textFrameDuration = SNew(STextBlock)
 		.Text(LOCTEXT("1.0", "1.0"));
 	_mTextFrameDuration = textFrameDuration;
+
+	/*
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation)
+		{
+			TWeakObjectPtr<UChromaSDKPluginAnimation2DObject> UserDefinedStruct = CastChecked<UChromaSDKPluginAnimation2DObject>(animation);
+			for (TFieldIterator<UProperty> propertyIter(animation->GetClass()); propertyIter; ++propertyIter)
+			{
+				UProperty* property = (*propertyIter);
+				const FName& propertyName = property->GetFName();
+				FString stringName = propertyName.ToString();
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails propertyName=%s"), *stringName);
+				if (stringName == "Curve")
+				{
+					//TSharedPtr<FStructOnScope> structData = MakeShareable(new FStructOnScope(UserDefinedStruct.Get()));
+					//TSharedPtr<FStructOnScope> structData = MakeShareable(new FStructOnScope(animation->Curve, false));
+					//category.AddExternalProperty(structData, (*propertyIter)->GetFName());
+				}
+			}
+
+			TArray<UObject*> objects = TArray<UObject*>();
+			objects.Add(animation);
+			category.AddExternalProperty(objects, "Curve");
+		}
+	}
+
+	category.AddCustomRow(FText::FromString(LOCTEXT("Reset animation length", "Reset animation length").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Reset animation length", "Reset animation length"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 5.0f)
+			.FillColumn(1, 2.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SProperty, DetailBuilder.GetProperty("Curve"))
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Set", "Set"))
+			]
+		];
+	*/
 
 	category.AddCustomRow(FText::FromString(LOCTEXT("Animation frames", "Animation frames").ToString()))
 		.NameContent()
@@ -903,6 +968,22 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
 		}
 	}
 
+	/*
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
+			animation->RefreshCurve();
+			RefreshFrames();
+			RefreshDevice();
+		}
+	}
+	*/
 	return FReply::Handled();
 }
 
@@ -937,7 +1018,6 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
 		}
 	}
 
-
 	/*
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -948,21 +1028,38 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
 			{
 				animation->Unload();
 			}
-			if (_mCurrentFrame < 0 ||
-				_mCurrentFrame >= animation->Frames.Num())
+			animation->RefreshCurve();
+			RefreshFrames();
+			RefreshDevice();
+		}
+	}
+	*/
+	return FReply::Handled();
+}
+
+FReply FChromaSDKPluginAnimation2DDetails::OnClickOverrideButton()
+{
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
 			{
-				_mCurrentFrame = 0;
+				animation->Unload();
 			}
-			if (_mCurrentFrame < animation->Frames.Num() )
+			float frameTime = animation->OverrideFrameTime;
+			float time = 0.0f;
+			for (int i = 0; i < animation->Curve.EditorCurveData.Keys.Num(); ++i)
 			{
+				time += frameTime;
+				animation->Curve.EditorCurveData.Keys[i].Time = time;
 			}
 			animation->RefreshCurve();
 			RefreshFrames();
 			RefreshDevice();
-			return FReply::Handled();
 		}
 	}
-	*/
 	return FReply::Handled();
 }
 
