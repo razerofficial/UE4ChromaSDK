@@ -620,7 +620,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 	return FReply::Handled();
 }
 
-void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path)
+void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path, bool isAnimation)
 {
 #if PLATFORM_WINDOWS
 
@@ -650,6 +650,18 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path)
 	);
 
 	IWICBitmapFrameDecode *Frame = NULL;
+
+	UINT frameCount = 0;
+
+	if (isAnimation)
+	{
+		if (SUCCEEDED(hr))
+		{
+			hr = (Decoder->GetFrameCount(&frameCount));
+			UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails frameCount=%d"),
+				(int)frameCount);
+		}
+	}
 
 	// Retrieve the first frame of the image from the decoder
 	if (SUCCEEDED(hr))
@@ -858,7 +870,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
 	if (DesktopPlatform)
 	{
 		FString texturePath;
-		FString Filter = TEXT("Image Files (*.bmp;*.jpg;*.png)| *.bmp;*.jpg;*.png ||");
+		FString Filter = TEXT("Image Files (*.bmp;*.jpg;*.png)| *.bmp;*.jpg;*.png; ||");
 		TArray<FString> OutFiles;
 		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
@@ -873,11 +885,13 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
 			if (OutFiles.Num() > 0)
 			{
 				texturePath = OutFiles[0];
+				/*
 				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
 					*texturePath);
-			}
+				*/
 
-			ReadImage(texturePath);
+				ReadImage(texturePath, false);
+			}
 		}
 	}
 
@@ -890,7 +904,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
 	if (DesktopPlatform)
 	{
 		FString texturePath;
-		FString Filter = TEXT("Image Files (*.gif)| *.gif ||");
+		FString Filter = TEXT("Image Files (*.gif)| *.gif; ||");
 		TArray<FString> OutFiles;
 		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
@@ -905,8 +919,12 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
 			if (OutFiles.Num() > 0)
 			{
 				texturePath = OutFiles[0];
+				/*
 				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
 					*texturePath);
+				*/
+
+				ReadImage(texturePath, true);
 			}
 		}
 	}

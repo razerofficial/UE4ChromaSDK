@@ -71,7 +71,7 @@ public:
 
 private:
 
-	void ReadImage(const FString& path);
+	void ReadImage(const FString& path, bool isAnimation);
 
 	// instance reference
 	TSharedPtr<FChromaSDKPluginAnimation2DDetails> _mDetails;
