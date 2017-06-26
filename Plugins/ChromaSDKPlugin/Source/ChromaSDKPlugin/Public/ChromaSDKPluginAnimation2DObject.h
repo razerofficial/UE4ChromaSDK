@@ -8,7 +8,7 @@
 DECLARE_DYNAMIC_DELEGATE_OneParam(FDelegateChomaSDKOnComplete2D, UChromaSDKPluginAnimation2DObject*, animation);
 
 UCLASS(Blueprintable, BlueprintType, Category = "Animation")
-class UChromaSDKPluginAnimation2DObject : public UObject, public FTickableGameObject
+class CHROMASDKPLUGIN_API UChromaSDKPluginAnimation2DObject : public UObject, public FTickableGameObject
 {
 	GENERATED_UCLASS_BODY()
 

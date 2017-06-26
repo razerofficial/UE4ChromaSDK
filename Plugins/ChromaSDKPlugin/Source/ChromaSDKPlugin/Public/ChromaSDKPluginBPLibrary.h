@@ -28,7 +28,7 @@
 */
 
 UCLASS()
-class UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
+class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 

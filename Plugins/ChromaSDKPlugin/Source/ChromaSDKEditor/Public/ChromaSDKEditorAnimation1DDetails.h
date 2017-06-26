@@ -2,14 +2,16 @@
 
 #pragma once
 
+#if WITH_EDITOR
+
 #include "IDetailCustomization.h"
+#include "ChromaSDKEditorButton1D.h"
 #include "ChromaSDKPluginTypes.h"
-#include "ChromaSDKPluginButton1D.h"
 #include "Widgets/Layout/SGridPanel.h"
 
 class FDetailWidgetRow;
 
-class FChromaSDKPluginAnimation1DDetails : public IDetailCustomization
+class FChromaSDKEditorAnimation1DDetails : public IDetailCustomization
 {
 public:
 	static TSharedRef<IDetailCustomization> MakeInstance();
@@ -38,7 +40,7 @@ public:
 	FReply OnClickRandomButton();
 	FReply OnClickCopyButton();
 	FReply OnClickPasteButton();
-	FReply OnClickApplyButton();
+	FReply OnClickPreviewButton();
 	FReply OnClickPlayButton();
 	FReply OnClickStopButton();
 	FReply OnClickLoadButton();
@@ -56,7 +58,7 @@ public:
 private:
 
 	// instance reference
-	TSharedPtr<FChromaSDKPluginAnimation1DDetails> _mDetails;
+	TSharedPtr<FChromaSDKEditorAnimation1DDetails> _mDetails;
 
 	// object being inspected
 	TArray<TWeakObjectPtr<UObject>> _mObjectsBeingCustomized;
@@ -71,7 +73,7 @@ private:
 	TSharedPtr<SGridPanel> _mGrid;
 
 	// grid buttons hold element
-	TArray<TSharedRef<IChromaSDKPluginButton1D>> _mColorButtons;
+	TArray<TSharedRef<IChromaSDKEditorButton1D>> _mColorButtons;
 
 	// current color in the color picker
 	FLinearColor _mColor;
@@ -85,3 +87,5 @@ private:
 	TSharedPtr<STextBlock> _mTextNumberOfFrames;
 	TSharedPtr<STextBlock> _mTextFrameDuration;
 };
+
+#endif

@@ -2,14 +2,13 @@
 
 #pragma once
 
-#include "UObject.h"
 #include "ChromaSDKPluginTypes.h"
 #include "ChromaSDKPluginAnimation1DObject.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FDelegateChomaSDKOnComplete1D, UChromaSDKPluginAnimation1DObject*, animation);
 
 UCLASS(Blueprintable, BlueprintType, Category = "Animation")
-class UChromaSDKPluginAnimation1DObject : public UObject, public FTickableGameObject
+class CHROMASDKPLUGIN_API UChromaSDKPluginAnimation1DObject : public UObject, public FTickableGameObject
 {
 	GENERATED_UCLASS_BODY()
 

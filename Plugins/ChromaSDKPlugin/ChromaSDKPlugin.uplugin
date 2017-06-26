@@ -18,6 +18,10 @@
 			"Name": "ChromaSDKPlugin",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen"
+		},
+		{
+			"Name": "ChromaSDKEditor",
+			"Type": "Editor"
 		}
 	]
 }

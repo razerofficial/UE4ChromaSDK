@@ -1,37 +1,39 @@
 ﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKPluginAnimation2DAssetTypeActions.h"
+#if WITH_EDITOR
+
+#include "ChromaSDKEditorAnimation2DAssetTypeActions.h"
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
 
 #define LOCTEXT_NAMESPACE "AssetTypeActions"
 
-FText FChromaSDKPluginAnimation2DAssetTypeActions::GetName() const
+FText FChromaSDKEditorAnimation2DAssetTypeActions::GetName() const
 {
-	return NSLOCTEXT("AssetTypeActions", "AssetTypeActions_ChromaSDKPluginAnimation2D", "ChromaSDK Animation 2D");
+	return NSLOCTEXT("AssetTypeActions", "AssetTypeActions_ChromaSDKEditorAnimation2D", "ChromaSDK Animation 2D");
 }
 
-FColor FChromaSDKPluginAnimation2DAssetTypeActions::GetTypeColor() const
+FColor FChromaSDKEditorAnimation2DAssetTypeActions::GetTypeColor() const
 {
 	return FColor(149, 70, 255);
 }
 
-UClass* FChromaSDKPluginAnimation2DAssetTypeActions::GetSupportedClass() const
+UClass* FChromaSDKEditorAnimation2DAssetTypeActions::GetSupportedClass() const
 {
 	return UChromaSDKPluginAnimation2DObject::StaticClass();
 }
 
-uint32 FChromaSDKPluginAnimation2DAssetTypeActions::GetCategories()
+uint32 FChromaSDKEditorAnimation2DAssetTypeActions::GetCategories()
 {
 	return EAssetTypeCategories::Misc;
 }
 
-bool FChromaSDKPluginAnimation2DAssetTypeActions::HasActions(const TArray<UObject*>& InObjects) const
+bool FChromaSDKEditorAnimation2DAssetTypeActions::HasActions(const TArray<UObject*>& InObjects) const
 {
 	return true;
 }
 
-void FChromaSDKPluginAnimation2DAssetTypeActions::GetActions(const TArray<UObject*>& InObjects, FMenuBuilder& MenuBuilder)
+void FChromaSDKEditorAnimation2DAssetTypeActions::GetActions(const TArray<UObject*>& InObjects, FMenuBuilder& MenuBuilder)
 {
 	TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Effects = GetTypedWeakObjectPtrs<UChromaSDKPluginAnimation2DObject>(InObjects);
 
@@ -40,8 +42,8 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::GetActions(const TArray<UObjec
 		LOCTEXT("ChromaAnimation2D_PlayEffectTooltip", "Plays the selected Chroma animation."),
 		FSlateIcon(FEditorStyle::GetStyleSetName(), "MediaAsset.AssetActions.Play.Small"),
 		FUIAction(
-			FExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation2DAssetTypeActions::ExecutePlayEffect, Effects),
-			FCanExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation2DAssetTypeActions::CanExecutePlayCommand, Effects)
+			FExecuteAction::CreateSP(this, &FChromaSDKEditorAnimation2DAssetTypeActions::ExecutePlayEffect, Effects),
+			FCanExecuteAction::CreateSP(this, &FChromaSDKEditorAnimation2DAssetTypeActions::CanExecutePlayCommand, Effects)
 		)
 	);
 
@@ -50,18 +52,18 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::GetActions(const TArray<UObjec
 		LOCTEXT("ChromaAnimation2D_StopEffectTooltip", "Stops the selected Chroma animation."),
 		FSlateIcon(FEditorStyle::GetStyleSetName(), "MediaAsset.AssetActions.Stop.Small"),
 		FUIAction(
-			FExecuteAction::CreateSP(this, &FChromaSDKPluginAnimation2DAssetTypeActions::ExecuteStopEffect, Effects),
+			FExecuteAction::CreateSP(this, &FChromaSDKEditorAnimation2DAssetTypeActions::ExecuteStopEffect, Effects),
 			FCanExecuteAction()
 		)
 	);
 }
 
-void FChromaSDKPluginAnimation2DAssetTypeActions::AssetsActivated(const TArray<UObject*>& InObjects, EAssetTypeActivationMethod::Type ActivationType)
+void FChromaSDKEditorAnimation2DAssetTypeActions::AssetsActivated(const TArray<UObject*>& InObjects, EAssetTypeActivationMethod::Type ActivationType)
 {
 
 }
 
-TSharedPtr<SWidget> FChromaSDKPluginAnimation2DAssetTypeActions::GetThumbnailOverlay(const FAssetData& AssetData) const
+TSharedPtr<SWidget> FChromaSDKEditorAnimation2DAssetTypeActions::GetThumbnailOverlay(const FAssetData& AssetData) const
 {
 	TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> EffectList;
 	EffectList.Add(TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>((UChromaSDKPluginAnimation2DObject*)AssetData.GetAsset()));
@@ -81,7 +83,7 @@ TSharedPtr<SWidget> FChromaSDKPluginAnimation2DAssetTypeActions::GetThumbnailOve
 		return CanExecutePlayCommand(EffectList);
 	};
 
-	FChromaSDKPluginAnimation2DAssetTypeActions* MutableThis = const_cast<FChromaSDKPluginAnimation2DAssetTypeActions*>(this);
+	FChromaSDKEditorAnimation2DAssetTypeActions* MutableThis = const_cast<FChromaSDKEditorAnimation2DAssetTypeActions*>(this);
 	auto OnClickedLambda = [MutableThis, EffectList]() -> FReply
 	{
 		if (MutableThis->IsEffectPlaying(EffectList))
@@ -146,7 +148,7 @@ TSharedPtr<SWidget> FChromaSDKPluginAnimation2DAssetTypeActions::GetThumbnailOve
 }
 
 /** Return if the specified effect is playing*/
-bool FChromaSDKPluginAnimation2DAssetTypeActions::IsEffectPlaying(const TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>>& Objects) const
+bool FChromaSDKEditorAnimation2DAssetTypeActions::IsEffectPlaying(const TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>>& Objects) const
 {
 	if (Objects.Num() > 0)
 	{
@@ -160,7 +162,7 @@ bool FChromaSDKPluginAnimation2DAssetTypeActions::IsEffectPlaying(const TArray<T
 }
 
 /** Handler for when PlayEffect is selected */
-void FChromaSDKPluginAnimation2DAssetTypeActions::ExecutePlayEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects)
+void FChromaSDKEditorAnimation2DAssetTypeActions::ExecutePlayEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects)
 {
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -183,7 +185,7 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::ExecutePlayEffect(TArray<TWeak
 }
 
 /** Handler for when StopEffect is selected */
-void FChromaSDKPluginAnimation2DAssetTypeActions::ExecuteStopEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects)
+void FChromaSDKEditorAnimation2DAssetTypeActions::ExecuteStopEffect(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects)
 {
 	if (Objects.Num() > 0)
 	{
@@ -196,7 +198,7 @@ void FChromaSDKPluginAnimation2DAssetTypeActions::ExecuteStopEffect(TArray<TWeak
 }
 
 /** Returns true if only one effect is selected to play */
-bool FChromaSDKPluginAnimation2DAssetTypeActions::CanExecutePlayCommand(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects) const
+bool FChromaSDKEditorAnimation2DAssetTypeActions::CanExecutePlayCommand(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation2DObject>> Objects) const
 {
 	if (Objects.Num() > 0)
 	{
@@ -210,3 +212,5 @@ bool FChromaSDKPluginAnimation2DAssetTypeActions::CanExecutePlayCommand(TArray<T
 }
 
 #undef LOCTEXT_NAMESPACE
+
+#endif

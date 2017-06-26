@@ -2,16 +2,18 @@
 
 #pragma once
 
+#if WITH_EDITOR
+
 #include "IDetailCustomization.h"
+#include "ChromaSDKEditorAnimation2DDetails.h"
 #include "ChromaSDKPluginTypes.h"
-#include "ChromaSDKPluginAnimation2DDetails.h"
 #include "SharedPointer.h"
 
-class IChromaSDKPluginButton2D : public TSharedFromThis<IChromaSDKPluginButton2D>
+class IChromaSDKEditorButton2D : public TSharedFromThis<IChromaSDKEditorButton2D>
 {
 public:
 
-	static TSharedRef<IChromaSDKPluginButton2D> MakeInstance();
+	static TSharedRef<IChromaSDKEditorButton2D> MakeInstance();
 
 	TSharedPtr<SColorBlock> CreateColorBlock(const FLinearColor& color);
 	FReply OnMouseButtonDownColor(const FGeometry& geometry, const FPointerEvent& pointer);
@@ -20,3 +22,5 @@ public:
 	int Column;
 	TSharedPtr<IDetailCustomization> Details;
 };
+
+#endif

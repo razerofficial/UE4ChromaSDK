@@ -2,14 +2,16 @@
 
 #pragma once
 
+#if WITH_EDITOR
+
 #include "IDetailCustomization.h"
+#include "ChromaSDKEditorButton2D.h"
 #include "ChromaSDKPluginTypes.h"
-#include "ChromaSDKPluginButton2D.h"
 #include "Widgets/Layout/SGridPanel.h"
 
 class FDetailWidgetRow;
 
-class FChromaSDKPluginAnimation2DDetails : public IDetailCustomization
+class FChromaSDKEditorAnimation2DDetails : public IDetailCustomization
 {
 public:
 	static TSharedRef<IDetailCustomization> MakeInstance();
@@ -38,7 +40,7 @@ public:
 	FReply OnClickRandomButton();
 	FReply OnClickCopyButton();
 	FReply OnClickPasteButton();
-	FReply OnClickApplyButton();
+	FReply OnClickPreviewButton();
 	FReply OnClickPlayButton();
 	FReply OnClickStopButton();
 	FReply OnClickLoadButton();
@@ -77,7 +79,7 @@ private:
 	void ReadImage(const FString& path, bool isAnimation);
 
 	// instance reference
-	TSharedPtr<FChromaSDKPluginAnimation2DDetails> _mDetails;
+	TSharedPtr<FChromaSDKEditorAnimation2DDetails> _mDetails;
 
 	// object being inspected
 	TArray<TWeakObjectPtr<UObject>> _mObjectsBeingCustomized;
@@ -92,7 +94,7 @@ private:
 	TSharedPtr<SGridPanel> _mGrid;
 
 	// grid buttons hold row/column
-	TArray<TSharedRef<IChromaSDKPluginButton2D>> _mColorButtons;
+	TArray<TSharedRef<IChromaSDKEditorButton2D>> _mColorButtons;
 
 	// select a key, enum dropdown text
 	TArray<TSharedPtr<FString>> _mChromaSDKKeyboardKeys;
@@ -118,3 +120,5 @@ private:
 	TSharedPtr<STextBlock> _mTextNumberOfFrames;
 	TSharedPtr<STextBlock> _mTextFrameDuration;
 };
+
+#endif

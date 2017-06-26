@@ -2,11 +2,13 @@
 
 #pragma once
 
-#include "UnrealEd.h"
+#if WITH_EDITOR
+
 #include "AssetTypeActions_Base.h"
+#include "UnrealEd.h"
 #include "ChromaSDKPluginAnimation1DObject.h"
 
-class FChromaSDKPluginAnimation1DAssetTypeActions : public FAssetTypeActions_Base
+class FChromaSDKEditorAnimation1DAssetTypeActions : public FAssetTypeActions_Base
 {
 	// IAssetTypeActions interface
 	virtual FText GetName() const override;
@@ -33,3 +35,5 @@ class FChromaSDKPluginAnimation1DAssetTypeActions : public FAssetTypeActions_Bas
 	bool CanExecutePlayCommand(TArray<TWeakObjectPtr<UChromaSDKPluginAnimation1DObject>> Objects) const;
 	// End of IAssetTypeActions interface
 };
+
+#endif

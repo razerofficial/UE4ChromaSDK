@@ -1,8 +1,10 @@
 ﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKPluginAnimation2DDetails.h"
+#if WITH_EDITOR
+
+#include "ChromaSDKEditorAnimation2DDetails.h"
+#include "ChromaSDKEditorButton2D.h"
 #include "ChromaSDKPluginAnimation2DObject.h"
-#include "ChromaSDKPluginButton2D.h"
 #include "ChromaSDKPluginBPLibrary.h"
 #include "DesktopPlatformModule.h"
 #include "DetailCategoryBuilder.h"
@@ -17,6 +19,7 @@
 #include "Widgets/Layout/SGridPanel.h"
 #include "SlateApplication.h"
 
+#if WITH_EDITOR
 #if PLATFORM_WINDOWS
 #include "objbase.h"
 #include "Windows/WindowsHWrapper.h"
@@ -26,12 +29,13 @@ THIRD_PARTY_INCLUDES_START
 THIRD_PARTY_INCLUDES_END
 #pragma comment( lib, "windowscodecs.lib" )
 #endif
+#endif
 
 #define LOCTEXT_NAMESPACE "ChromaAnimation2DDetails"
 
-TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstance()
+TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstance()
 {
-	TSharedRef<FChromaSDKPluginAnimation2DDetails> instance = MakeShareable(new FChromaSDKPluginAnimation2DDetails);
+	TSharedRef<FChromaSDKEditorAnimation2DDetails> instance = MakeShareable(new FChromaSDKEditorAnimation2DDetails);
 	instance->_mDetails = instance;
 
 	//populate list of device enums
@@ -79,9 +83,9 @@ TSharedRef<IDetailCustomization> FChromaSDKPluginAnimation2DDetails::MakeInstanc
 	return instance;
 }
 
-void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
+void FChromaSDKEditorAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::CustomizeDetails"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::CustomizeDetails"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -111,13 +115,13 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Import image", "Import image"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickImportTextureImageButton)
 			]
 			+ SGridPanel::Slot(1, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Import texture", "Import animation"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickImportTextureAnimationButton)
 			]
 		];
 
@@ -132,7 +136,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		[
 			SNew(SButton)
 			.Text(LOCTEXT("Override", "Override"))
-			.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickOverrideButton)
+			.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickOverrideButton)
 		];
 
 	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
@@ -154,8 +158,8 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				SNew(SComboBox<TSharedPtr<FString>>)
 				.InitiallySelectedItem(_mChromaSDKDevices[0])
 				.OptionsSource(&_mChromaSDKDevices)
-				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum)
-				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices)
+				.OnGenerateWidget(this, &FChromaSDKEditorAnimation2DDetails::GenerateDropdownEnum)
+				.OnSelectionChanged(this, &FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKDevices)
 				[
 					SNew(STextBlock)
 					.Text(LOCTEXT("Select a device", "Select a device"))
@@ -165,7 +169,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Set device", "Set device"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickSetDeviceButton)
 			]
 		];
 
@@ -185,7 +189,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			.FillColumn(2, 2.0f)
 			.FillColumn(3, 1.5f)
 			.FillColumn(4, 1.5f)
-			.FillColumn(5, 1.5f)
+			.FillColumn(5, 2.0f)
 			.FillColumn(6, 1.5f)
 			.FillColumn(7, 1.5f)
 			.FillColumn(8, 1.5f)
@@ -194,61 +198,61 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Clear", "Clear"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickClearButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickClearButton)
 			]
 			+ SGridPanel::Slot(1, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Fill", "Fill"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickFillButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickFillButton)
 			]
 			+ SGridPanel::Slot(2, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Random", "Random"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickRandomButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickRandomButton)
 			]
 			+ SGridPanel::Slot(3, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Copy", "Copy"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickCopyButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickCopyButton)
 			]
 			+ SGridPanel::Slot(4, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Paste", "Paste"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPasteButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickPasteButton)
 			]
 			+ SGridPanel::Slot(5, 0)
 			[
 				SNew(SButton)
-				.Text(LOCTEXT("Apply", "Apply"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickApplyButton)
+				.Text(LOCTEXT("Preview", "Preview"))
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickPreviewButton)
 			]
 			+ SGridPanel::Slot(6, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Play", "Play"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPlayButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickPlayButton)
 			]
 			+ SGridPanel::Slot(7, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Stop", "Stop"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickStopButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickStopButton)
 			]
 			+ SGridPanel::Slot(8, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Load", "Load"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickLoadButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickLoadButton)
 			]
 			+ SGridPanel::Slot(9, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Unload", "Unload"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickUnloadButton)
 			]
 		];
 
@@ -286,8 +290,8 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				SNew(SComboBox<TSharedPtr<FString>>)
 				.InitiallySelectedItem(_mChromaSDKKeyboardKeys[0])
 				.OptionsSource(&_mChromaSDKKeyboardKeys)
-				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum)
-				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
+				.OnGenerateWidget(this, &FChromaSDKEditorAnimation2DDetails::GenerateDropdownEnum)
+				.OnSelectionChanged(this, &FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKKeyboardKeys)
 				[
 					SNew(STextBlock)
 					.Text(LOCTEXT("Select a key", "Select a key"))
@@ -297,8 +301,8 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Set key", "Set key"))
-				.IsEnabled(this, &FChromaSDKPluginAnimation2DDetails::IsEnabledKeyboardKey)
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton)
+				.IsEnabled(this, &FChromaSDKEditorAnimation2DDetails::IsEnabledKeyboardKey)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickSetKeyButton)
 			]
 		];
 
@@ -319,8 +323,8 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				SNew(SComboBox<TSharedPtr<FString>>)
 				.InitiallySelectedItem(_mChromaSDKMouseLeds[0])
 				.OptionsSource(&_mChromaSDKMouseLeds)
-				.OnGenerateWidget(this, &FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum)
-				.OnSelectionChanged(this, &FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds)
+				.OnGenerateWidget(this, &FChromaSDKEditorAnimation2DDetails::GenerateDropdownEnum)
+				.OnSelectionChanged(this, &FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKMouseLeds)
 				[
 					SNew(STextBlock)
 					.Text(LOCTEXT("Select an LED", "Select an LED"))
@@ -330,8 +334,8 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Set LED", "Set LED"))
-				.IsEnabled(this, &FChromaSDKPluginAnimation2DDetails::IsEnabledMouseLed)
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton)
+				.IsEnabled(this, &FChromaSDKEditorAnimation2DDetails::IsEnabledMouseLed)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickSetLedButton)
 			]
 		];
 
@@ -345,7 +349,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 		.ValueContent().MinDesiredWidth(300)
 		[
 			SNew(SColorPicker)
-			.OnColorCommitted(this, &FChromaSDKPluginAnimation2DDetails::OnColorCommitted)
+			.OnColorCommitted(this, &FChromaSDKEditorAnimation2DDetails::OnColorCommitted)
 		];
 
 	TSharedRef<STextBlock> textCurrentFrame = SNew(STextBlock)
@@ -372,7 +376,7 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 				UProperty* property = (*propertyIter);
 				const FName& propertyName = property->GetFName();
 				FString stringName = propertyName.ToString();
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails propertyName=%s"), *stringName);
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails propertyName=%s"), *stringName);
 				if (stringName == "Curve")
 				{
 					//TSharedPtr<FStructOnScope> structData = MakeShareable(new FStructOnScope(UserDefinedStruct.Get()));
@@ -461,32 +465,32 @@ void FChromaSDKPluginAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Previous", "Previous"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickPreviousFrame)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickPreviousFrame)
 			]
 			+ SGridPanel::Slot(1, 2)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Next","Next"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickNextFrame)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickNextFrame)
 			]
 			+ SGridPanel::Slot(2, 2)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Add","Add"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickAddFrame)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickAddFrame)
 			]
 			+ SGridPanel::Slot(3, 2)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Delete","Delete"))
-				.OnClicked(this, &FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame)
+				.OnClicked(this, &FChromaSDKEditorAnimation2DDetails::OnClickDeleteFrame)
 			]
 		];
 
 		RefreshFrames();
 }
 
-bool FChromaSDKPluginAnimation2DDetails::IsEnabledKeyboardKey() const
+bool FChromaSDKEditorAnimation2DDetails::IsEnabledKeyboardKey() const
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -499,7 +503,7 @@ bool FChromaSDKPluginAnimation2DDetails::IsEnabledKeyboardKey() const
 	return false;
 }
 
-bool FChromaSDKPluginAnimation2DDetails::IsEnabledMouseLed() const
+bool FChromaSDKEditorAnimation2DDetails::IsEnabledMouseLed() const
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -512,7 +516,7 @@ bool FChromaSDKPluginAnimation2DDetails::IsEnabledMouseLed() const
 	return false;
 }
 
-void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
+void FChromaSDKEditorAnimation2DDetails::RefreshFrames()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -553,7 +557,7 @@ void FChromaSDKPluginAnimation2DDetails::RefreshFrames()
 	_mTextFrameDuration->SetText(FText::AsNumber(0.0f));
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickPreviousFrame()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickPreviousFrame()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -579,7 +583,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPreviousFrame()
 	_mCurrentFrame = 0;
 	return FReply::Handled();
 }
-FReply FChromaSDKPluginAnimation2DDetails::OnClickNextFrame()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickNextFrame()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -605,7 +609,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickNextFrame()
 	_mCurrentFrame = 0;
 	return FReply::Handled();
 }
-FReply FChromaSDKPluginAnimation2DDetails::OnClickAddFrame()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickAddFrame()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -645,7 +649,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickAddFrame()
 	_mCurrentFrame = 0;
 	return FReply::Handled();
 }
-FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickDeleteFrame()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -685,7 +689,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickDeleteFrame()
 	return FReply::Handled();
 }
 
-void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path, bool isAnimation)
+void FChromaSDKEditorAnimation2DDetails::ReadImage(const FString& path, bool isAnimation)
 {
 #if PLATFORM_WINDOWS
 
@@ -725,7 +729,7 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path, bool isA
 			if (SUCCEEDED(hr))
 			{
 				hr = (Decoder->GetFrameCount(&frameCount));
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails frameCount=%d"),
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails frameCount=%d"),
 					(int)frameCount);
 			}
 		}
@@ -881,7 +885,7 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path, bool isA
 								_mColors[i].Colors[j] = color;
 								pColor++;
 								/*
-								UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails r=%f g=%f b=%f"),
+								UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails r=%f g=%f b=%f"),
 									red, green, blue);
 								*/
 							}
@@ -937,7 +941,7 @@ void FChromaSDKPluginAnimation2DDetails::ReadImage(const FString& path, bool isA
 #endif
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureImageButton()
 {
 	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
 	if (DesktopPlatform)
@@ -959,7 +963,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
 			{
 				texturePath = OutFiles[0];
 				/*
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
 					*texturePath);
 				*/
 
@@ -987,7 +991,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureImageButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureAnimationButton()
 {
 	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
 	if (DesktopPlatform)
@@ -1009,7 +1013,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
 			{
 				texturePath = OutFiles[0];
 				/*
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickImportTextureButton Selected=%s"),
 					*texturePath);
 				*/
 
@@ -1037,7 +1041,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickImportTextureAnimationButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickOverrideButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickOverrideButton()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1063,10 +1067,10 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickOverrideButton()
 	return FReply::Handled();
 }
 
-TSharedRef<SColorBlock> FChromaSDKPluginAnimation2DDetails::SetupColorButton(int row, int column, const FLinearColor& color)
+TSharedRef<SColorBlock> FChromaSDKEditorAnimation2DDetails::SetupColorButton(int row, int column, const FLinearColor& color)
 {
-	TSharedRef<IChromaSDKPluginButton2D> button =
-		IChromaSDKPluginButton2D::MakeInstance();
+	TSharedRef<IChromaSDKEditorButton2D> button =
+		IChromaSDKEditorButton2D::MakeInstance();
 	button->Row = row;
 	button->Column = column;
 	button->Details = _mDetails;
@@ -1080,7 +1084,7 @@ TSharedRef<SColorBlock> FChromaSDKPluginAnimation2DDetails::SetupColorButton(int
 	return newColor;
 }
 
-void FChromaSDKPluginAnimation2DDetails::RefreshDevice()
+void FChromaSDKEditorAnimation2DDetails::RefreshDevice()
 {
 	// Remove existing button events
 	if (_mColorButtons.Num() > 0)
@@ -1133,7 +1137,7 @@ void FChromaSDKPluginAnimation2DDetails::RefreshDevice()
 	}
 }
 
-void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
+void FChromaSDKEditorAnimation2DDetails::OnClickColor(int row, int column)
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1159,16 +1163,16 @@ void FChromaSDKPluginAnimation2DDetails::OnClickColor(int row, int column)
 	RefreshDevice();
 }
 
-TSharedRef<SWidget> FChromaSDKPluginAnimation2DDetails::GenerateDropdownEnum(TSharedPtr<FString> InItem)
+TSharedRef<SWidget> FChromaSDKEditorAnimation2DDetails::GenerateDropdownEnum(TSharedPtr<FString> InItem)
 {
 	return SNew(STextBlock)
 		.Text(FText::FromString(*InItem));
 }
 
-void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
+void FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
 {
 	FString selectedItem = *Item;
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices Selected=%s"),
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKDevices Selected=%s"),
 		*selectedItem);
 
 	// set the selected enum
@@ -1181,18 +1185,18 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices(TSharedPtr<FSt
 			if (text == selectedItem)
 			{
 				_mSelectedDevice = (EChromaSDKDevice2DEnum)k;
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKDevices Item=%d"), k);
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKDevices Item=%d"), k);
 				break;
 			}
 		}
 	}
 }
 
-void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
+void FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
 {
 	FString selectedItem = *Item;
 	/*
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Selected=%s"),
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Selected=%s"),
 		*selectedItem);
 	*/
 
@@ -1206,18 +1210,18 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys(TSharedPt
 			if (text == selectedItem)
 			{
 				_mSelectedKey = (EChromaSDKKeyboardKey)k;
-				//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Item=%d"), k);
+				//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKKeyboardKeys Item=%d"), k);
 				break;
 			}
 		}
 	}
 }
 
-void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
+void FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKMouseLeds(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
 {
 	FString selectedItem = *Item;
 	/*
-	UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds Selected=%s"),
+	UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKMouseLeds Selected=%s"),
 		*selectedItem);
 	*/
 
@@ -1231,21 +1235,21 @@ void FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds(TSharedPtr<F
 			if (text == selectedItem)
 			{
 				_mSelectedLed = (EChromaSDKMouseLed)k;
-				//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnChangeChromaSDKMouseLeds Item=%d"), k);
+				//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnChangeChromaSDKMouseLeds Item=%d"), k);
 				break;
 			}
 		}
 	}
 }
 
-void FChromaSDKPluginAnimation2DDetails::OnColorCommitted(FLinearColor color)
+void FChromaSDKEditorAnimation2DDetails::OnColorCommitted(FLinearColor color)
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnColorCommitted"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnColorCommitted"));
 	color.A = 1.0f; //full alpha
 	_mColor = color;
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickClearButton()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1269,7 +1273,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickClearButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickFillButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickFillButton()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1303,7 +1307,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickFillButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickCopyButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickCopyButton()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1321,7 +1325,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickCopyButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickPasteButton()
 {
 	// refresh the UI
 	RefreshDevice();
@@ -1351,7 +1355,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPasteButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickRandomButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickRandomButton()
 {
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1372,9 +1376,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickRandomButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickSetDeviceButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickSetDeviceButton"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1398,9 +1402,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetDeviceButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickSetKeyButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickSetKeyButton"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1422,9 +1426,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetKeyButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickSetLedButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickSetLedButton"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
@@ -1446,9 +1450,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickSetLedButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickApplyButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickPreviewButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickApplyButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickPreviewButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -1478,9 +1482,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickApplyButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickPlayButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickPlayButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickPlayButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickPlayButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -1495,7 +1499,7 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPlayButton()
 		{
 			if (animation->IsPlaying())
 			{
-				UE_LOG(LogTemp, Error, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickPlayButton Animation is already playing!"));
+				UE_LOG(LogTemp, Error, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickPlayButton Animation is already playing!"));
 			}
 			else
 			{
@@ -1511,9 +1515,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickPlayButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickStopButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickStopButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickStopButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickStopButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -1536,9 +1540,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickStopButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickLoadButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickLoadButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickLoadButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickLoadButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -1561,9 +1565,9 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickLoadButton()
 	return FReply::Handled();
 }
 
-FReply FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton()
+FReply FChromaSDKEditorAnimation2DDetails::OnClickUnloadButton()
 {
-	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton"));
+	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickUnloadButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
 	if (!initialized)
@@ -1587,3 +1591,5 @@ FReply FChromaSDKPluginAnimation2DDetails::OnClickUnloadButton()
 }
 
 #undef LOCTEXT_NAMESPACE
+
+#endif

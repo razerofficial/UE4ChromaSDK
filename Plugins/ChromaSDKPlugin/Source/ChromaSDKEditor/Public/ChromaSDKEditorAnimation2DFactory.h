@@ -2,11 +2,13 @@
 
 #pragma once
 
+#if WITH_EDITOR
+
 #include "UnrealEd.h"
-#include "ChromaSDKPluginAnimation1DFactory.generated.h"
+#include "ChromaSDKEditorAnimation2DFactory.generated.h"
 
 UCLASS()
-class UChromaSDKPluginAnimation1DFactory : public UFactory
+class UChromaSDKEditorAnimation2DFactory : public UFactory
 {
 	GENERATED_UCLASS_BODY()
 
@@ -14,3 +16,5 @@ class UChromaSDKPluginAnimation1DFactory : public UFactory
 	virtual UObject* FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn) override;
 	// End of UFactory interface
 };
+
+#endif

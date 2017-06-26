@@ -2,25 +2,31 @@
 
 using UnrealBuildTool;
 
-public class ChromaSDKPlugin : ModuleRules
+public class ChromaSDKEditor : ModuleRules
 {
-	public ChromaSDKPlugin(ReadOnlyTargetRules Target) : base(Target)
+	public ChromaSDKEditor(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"ChromaSDKPlugin/Public",				
+				"ChromaSDKEditor/Public",
 				// ... add public include paths required here ...
+				"ChromaSDKPlugin/Public",
 			}
 			);
 				
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"ChromaSDKPlugin/Private",
+				"ChromaSDKEditor/Private",
 				
 				// ... add other private include paths required here ...
+				"AssetTools",
+				"ChromaSDKPlugin/Private",
+				"Editor/DetailCustomizations/Private",
+				"EditorStyle",
+				"PropertyEditor",
 			}
 			);
 			
@@ -31,6 +37,11 @@ public class ChromaSDKPlugin : ModuleRules
 				"Core",
 				
 				// ... add other public dependencies that you statically link with here ...
+				"AppFramework",
+				"ChromaSDKPlugin",
+				"DesktopPlatform",
+				"InputCore",
+				"UnrealEd",
 			}
 			);
 			
@@ -42,6 +53,13 @@ public class ChromaSDKPlugin : ModuleRules
 				"Engine",
 
 				// ... add private dependencies that you statically link with here ...	
+				"AssetTools",
+				"ChromaSDKPlugin",
+				"DetailCustomizations",
+				"EditorStyle",
+				"PropertyEditor",
+				"Slate",
+				"SlateCore",
 			}
 			);
 		

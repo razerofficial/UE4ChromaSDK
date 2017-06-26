@@ -13,7 +13,7 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 	Frames.Add(frame);
 
 	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
-	OverrideFrameTime = 0.01f;
+	OverrideFrameTime = 0.1f;
 
 	_mIsPlaying = false;
 	_mTime = 0.0f;
