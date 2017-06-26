@@ -1,6 +1,7 @@
 {
-	"Changelist" : 0,
-	"BuildId" : "1f9be311-9d90-4d17-ac87-058b1353c079",
+	"Changelist" : 3466753,
+	"CompatibleChangelist" : 3452394,
+	"BuildId" : "7370d9bf-5485-48ce-aacb-446748b048bc",
 	"Modules" : 
 	{
 		"ChromaSDKPlugin" : "UE4Editor-ChromaSDKPlugin.dll"
