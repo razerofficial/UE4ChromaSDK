@@ -6,4 +6,7 @@ Saved/
 .vs/
 UE4ChromaSDK.VC.VC.opendb
 UE4ChromaSDK.VC.db
-Binaries/
+Binaries/Win64/UE4Editor-UE4ChromaSDK.pdb
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKPlugin-1484.pdb
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKPlugin.pdb
+Plugins/ChromaSDKPlugin/Binaries/Win64/failed.hotreload
