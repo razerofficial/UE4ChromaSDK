@@ -3,6 +3,7 @@
 **Table of Contents**
 
 * [Frameworks supported](#frameworks-supported)
+* [Prerequisites](#prerequisites)
 * [Usage](#usage)
 * [Blueprint objects](#blueprint-objects)
 * [Blueprint functions](#blueprint-functions)
@@ -14,6 +15,16 @@
 ## Frameworks supported
 - Windows ChromaSDK (32-bit)
 - Windows ChromaSDK (64-bit)
+
+<a name="prerequisites"></a>
+## Prerequisites
+
+- Install [Visual Studio](https://www.visualstudio.com/)
+- Install [Windows Software Development Kit (SDK) for Windows 8.1](https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk)
+- Install [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk)
+- Install `Templates->Other Languages->Visual C++->Visual C++ 2015 Tools for Windows Desktop` which can be installed through the `Visual Studio New Project Dialog`
+
+![image_42](images/image_42.png)
 
 <a name="usage"></a>
 ## Usage
