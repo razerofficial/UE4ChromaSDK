@@ -13,6 +13,7 @@ UChromaSDKPluginAnimation1DObject::UChromaSDKPluginAnimation1DObject(const FObje
 	Frames.Add(frame);
 
 	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
+	OverrideFrameTime = 0.1f;
 
 	_mIsPlaying = false;
 	_mTime = 0.0f;
@@ -42,8 +43,9 @@ void UChromaSDKPluginAnimation1DObject::Tick(float deltaTime)
 			_mIsPlaying = false;
 			_mTime = 0.0f;
 			_mCurrentFrame = 0;
+
+			// execute the complete event if set
 			_mOnComplete.ExecuteIfBound(this);
-			_mOnComplete.Clear();
 		}
 	}
 }
@@ -134,6 +136,12 @@ void UChromaSDKPluginAnimation1DObject::Play()
 	{
 		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation1DObject::Play Animation has not been loaded!"));
 		return;
+	}
+
+	// clear on play to avoid unsetting on a loop
+	if (_mOnComplete.IsBound())
+	{
+		_mOnComplete.Clear();
 	}
 
 	_mTime = 0.0f;

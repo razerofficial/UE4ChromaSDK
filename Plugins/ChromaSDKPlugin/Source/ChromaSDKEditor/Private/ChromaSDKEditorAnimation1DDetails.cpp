@@ -6,9 +6,11 @@
 #include "ChromaSDKEditorButton1D.h"
 #include "ChromaSDKPluginAnimation1DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
+#include "DesktopPlatformModule.h"
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
+#include "EditorDirectories.h"
 #include "PropertyCustomizationHelpers.h"
 #include "Widgets/Colors/SColorBlock.h"
 #include "Widgets/Colors/SColorPicker.h"
@@ -56,6 +58,48 @@ void FChromaSDKEditorAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	_mCurrentFrame = 0;
 
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
+
+	IDetailCategoryBuilder& import = DetailBuilder.EditCategory("Import", LOCTEXT("Import", "Import"), ECategoryPriority::Important);
+
+	import.AddCustomRow(FText::FromString(LOCTEXT("Import", "Import").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Import", "Import"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SGridPanel)
+			.FillColumn(0, 3.0f)
+			.FillColumn(1, 3.0f)
+			+ SGridPanel::Slot(0, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Import image", "Import image"))
+				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickImportTextureImageButton)
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Import texture", "Import animation"))
+				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickImportTextureAnimationButton)
+			]
+		];
+
+		import.AddCustomRow(FText::FromString(LOCTEXT("Reset animation length", "Reset animation length").ToString()))
+		.NameContent()
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("Reset animation length", "Reset animation length"))
+			.Font(IDetailLayoutBuilder::GetDetailFont())
+		]
+		.ValueContent().MinDesiredWidth(300)
+		[
+			SNew(SButton)
+			.Text(LOCTEXT("Override", "Override"))
+			.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickOverrideButton)
+		];
 
 	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
 
@@ -462,6 +506,160 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickDeleteFrame()
 	}
 
 	_mCurrentFrame = 0;
+	return FReply::Handled();
+}
+
+void FChromaSDKEditorAnimation1DDetails::CopyPixels(COLORREF* pColor, UINT width, UINT height)
+{
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			_mColors = UChromaSDKPluginBPLibrary::CreateColors1D(animation->Device);
+			for (int i = 0; i < (int)height; i++)
+			{
+				COLORREF* nextRow = pColor + width;
+				for (int j = 0; j < _mColors.Num() && j < (int)width; j++)
+				{
+					float red = GetBValue(*pColor) / 255.0f;
+					float green = GetGValue(*pColor) / 255.0f;
+					float blue = GetRValue(*pColor) / 255.0f;
+					FLinearColor color = FLinearColor(red, green, blue, 1.0f);
+					_mColors[j] = color;
+					pColor++;
+					/*
+					UE_LOG(LogTemp, Log, TEXT("IChromaSDKEditorAnimationBaseDetails r=%f g=%f b=%f"),
+					red, green, blue);
+					*/
+				}
+				pColor = nextRow;
+			}
+		}
+	}
+}
+
+FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureImageButton()
+{
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString texturePath;
+		FString Filter = TEXT("Image Files (*.bmp;*.jpg;*.png)| *.bmp;*.jpg;*.png; ||");
+		TArray<FString> OutFiles;
+		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+		if (DesktopPlatform->OpenFileDialog(
+			parentWindowWindowHandle,
+			TEXT("Import texture..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				texturePath = OutFiles[0];
+				/*
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickImportTextureButton Selected=%s"),
+				*texturePath);
+				*/
+
+				ReadImage(texturePath, false);
+			}
+		}
+	}
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
+			animation->RefreshCurve();
+			RefreshFrames();
+			RefreshDevice();
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureAnimationButton()
+{
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString texturePath;
+		FString Filter = TEXT("Image Files (*.gif)| *.gif; ||");
+		TArray<FString> OutFiles;
+		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+		if (DesktopPlatform->OpenFileDialog(
+			parentWindowWindowHandle,
+			TEXT("Import texture..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				texturePath = OutFiles[0];
+				/*
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickImportTextureButton Selected=%s"),
+				*texturePath);
+				*/
+
+				ReadImage(texturePath, true);
+			}
+		}
+	}
+
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
+			animation->RefreshCurve();
+			RefreshFrames();
+			RefreshDevice();
+		}
+	}
+
+	return FReply::Handled();
+}
+
+FReply FChromaSDKEditorAnimation1DDetails::OnClickOverrideButton()
+{
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			if (animation->IsLoaded())
+			{
+				animation->Unload();
+			}
+			float frameTime = animation->OverrideFrameTime;
+			float time = 0.0f;
+			for (int i = 0; i < animation->Curve.EditorCurveData.Keys.Num(); ++i)
+			{
+				time += frameTime;
+				animation->Curve.EditorCurveData.Keys[i].Time = time;
+			}
+			animation->RefreshCurve();
+			RefreshFrames();
+			RefreshDevice();
+		}
+	}
 	return FReply::Handled();
 }
 

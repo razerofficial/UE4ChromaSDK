@@ -139,13 +139,9 @@ void UChromaSDKPluginAnimation2DObject::Play()
 	}
 
 	// clear on play to avoid unsetting on a loop
-	if (_mCompleted)
+	if (_mOnComplete.IsBound())
 	{
-		_mCompleted = false;
-		if (_mOnComplete.IsBound())
-		{
-			_mOnComplete.Clear();
-		}
+		_mOnComplete.Clear();
 	}
 
 	_mTime = 0.0f;
@@ -172,16 +168,6 @@ void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnCo
 	{
 		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete Animation has not been loaded!"));
 		return;
-	}
-
-	// clear on play to avoid unsetting on a loop
-	if (_mCompleted)
-	{
-		_mCompleted = false;
-		if (_mOnComplete.IsBound())
-		{
-			_mOnComplete.Clear();
-		}
 	}
 
 	_mOnComplete = onComplete;

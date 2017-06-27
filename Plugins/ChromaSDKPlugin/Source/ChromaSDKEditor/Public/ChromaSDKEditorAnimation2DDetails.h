@@ -4,14 +4,10 @@
 
 #if WITH_EDITOR
 
-#include "IDetailCustomization.h"
+#include "ChromaSDKEditorAnimationBaseDetails.h"
 #include "ChromaSDKEditorButton2D.h"
-#include "ChromaSDKPluginTypes.h"
-#include "Widgets/Layout/SGridPanel.h"
 
-class FDetailWidgetRow;
-
-class FChromaSDKEditorAnimation2DDetails : public IDetailCustomization
+class FChromaSDKEditorAnimation2DDetails : public IChromaSDKEditorAnimationBaseDetails
 {
 public:
 	static TSharedRef<IDetailCustomization> MakeInstance();
@@ -39,7 +35,6 @@ public:
 	FReply OnClickFillButton();
 	FReply OnClickRandomButton();
 	FReply OnClickCopyButton();
-	FReply OnClickPasteButton();
 	FReply OnClickPreviewButton();
 	FReply OnClickPlayButton();
 	FReply OnClickStopButton();
@@ -62,7 +57,6 @@ public:
 	// animation frames row
 	FReply OnClickPreviousFrame();
 	FReply OnClickNextFrame();
-	FReply OnClickAddFrame();
 	FReply OnClickDeleteFrame();
 
 	// import colors from texture image
@@ -74,24 +68,26 @@ public:
 	// reset animation length to override
 	FReply OnClickOverrideButton();
 
-private:
+protected:
 
-	void ReadImage(const FString& path, bool isAnimation);
+	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
+
+	// apply row
+	FReply OnClickPasteButton();
+
+	// animation frames row
+	FReply OnClickAddFrame();
+
+private:
 
 	// instance reference
 	TSharedPtr<FChromaSDKEditorAnimation2DDetails> _mDetails;
-
-	// object being inspected
-	TArray<TWeakObjectPtr<UObject>> _mObjectsBeingCustomized;
 
 	// the device enum dropdown text
 	TArray<TSharedPtr<FString>> _mChromaSDKDevices;
 
 	// the selected enum device
 	EChromaSDKDevice2DEnum _mSelectedDevice;
-
-	// device grid
-	TSharedPtr<SGridPanel> _mGrid;
 
 	// grid buttons hold row/column
 	TArray<TSharedRef<IChromaSDKEditorButton2D>> _mColorButtons;
@@ -108,17 +104,8 @@ private:
 	// select an led, selected enum
 	EChromaSDKMouseLed _mSelectedLed;
 	
-	// current color in the color picker
-	FLinearColor _mColor;
-
 	// for copy/paste for the grid colors
 	TArray<FChromaSDKColors> _mColors;
-
-	// animation controls
-	int _mCurrentFrame;
-	TSharedPtr<STextBlock> _mTextCurrentFrame;
-	TSharedPtr<STextBlock> _mTextNumberOfFrames;
-	TSharedPtr<STextBlock> _mTextFrameDuration;
 };
 
 #endif

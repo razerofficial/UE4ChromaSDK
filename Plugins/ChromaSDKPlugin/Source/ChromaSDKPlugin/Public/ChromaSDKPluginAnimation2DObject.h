@@ -70,8 +70,6 @@ private:
 	// Callback when animation completes
 	FDelegateChomaSDKOnComplete2D _mOnComplete;
 
-	bool _mCompleted;
-
 	// Effects needs to be loaded before the animation can be played
 	bool _mIsLoaded;
 

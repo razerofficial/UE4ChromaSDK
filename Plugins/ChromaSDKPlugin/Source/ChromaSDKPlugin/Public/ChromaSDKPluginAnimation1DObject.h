@@ -14,6 +14,9 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginAnimation1DObject : public UObject, pu
 
 public:
 
+	UPROPERTY(EditAnywhere, Category = "Import")
+	float OverrideFrameTime;
+
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	FRuntimeFloatCurve Curve;
 
@@ -26,7 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Play", Keywords = "Play the animation"), Category = "ChromaSDK")
 	void Play();
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Play", Keywords = "Play the animation and fire the OnComplete event"), Category = "ChromaSDK")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PlayWithOnComplete", Keywords = "Play the animation and fire the OnComplete event"), Category = "ChromaSDK")
 	void PlayWithOnComplete(FDelegateChomaSDKOnComplete1D onComplete);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Stop", Keywords = "Stop the animation"), Category = "ChromaSDK")
