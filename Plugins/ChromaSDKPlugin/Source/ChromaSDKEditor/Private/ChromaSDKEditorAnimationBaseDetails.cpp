@@ -362,16 +362,11 @@ void IChromaSDKEditorAnimationBaseDetails::BuildApplyRow(IDetailLayoutBuilder& D
 		.ValueContent().MinDesiredWidth(300)
 		[
 			SNew(SGridPanel)
-			.FillColumn(0, 1.5f)
-			.FillColumn(1, 1.0f)
-			.FillColumn(2, 2.0f)
-			.FillColumn(3, 1.5f)
-			.FillColumn(4, 2.0f)
-			.FillColumn(5, 2.0f)
-			.FillColumn(6, 1.5f)
-			.FillColumn(7, 1.5f)
-			.FillColumn(8, 1.5f)
-			.FillColumn(9, 2.0f)
+			.FillColumn(0, 4.0f)
+			.FillColumn(1, 4.0f)
+			.FillColumn(2, 4.0f)
+			.FillColumn(3, 4.0f)
+			.FillColumn(4, 4.0f)
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SButton)
@@ -402,31 +397,31 @@ void IChromaSDKEditorAnimationBaseDetails::BuildApplyRow(IDetailLayoutBuilder& D
 				.Text(LOCTEXT("Paste", "Paste"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickPasteButton)
 			]
-			+ SGridPanel::Slot(5, 0)
+			+ SGridPanel::Slot(0, 1)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Preview", "Preview"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickPreviewButton)
 			]
-			+ SGridPanel::Slot(6, 0)
+			+ SGridPanel::Slot(1, 1)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Play", "Play"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickPlayButton)
 			]
-			+ SGridPanel::Slot(7, 0)
+			+ SGridPanel::Slot(2, 1)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Stop", "Stop"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickStopButton)
 			]
-			+ SGridPanel::Slot(8, 0)
+			+ SGridPanel::Slot(3, 1)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Load", "Load"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickLoadButton)
 			]
-			+ SGridPanel::Slot(9, 0)
+			+ SGridPanel::Slot(4, 1)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Unload", "Unload"))
