@@ -15,39 +15,12 @@ public:
 	/** IDetailCustomization interface */
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
-	void RefreshFrames();
-
-	void RefreshDevice();
-
-	// enum dropdown handler
-	TSharedRef<SWidget> GenerateDropdownEnum(TSharedPtr<FString> InItem);
-
-	// device row
-	void OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
-	FReply OnClickSetDeviceButton();
-
 	// device preview row
-	TSharedRef<SColorBlock> SetupColorButton(int element, const FLinearColor& color);
 	void OnClickColor(int element);
 
-	// apply row
-	FReply OnClickClearButton();
-	FReply OnClickFillButton();
-	FReply OnClickRandomButton();
-	FReply OnClickCopyButton();
-	FReply OnClickPreviewButton();
-	FReply OnClickPlayButton();
-	FReply OnClickStopButton();
-	FReply OnClickLoadButton();
-	FReply OnClickUnloadButton();
+protected:
 
-	// set the color row
-	void OnColorCommitted(FLinearColor color);
-
-	// animation frames row
-	FReply OnClickPreviousFrame();
-	FReply OnClickNextFrame();
-	FReply OnClickDeleteFrame();
+	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
 
 	// import colors from texture image
 	FReply OnClickImportTextureImageButton();
@@ -58,15 +31,35 @@ public:
 	// reset animation length to override
 	FReply OnClickOverrideButton();
 
-protected:
-
-	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
+	// device row
+	void OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo);
+	FReply OnClickSetDeviceButton();
 
 	// apply row
+	FReply OnClickClearButton();
+	FReply OnClickFillButton();
+	FReply OnClickRandomButton();
+	FReply OnClickCopyButton();
 	FReply OnClickPasteButton();
+	FReply OnClickPreviewButton();
+	FReply OnClickPlayButton();
+	FReply OnClickStopButton();
+	FReply OnClickLoadButton();
+	FReply OnClickUnloadButton();
+
+	// device preview row
+	TSharedRef<SColorBlock> SetupColorButton(int element, const FLinearColor& color);
+	void RefreshDevice();
+
+	// set the color row
+	void OnColorCommitted(FLinearColor color);
 
 	// animation frames row
+	FReply OnClickPreviousFrame();
+	FReply OnClickNextFrame();
 	FReply OnClickAddFrame();
+	FReply OnClickDeleteFrame();
+	void RefreshFrames();
 
 private:
 

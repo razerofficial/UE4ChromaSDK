@@ -211,7 +211,7 @@ enum class EChromaSDKMouseLed : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FChromaSDKGuid
+struct CHROMASDKPLUGIN_API FChromaSDKGuid
 {
 	GENERATED_BODY()
 
@@ -237,7 +237,7 @@ struct FChromaSDKGuid
 
 
 USTRUCT(BlueprintType)
-struct FChromaSDKEffectResult
+struct CHROMASDKPLUGIN_API FChromaSDKEffectResult
 {
 	GENERATED_BODY()
 
@@ -256,7 +256,7 @@ struct FChromaSDKEffectResult
 };
 
 USTRUCT(BlueprintType)
-struct FChromaSDKColors
+struct CHROMASDKPLUGIN_API FChromaSDKColors
 {
 	GENERATED_BODY()
 
@@ -270,7 +270,7 @@ struct FChromaSDKColors
 };
 
 USTRUCT(BlueprintType)
-struct FChromaSDKColorFrame1D
+struct CHROMASDKPLUGIN_API FChromaSDKColorFrame1D
 {
 	GENERATED_BODY()
 
@@ -284,7 +284,7 @@ struct FChromaSDKColorFrame1D
 };
 
 USTRUCT(BlueprintType)
-struct FChromaSDKColorFrame2D
+struct CHROMASDKPLUGIN_API FChromaSDKColorFrame2D
 {
 	GENERATED_BODY()
 

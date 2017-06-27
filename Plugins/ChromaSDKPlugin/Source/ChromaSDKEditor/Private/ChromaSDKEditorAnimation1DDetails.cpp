@@ -7,7 +7,6 @@
 #include "ChromaSDKPluginAnimation1DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
 #include "DesktopPlatformModule.h"
-#include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
 #include "EditorDirectories.h"
@@ -33,7 +32,7 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation1DDetails::MakeInstanc
 		for (int k = 0; (k + 1) < deviceEnumPtr->NumEnums(); ++k)
 		{
 			FString text = deviceEnumPtr->GetDisplayNameTextByValue(k).ToString();
-			instance->_mChromaSDKDevices.Add(MakeShared<FString>(text));
+			instance->AddChromaSDKDevice(text);
 		}
 	}
 	//set default key
@@ -59,280 +58,23 @@ void FChromaSDKEditorAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 	DetailBuilder.GetObjectsBeingCustomized(/*out*/ _mObjectsBeingCustomized);
 
-	IDetailCategoryBuilder& import = DetailBuilder.EditCategory("Import", LOCTEXT("Import", "Import"), ECategoryPriority::Important);
-
-	import.AddCustomRow(FText::FromString(LOCTEXT("Import", "Import").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Import", "Import"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SGridPanel)
-			.FillColumn(0, 3.0f)
-			.FillColumn(1, 3.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Import image", "Import image"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickImportTextureImageButton)
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Import texture", "Import animation"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickImportTextureAnimationButton)
-			]
-		];
-
-		import.AddCustomRow(FText::FromString(LOCTEXT("Reset animation length", "Reset animation length").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Reset animation length", "Reset animation length"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SButton)
-			.Text(LOCTEXT("Override", "Override"))
-			.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickOverrideButton)
-		];
+	BuildImportRow(DetailBuilder);
 
 	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Animation", LOCTEXT("Animation", "Animation"), ECategoryPriority::Important);
 
-	category.AddCustomRow(FText::FromString(LOCTEXT("Device", "Device").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Device", "Device"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SGridPanel)
-			.FillColumn(0, 4.0f)
-			.FillColumn(1, 2.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(SComboBox<TSharedPtr<FString>>)
-				.InitiallySelectedItem(_mChromaSDKDevices[0])
-				.OptionsSource(&_mChromaSDKDevices)
-				.OnGenerateWidget(this, &FChromaSDKEditorAnimation1DDetails::GenerateDropdownEnum)
-				.OnSelectionChanged(this, &FChromaSDKEditorAnimation1DDetails::OnChangeChromaSDKDevices)
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("Select a device", "Select a device"))
-				]
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Set device", "Set device"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickSetDeviceButton)
-			]
-		];
+	BuildDeviceRow(DetailBuilder, category);
 
+	BuildApplyRow(DetailBuilder, category);
 
-	category.AddCustomRow(FText::FromString(LOCTEXT("Apply", "Apply").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Apply", "Apply"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SGridPanel)
-			.FillColumn(0, 1.5f)
-			.FillColumn(1, 1.0f)
-			.FillColumn(2, 2.0f)
-			.FillColumn(3, 1.5f)
-			.FillColumn(4, 1.5f)
-			.FillColumn(5, 2.0f)
-			.FillColumn(6, 1.5f)
-			.FillColumn(7, 1.5f)
-			.FillColumn(8, 1.5f)
-			.FillColumn(9, 2.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Clear", "Clear"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickClearButton)
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Fill", "Fill"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickFillButton)
-			]
-			+ SGridPanel::Slot(2, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Random", "Random"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickRandomButton)
-			]
-			+ SGridPanel::Slot(3, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Copy", "Copy"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickCopyButton)
-			]
-			+ SGridPanel::Slot(4, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Paste", "Paste"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickPasteButton)
-			]
-			+ SGridPanel::Slot(5, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Preview", "Preview"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickPreviewButton)
-			]
-			+ SGridPanel::Slot(6, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Play", "Play"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickPlayButton)
-			]
-			+ SGridPanel::Slot(7, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Stop", "Stop"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickStopButton)
-			]
-			+ SGridPanel::Slot(8, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Load", "Load"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickLoadButton)
-			]
-			+ SGridPanel::Slot(9, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Unload", "Unload"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickUnloadButton)
-			]
-		];
+	BuildInfoRow(DetailBuilder, category);
 
-	FDetailWidgetRow& widgetRow = category.AddCustomRow(FText::FromString(LOCTEXT("Device preview", "Device preview").ToString()));
-	widgetRow.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Device preview", "Device preview"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		];
-	widgetRow.ValueContent().MinDesiredWidth(300);
-	TSharedRef<SGridPanel> grid = SNew(SGridPanel);
-	_mGrid = grid;
-	widgetRow.ValueContent()
-	[
-		grid
-	];
+	BuildPreviewRow(DetailBuilder, category);
 
-	RefreshDevice();
+	BuildColorRow(DetailBuilder, category);
 
-	category.AddCustomRow(FText::FromString(LOCTEXT("Set the color", "Set the color").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Set the color", "Set the color"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SColorPicker)
-			.OnColorCommitted(this, &FChromaSDKEditorAnimation1DDetails::OnColorCommitted)
-		];
+	BuildFramesRow(DetailBuilder, category);
 
-	TSharedRef<STextBlock> textCurrentFrame = SNew(STextBlock)
-		.Text(LOCTEXT("0","0"));
-	_mTextCurrentFrame = textCurrentFrame;
-
-	TSharedRef<STextBlock> textNumberOfFrames = SNew(STextBlock)
-		.Text(LOCTEXT("0","0"));
-	_mTextNumberOfFrames = textNumberOfFrames;
-
-	TSharedRef<STextBlock> textFrameDuration = SNew(STextBlock)
-		.Text(LOCTEXT("1.0", "1.0"));
-	_mTextFrameDuration = textFrameDuration;
-
-	category.AddCustomRow(FText::FromString(LOCTEXT("Animation frames", "Animation frames").ToString()))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("Animation frames", "Animation frames"))
-			.Font(IDetailLayoutBuilder::GetDetailFont())
-		]
-		.ValueContent().MinDesiredWidth(300)
-		[
-			SNew(SGridPanel)
-			.FillColumn(0, 1.0f)
-			.FillColumn(1, 1.0f)
-			.FillColumn(2, 1.0f)
-			.FillColumn(3, 1.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("Frame: ","Frame: "))
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				_mTextCurrentFrame.ToSharedRef()
-			]
-			+ SGridPanel::Slot(2, 0)
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("of","of"))
-			]
-			+ SGridPanel::Slot(3, 0)
-			[
-				_mTextNumberOfFrames.ToSharedRef()
-			]
-			+ SGridPanel::Slot(0, 1)
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("Duration:","Duration:"))
-			]
-			+ SGridPanel::Slot(1, 1)
-			[
-				_mTextFrameDuration.ToSharedRef()
-			]
-			+ SGridPanel::Slot(2, 1)
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("second(s)","second(s)"))
-			]
-			+ SGridPanel::Slot(0, 2)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Previous", "Previous"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickPreviousFrame)
-			]
-			+ SGridPanel::Slot(1, 2)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Next","Next"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickNextFrame)
-			]
-			+ SGridPanel::Slot(2, 2)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Add","Add"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickAddFrame)
-			]
-			+ SGridPanel::Slot(3, 2)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Delete","Delete"))
-				.OnClicked(this, &FChromaSDKEditorAnimation1DDetails::OnClickDeleteFrame)
-			]
-		];
-
-		RefreshFrames();
+	BuildCurveRow(DetailBuilder, category);
 }
 
 void FChromaSDKEditorAnimation1DDetails::RefreshFrames()
@@ -699,6 +441,10 @@ void FChromaSDKEditorAnimation1DDetails::RefreshDevice()
 		{
 			int maxLeds = UChromaSDKPluginBPLibrary::GetMaxLeds(animation->Device);
 
+			FFormatNamedArguments textArgs;
+			textArgs.Add(TEXT("maxLeds"), FText::AsNumber(maxLeds));
+			_mTextInfo->SetText(FText::Format(LOCTEXT("GridInfo", "1 x {maxLeds}"), textArgs));
+
 			FChromaSDKColorFrame1D& frame = animation->Frames[_mCurrentFrame];
 			TArray<FLinearColor>& colors = frame.Colors;
 			if (colors.Num() == maxLeds)
@@ -748,12 +494,6 @@ void FChromaSDKEditorAnimation1DDetails::OnClickColor(int element)
 	}
 
 	RefreshDevice();
-}
-
-TSharedRef<SWidget> FChromaSDKEditorAnimation1DDetails::GenerateDropdownEnum(TSharedPtr<FString> InItem)
-{
-	return SNew(STextBlock)
-		.Text(FText::FromString(*InItem));
 }
 
 void FChromaSDKEditorAnimation1DDetails::OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
