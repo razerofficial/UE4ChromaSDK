@@ -11,8 +11,8 @@ using namespace ChromaSDK;
 #if PLATFORM_WINDOWS
 
 // keyboard map
-std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> UChromaSDKPluginBPLibrary::_sKeyboardEnumMap =
-	std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY>();
+std::map<EChromaSDKKeyboardKey, int> UChromaSDKPluginBPLibrary::_sKeyboardEnumMap =
+	std::map<EChromaSDKKeyboardKey, int>();
 
 // mouse map
 std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2> UChromaSDKPluginBPLibrary::_sMouseEnumMap =
@@ -151,6 +151,7 @@ UChromaSDKPluginBPLibrary::UChromaSDKPluginBPLibrary(const FObjectInitializer& O
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_KOR_5] = Keyboard::RZKEY::RZKEY_KOR_5;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_KOR_6] = Keyboard::RZKEY::RZKEY_KOR_6;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_KOR_7] = Keyboard::RZKEY::RZKEY_KOR_7;
+	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_LOGO] = Keyboard::RZLED::RZLED_LOGO;
 	_sKeyboardEnumMap[EChromaSDKKeyboardKey::KK_INVALID] = Keyboard::RZKEY::RZKEY_INVALID;
 
 	// mouse mapping
@@ -322,7 +323,7 @@ const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(c
 		return colors;
 	}
 
-	ChromaSDK::Keyboard::RZKEY rzkey = _sKeyboardEnumMap[key];
+	int rzkey = _sKeyboardEnumMap[key];
 	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
 	{
 		colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = color;

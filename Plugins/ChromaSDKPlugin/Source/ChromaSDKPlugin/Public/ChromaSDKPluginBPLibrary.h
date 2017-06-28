@@ -96,7 +96,7 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionL
 private:
 	static void ToString(const RZEFFECTID& effectId, FString& effectString);
 	static void ToEffect(const FString& effectString, RZEFFECTID& effectId);
-	static std::map<EChromaSDKKeyboardKey, ChromaSDK::Keyboard::RZKEY> _sKeyboardEnumMap;
+	static std::map<EChromaSDKKeyboardKey, int> _sKeyboardEnumMap;
 	static std::map<EChromaSDKMouseLed, ChromaSDK::Mouse::RZLED2> _sMouseEnumMap;
 
 	static bool _sInitialized;

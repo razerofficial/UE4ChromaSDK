@@ -180,6 +180,7 @@ enum class EChromaSDKKeyboardKey : uint8
 	KK_KOR_5                         UMETA(DisplayName = "(VK_OEM_PA1)"),
 	KK_KOR_6                         UMETA(DisplayName = "한/영 (0xFF)"),
 	KK_KOR_7                         UMETA(DisplayName = "(0xFF)"),
+	KK_LOGO                          UMETA(DisplayName = "Razer logo"),
 	KK_INVALID                       UMETA(DisplayName = "Invalid keys.")
 };
 
