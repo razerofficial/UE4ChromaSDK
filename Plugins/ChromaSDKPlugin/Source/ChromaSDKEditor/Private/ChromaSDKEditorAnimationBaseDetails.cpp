@@ -9,12 +9,13 @@
 #include "DetailWidgetRow.h"
 #include "EditorDirectories.h"
 #include "PropertyCustomizationHelpers.h"
+#include "SCurveEditor.h"
+#include "SlateApplication.h"
 #include "Widgets/Colors/SColorBlock.h"
 #include "Widgets/Colors/SColorPicker.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SComboBox.h"
 #include "Widgets/Layout/SGridPanel.h"
-#include "SlateApplication.h"
 
 #if PLATFORM_WINDOWS
 #include "objbase.h"
@@ -576,56 +577,23 @@ void IChromaSDKEditorAnimationBaseDetails::BuildFramesRow(IDetailLayoutBuilder& 
 
 void IChromaSDKEditorAnimationBaseDetails::BuildCurveRow(IDetailLayoutBuilder& DetailBuilder, IDetailCategoryBuilder& category)
 {
-/*
-	if (_mObjectsBeingCustomized.Num() > 0)
-	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation)
-		{
-			TWeakObjectPtr<UChromaSDKPluginAnimation2DObject> UserDefinedStruct = CastChecked<UChromaSDKPluginAnimation2DObject>(animation);
-			for (TFieldIterator<UProperty> propertyIter(animation->GetClass()); propertyIter; ++propertyIter)
-			{
-				UProperty* property = (*propertyIter);
-				const FName& propertyName = property->GetFName();
-				FString stringName = propertyName.ToString();
-				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails propertyName=%s"), *stringName);
-				if (stringName == "Curve")
-				{
-					//TSharedPtr<FStructOnScope> structData = MakeShareable(new FStructOnScope(UserDefinedStruct.Get()));
-					//TSharedPtr<FStructOnScope> structData = MakeShareable(new FStructOnScope(animation->Curve, false));
-					//category.AddExternalProperty(structData, (*propertyIter)->GetFName());
-				}
-			}
+	//hide default property
+	//DetailBuilder.HideProperty(DetailBuilder.GetProperty("Curve"));
 
-			TArray<UObject*> objects = TArray<UObject*>();
-			objects.Add(animation);
-			category.AddExternalProperty(objects, "Curve");
-		}
-	}
-
-	category.AddCustomRow(FText::FromString(LOCTEXT("Reset animation length", "Reset animation length").ToString()))
+	//show custom property
+	category.AddCustomRow(FText::FromString(LOCTEXT("Custom Curve", "Custom Curve").ToString()))
 		.NameContent()
 		[
 			SNew(STextBlock)
-			.Text(LOCTEXT("Reset animation length", "Reset animation length"))
+			.Text(LOCTEXT("Custom Curve", "Custom Curve"))
 			.Font(IDetailLayoutBuilder::GetDetailFont())
 		]
 		.ValueContent().MinDesiredWidth(300)
 		[
-			SNew(SGridPanel)
-			.FillColumn(0, 5.0f)
-			.FillColumn(1, 2.0f)
-			+ SGridPanel::Slot(0, 0)
-			[
-				SNew(SProperty, DetailBuilder.GetProperty("Curve"))
-			]
-			+ SGridPanel::Slot(1, 0)
-			[
-				SNew(SButton)
-				.Text(LOCTEXT("Set", "Set"))
-			]
+			SNew(SCurveEditor)
+			.ShowZoomButtons(false)
+			.XAxisName(FString(TEXT("Time")))
 		];
-	*/
 }
 
 #undef LOCTEXT_NAMESPACE
