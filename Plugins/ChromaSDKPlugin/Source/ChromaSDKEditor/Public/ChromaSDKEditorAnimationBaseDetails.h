@@ -6,12 +6,18 @@
 
 #include "IDetailCustomization.h"
 #include "ChromaSDKPluginTypes.h"
+#include "Curves/CurveOwnerInterface.h"
 #include "DetailCategoryBuilder.h"
 #include "Widgets/Layout/SGridPanel.h"
 
-class IChromaSDKEditorAnimationBaseDetails : public IDetailCustomization
+class SCurveEditor;
+struct FRuntimeFloatCurve;
+
+class IChromaSDKEditorAnimationBaseDetails : public IDetailCustomization, public FCurveOwnerInterface
 {
 protected:
+
+	void Initialize();
 
 	void ReadImage(const FString& path, bool isAnimation);
 
@@ -96,6 +102,9 @@ protected:
 	TSharedPtr<STextBlock> _mTextCurrentFrame;
 	TSharedPtr<STextBlock> _mTextNumberOfFrames;
 	TSharedPtr<STextBlock> _mTextFrameDuration;
+
+	// custom curve
+	TSharedPtr<SCurveEditor> _mCurveWidget;
 };
 
 #endif

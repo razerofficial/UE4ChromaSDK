@@ -38,10 +38,23 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation1DDetails::MakeInstanc
 	//set default key
 	instance->_mSelectedDevice = EChromaSDKDevice1DEnum::DE_ChromaLink;
 
-	//set the default frame
-	instance->_mCurrentFrame = 0;
+	// initialize
+	instance->Initialize();
 
 	return instance;
+}
+
+UChromaSDKPluginAnimation1DObject* FChromaSDKEditorAnimation1DDetails::GetAnimation()
+{
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UChromaSDKPluginAnimation1DObject* animation = (UChromaSDKPluginAnimation1DObject*)_mObjectsBeingCustomized[0].Get();
+		return animation;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void FChromaSDKEditorAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
@@ -815,6 +828,68 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickUnloadButton()
 
 	return FReply::Handled();
 }
+
+/* implements FCurveOwnerInterface */
+
+/** Returns set of curves to edit. Must not release the curves while being edited. */
+TArray<FRichCurveEditInfoConst> FChromaSDKEditorAnimation1DDetails::GetCurves() const
+{
+	TArray<FRichCurveEditInfoConst> result = TArray<FRichCurveEditInfoConst>();
+	return result;
+}
+
+/** Returns set of curves to query. Must not release the curves while being edited. */
+TArray<FRichCurveEditInfo> FChromaSDKEditorAnimation1DDetails::GetCurves()
+{
+	TArray<FRichCurveEditInfo> result = TArray<FRichCurveEditInfo>();
+	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		result.Add(&animation->Curve.EditorCurveData);
+	}
+	return result;
+}
+
+/** Called to modify the owner of the curve */
+void FChromaSDKEditorAnimation1DDetails::ModifyOwner()
+{
+
+}
+
+/** Returns the owner(s) of the curve */
+TArray<const UObject*> FChromaSDKEditorAnimation1DDetails::GetOwners() const
+{
+	TArray<const UObject*> result = TArray<const UObject*>();
+	if (_mObjectsBeingCustomized.Num() > 0)
+	{
+		UObject* animation = (UObject*)_mObjectsBeingCustomized[0].Get();
+		if (animation != nullptr)
+		{
+			result.Add(animation);
+		}
+	}
+	return result;
+}
+
+/** Called to make curve owner transactional */
+void FChromaSDKEditorAnimation1DDetails::MakeTransactional()
+{
+
+}
+
+/** Called when any of the curves have been changed */
+void FChromaSDKEditorAnimation1DDetails::OnCurveChanged(const TArray<FRichCurveEditInfo>& ChangedCurveEditInfos)
+{
+
+}
+
+/** Validates that a previously retrieved curve is still valid for editing. */
+bool FChromaSDKEditorAnimation1DDetails::IsValidCurve(FRichCurveEditInfo CurveInfo)
+{
+	return true;
+}
+
+/* end of FCurveOwnerInterface */
 
 #undef LOCTEXT_NAMESPACE
 

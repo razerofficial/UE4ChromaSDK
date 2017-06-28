@@ -18,6 +18,31 @@ public:
 	// device preview row
 	void OnClickColor(int element);
 
+	/* implements FCurveOwnerInterface */
+
+	/** Returns set of curves to edit. Must not release the curves while being edited. */
+	TArray<FRichCurveEditInfoConst> GetCurves() const;
+
+	/** Returns set of curves to query. Must not release the curves while being edited. */
+	TArray<FRichCurveEditInfo> GetCurves();
+
+	/** Called to modify the owner of the curve */
+	void ModifyOwner();
+
+	/** Returns the owner(s) of the curve */
+	TArray<const UObject*> GetOwners() const;
+
+	/** Called to make curve owner transactional */
+	void MakeTransactional();
+
+	/** Called when any of the curves have been changed */
+	void OnCurveChanged(const TArray<FRichCurveEditInfo>& ChangedCurveEditInfos);
+
+	/** Validates that a previously retrieved curve is still valid for editing. */
+	bool IsValidCurve(FRichCurveEditInfo CurveInfo);
+
+	/* end of FCurveOwnerInterface */
+
 protected:
 
 	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
@@ -62,6 +87,8 @@ protected:
 	void RefreshFrames();
 
 private:
+
+	UChromaSDKPluginAnimation1DObject* GetAnimation();
 
 	// instance reference
 	TSharedPtr<FChromaSDKEditorAnimation1DDetails> _mDetails;

@@ -29,6 +29,15 @@ THIRD_PARTY_INCLUDES_END
 
 #define LOCTEXT_NAMESPACE "ChromaAnimationBaseDetails"
 
+void IChromaSDKEditorAnimationBaseDetails::Initialize()
+{
+	//set the default frame
+	_mCurrentFrame = 0;
+
+	//show custom property
+	_mCurveWidget.Reset();
+}
+
 void IChromaSDKEditorAnimationBaseDetails::ReadImage(const FString& path, bool isAnimation)
 {
 #if PLATFORM_WINDOWS
@@ -578,7 +587,7 @@ void IChromaSDKEditorAnimationBaseDetails::BuildFramesRow(IDetailLayoutBuilder& 
 void IChromaSDKEditorAnimationBaseDetails::BuildCurveRow(IDetailLayoutBuilder& DetailBuilder, IDetailCategoryBuilder& category)
 {
 	//hide default property
-	//DetailBuilder.HideProperty(DetailBuilder.GetProperty("Curve"));
+	DetailBuilder.HideProperty(DetailBuilder.GetProperty("Curve"));
 
 	//show custom property
 	category.AddCustomRow(FText::FromString(LOCTEXT("Custom Curve", "Custom Curve").ToString()))
@@ -590,10 +599,13 @@ void IChromaSDKEditorAnimationBaseDetails::BuildCurveRow(IDetailLayoutBuilder& D
 		]
 		.ValueContent().MinDesiredWidth(300)
 		[
-			SNew(SCurveEditor)
+			SAssignNew(_mCurveWidget, SCurveEditor)
 			.ShowZoomButtons(false)
 			.XAxisName(FString(TEXT("Time")))
+			.DesiredSize(FVector2D(512, 128))
 		];
+
+	_mCurveWidget->SetCurveOwner(this);
 }
 
 #undef LOCTEXT_NAMESPACE
