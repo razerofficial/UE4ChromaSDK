@@ -4,7 +4,8 @@ using UnrealBuildTool;
 
 public class ChromaSDKEditor : ModuleRules
 {
-	public ChromaSDKEditor(ReadOnlyTargetRules Target) : base(Target)
+    //public ChromaSDKEditor(TargetInfo Target) //4.15 or lower
+    public ChromaSDKEditor(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		

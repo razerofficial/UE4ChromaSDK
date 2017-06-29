@@ -4,7 +4,8 @@ using UnrealBuildTool;
 
 public class ChromaSDKPlugin : ModuleRules
 {
-	public ChromaSDKPlugin(ReadOnlyTargetRules Target) : base(Target)
+    //public ChromaSDKPlugin(TargetInfo Target) //4.15 or lower
+    public ChromaSDKPlugin(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		

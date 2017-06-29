@@ -26,6 +26,30 @@
 
 ![image_42](images/image_42.png)
 
+** Note: To compile the plugin on versions before `4.16`, comment as follows:**
+
+`Plugins\ChromaSDKPlugin\Source\ChromaSDKPlugin\ChromaSDKPlugin.Build.cs`
+
+```c++
+using UnrealBuildTool;
+
+public class ChromaSDKPlugin : ModuleRules
+{
+	public ChromaSDKPlugin(TargetInfo Target) //4.15 or lower
+	//public ChromaSDKPlugin(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
+```
+
+`Plugins\ChromaSDKPlugin\Source\ChromaSDKEditor\ChromaSDKEditor.Build.cs`
+
+```c++
+using UnrealBuildTool;
+
+public class ChromaSDKEditor : ModuleRules
+{
+	public ChromaSDKEditor(TargetInfo Target) //4.15 or lower
+	//public ChromaSDKEditor(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
+```
+
 <a name="usage"></a>
 ## Usage
 
