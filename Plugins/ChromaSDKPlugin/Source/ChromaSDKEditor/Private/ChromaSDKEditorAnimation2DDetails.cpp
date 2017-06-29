@@ -786,7 +786,6 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickCopyButton()
 			_mCurrentFrame >= 0 &&
 			_mCurrentFrame < animation->Frames.Num())
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
 			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
 			_mColors = frames[_mCurrentFrame].Colors;
 		}

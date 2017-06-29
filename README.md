@@ -4,6 +4,7 @@
 
 * [Frameworks supported](#frameworks-supported)
 * [Prerequisites](#prerequisites)
+* [Engine Versions](#engine-versions)
 * [Usage](#usage)
 * [Blueprint objects](#blueprint-objects)
 * [Blueprint functions](#blueprint-functions)
@@ -26,9 +27,16 @@
 
 ![image_42](images/image_42.png)
 
-** Note: To compile the plugin on versions before `4.16`, comment as follows:**
+<a name="engine-versions"></a>
+## Engine Versions
 
-`Plugins\ChromaSDKPlugin\Source\ChromaSDKPlugin\ChromaSDKPlugin.Build.cs`
+The `Plugin` was created in UE4 `4.16`.
+
+**Note: To compile the plugin on versions before `4.16`, adjust the comments in the module build files.**
+
+### ChromaSDKPlugin.Build.cs
+
+The runtime module - `Plugins\ChromaSDKPlugin\Source\ChromaSDKPlugin\ChromaSDKPlugin.Build.cs`
 
 ```c++
 using UnrealBuildTool;
@@ -39,7 +47,9 @@ public class ChromaSDKPlugin : ModuleRules
 	//public ChromaSDKPlugin(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
 ```
 
-`Plugins\ChromaSDKPlugin\Source\ChromaSDKEditor\ChromaSDKEditor.Build.cs`
+### ChromaSDKEditor.Build.cs
+
+The editor module - `Plugins\ChromaSDKPlugin\Source\ChromaSDKEditor\ChromaSDKEditor.Build.cs`
 
 ```c++
 using UnrealBuildTool;
