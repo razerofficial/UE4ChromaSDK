@@ -4,10 +4,13 @@ using UnrealBuildTool;
 
 public class ChromaSDKEditor : ModuleRules
 {
-    //public ChromaSDKEditor(TargetInfo Target) //4.15 or lower
+#if WITH_FORWARDED_MODULE_RULES_CTOR
     public ChromaSDKEditor(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
-	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+#else
+    public ChromaSDKEditor(TargetInfo Target) //4.15 or lower
+#endif
+    {
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
