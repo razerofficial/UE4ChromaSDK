@@ -6,11 +6,11 @@
 * [Prerequisites](#prerequisites)
 * [Engine Versions](#engine-versions)
 * [Usage](#usage)
+* [Assets](#assets)
 * [Blueprint objects](#blueprint-objects)
 * [Blueprint functions](#blueprint-functions)
 * [Examples](#examples)
 * [Getting Started](#getting-started)
-* [Assets](#assets)
 
 <a name="frameworks-supported"></a>
 ## Frameworks supported
@@ -72,6 +72,53 @@ public class ChromaSDKEditor : ModuleRules
 3 Make sure the `ChromeSDKPlugin` is enabled
 
 ![image_6](images/image_6.png)
+
+<a name="assets"></a>
+## Assets
+
+In the `Content Browser` under the `Add New->Miscellaneous` menu item is where animation assets can be created for `ChromaSDKPluginAnimation1DObject` and `ChromaSDKPluginAnimation2DObject`.
+
+![image_33](images/image_33.png)
+
+Hovering `ChromaSDK Animations` will show a `Play` or `Stop` thumbnail. Clicking the `Play` thumbnail will play the animation effect when in `play-mode` or `edit-mode`.
+
+![image_34](images/image_34.png)
+
+Right-click a `ChromaSDK Animation` and select `Edit` to open the custom `details view`.
+
+![image_35](images/image_35.png)
+
+The `details view` sets the device type and allows the color animation frames to be edited.
+`1D` animations support `ChromaLink`, `Headset`, and `Mousepad` devices.
+`2D` animations support `Keyboard`, `Keypad`, and `Mouse` devices.
+The `device preview` shows a grid and clicking the elements will set the color from the color wheel.
+The `Curve` adjusts the timings for each animation frame.
+
+![image_36](images/image_36.png)
+
+`ChromaSDK Animation` objects can be referenced from blueprints.
+Create a variable of object type `ChromaSDKPluginAnimation1DObject` or `ChromaSDKPluginAnimation2DObject`.
+Use the variable `SET` so the `animation asset` can be selected from the dropdown.
+
+![image_37](images/image_37.png)
+
+Use `Load` on the `animation` before it can be used.
+Use `IsLoaded` to check if the `animation` has been loaded.
+
+![image_40](images/image_40.png)
+
+After the `ChromaSDK Animation` has been loaded and set in a variable, it can be played.
+
+![image_38](images/image_38.png)
+
+A playing `ChromaSDK Animation` can be stopped.
+
+![image_39](images/image_39.png)
+
+Use `Unload` to unload the animation.
+`ChromaSDKPluginBPLibrary::UnInit` will automatically unload animations.
+
+![image_41](images/image_41.png)
 
 <a name="blueprint-objects"></a>
 ## Blueprint objects
@@ -422,50 +469,3 @@ After an effect has been deleted, check the result for success. After effects ha
 `MouseLedColor` returns a modified two-dimensional color array with the led color changed.
 
 ![image_32](images/image_32.png)
-
-<a name="assets"></a>
-## Assets
-
-In the `Content Browser` under the `Add New->Miscellaneous` menu item is where animation assets can be created for `ChromaSDKPluginAnimation1DObject` and `ChromaSDKPluginAnimation2DObject`.
-
-![image_33](images/image_33.png)
-
-Hovering `ChromaSDK Animations` will show a `Play` or `Stop` thumbnail. Clicking the `Play` thumbnail will play the animation effect when in `play-mode` or `edit-mode`.
-
-![image_34](images/image_34.png)
-
-Right-click a `ChromaSDK Animation` and select `Edit` to open the custom `details view`.
-
-![image_35](images/image_35.png)
-
-The `details view` sets the device type and allows the color animation frames to be edited.
-`1D` animations support `ChromaLink`, `Headset`, and `Mousepad` devices.
-`2D` animations support `Keyboard`, `Keypad`, and `Mouse` devices.
-The `device preview` shows a grid and clicking the elements will set the color from the color wheel.
-The `Curve` adjusts the timings for each animation frame.
-
-![image_36](images/image_36.png)
-
-`ChromaSDK Animation` objects can be referenced from blueprints.
-Create a variable of object type `ChromaSDKPluginAnimation1DObject` or `ChromaSDKPluginAnimation2DObject`.
-Use the variable `SET` so the `animation asset` can be selected from the dropdown.
-
-![image_37](images/image_37.png)
-
-Use `Load` on the `animation` before it can be used.
-Use `IsLoaded` to check if the `animation` has been loaded.
-
-![image_40](images/image_40.png)
-
-After the `ChromaSDK Animation` has been loaded and set in a variable, it can be played.
-
-![image_38](images/image_38.png)
-
-A playing `ChromaSDK Animation` can be stopped.
-
-![image_39](images/image_39.png)
-
-Use `Unload` to unload the animation.
-`ChromaSDKPluginBPLibrary::UnInit` will automatically unload animations.
-
-![image_41](images/image_41.png)
