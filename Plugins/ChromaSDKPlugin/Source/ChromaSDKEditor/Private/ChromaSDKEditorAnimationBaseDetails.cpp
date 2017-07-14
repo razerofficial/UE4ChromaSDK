@@ -71,20 +71,20 @@ void IChromaSDKEditorAnimationBaseDetails::ReadImage(const FString& path, bool i
 
 	UINT frameCount = 1;
 
+	if (isAnimation)
+	{
+		if (SUCCEEDED(hr))
+		{
+			hr = (Decoder->GetFrameCount(&frameCount));
+			/*
+			UE_LOG(LogTemp, Log, TEXT("IChromaSDKEditorAnimationBaseDetails frameCount=%d"),
+			(int)frameCount);
+			*/
+		}
+	}
+
 	for (UINT frameIndex = 0; frameIndex < frameCount; ++frameIndex)
 	{
-		if (isAnimation)
-		{
-			if (SUCCEEDED(hr))
-			{
-				hr = (Decoder->GetFrameCount(&frameCount));
-				/*
-				UE_LOG(LogTemp, Log, TEXT("IChromaSDKEditorAnimationBaseDetails frameCount=%d"),
-					(int)frameCount);
-				*/
-			}
-		}
-
 		// Retrieve the first frame of the image from the decoder
 		if (SUCCEEDED(hr))
 		{
@@ -223,13 +223,6 @@ void IChromaSDKEditorAnimationBaseDetails::ReadImage(const FString& path, bool i
 
 					OnClickPasteButton();
 				}
-			}
-
-			// Image Extraction failed, clear allocated memory
-			if (FAILED(hr) && hDIBBitmap)
-			{
-				ensure(DeleteObject(hDIBBitmap));
-				hDIBBitmap = NULL;
 			}
 
 			// done with bitmap

@@ -211,37 +211,34 @@ bool FChromaSDKEditorAnimation2DDetails::IsEnabledMouseLed() const
 
 void FChromaSDKEditorAnimation2DDetails::RefreshFrames()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (_mCurrentFrame < 0 ||
+			_mCurrentFrame >= animation->Frames.Num())
 		{
-			if (_mCurrentFrame < 0 ||
-				_mCurrentFrame >= animation->Frames.Num())
-			{
-				_mCurrentFrame = 0;
-			}
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			_mTextCurrentFrame->SetText(FText::AsNumber(_mCurrentFrame+1));
-			_mTextNumberOfFrames->SetText(FText::AsNumber(animation->Frames.Num()));
-			float duration = 0.0f;
-			if (_mCurrentFrame < animation->Frames.Num() &&
-				_mCurrentFrame < animation->Curve.EditorCurveData.Keys.Num())
-			{
-				if (_mCurrentFrame == 0)
-				{
-					duration = animation->Curve.EditorCurveData.Keys[_mCurrentFrame].Time;
-				}
-				else
-				{
-					duration =
-						animation->Curve.EditorCurveData.Keys[_mCurrentFrame].Time -
-						animation->Curve.EditorCurveData.Keys[_mCurrentFrame-1].Time;
-				}
-			}
-			_mTextFrameDuration->SetText(FText::AsNumber(duration));
-			return;
+			_mCurrentFrame = 0;
 		}
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		_mTextCurrentFrame->SetText(FText::AsNumber(_mCurrentFrame + 1));
+		_mTextNumberOfFrames->SetText(FText::AsNumber(animation->Frames.Num()));
+		float duration = 0.0f;
+		if (_mCurrentFrame < animation->Frames.Num() &&
+			_mCurrentFrame < animation->Curve.EditorCurveData.Keys.Num())
+		{
+			if (_mCurrentFrame == 0)
+			{
+				duration = animation->Curve.EditorCurveData.Keys[_mCurrentFrame].Time;
+			}
+			else
+			{
+				duration =
+					animation->Curve.EditorCurveData.Keys[_mCurrentFrame].Time -
+					animation->Curve.EditorCurveData.Keys[_mCurrentFrame - 1].Time;
+			}
+		}
+		_mTextFrameDuration->SetText(FText::AsNumber(duration));
+		return;
 	}
 
 	_mCurrentFrame = 0;
@@ -252,25 +249,22 @@ void FChromaSDKEditorAnimation2DDetails::RefreshFrames()
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickPreviousFrame()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (_mCurrentFrame < 0 ||
+			_mCurrentFrame >= animation->Frames.Num())
 		{
-			if (_mCurrentFrame < 0 ||
-				_mCurrentFrame >= animation->Frames.Num())
-			{
-				_mCurrentFrame = 0;
-			}
-			if (_mCurrentFrame > 0)
-			{
-				--_mCurrentFrame;
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
-			return FReply::Handled();
+			_mCurrentFrame = 0;
 		}
+		if (_mCurrentFrame > 0)
+		{
+			--_mCurrentFrame;
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
 	}
 
 	_mCurrentFrame = 0;
@@ -278,25 +272,22 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickPreviousFrame()
 }
 FReply FChromaSDKEditorAnimation2DDetails::OnClickNextFrame()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (_mCurrentFrame < 0 ||
+			_mCurrentFrame >= animation->Frames.Num())
 		{
-			if (_mCurrentFrame < 0 ||
-				_mCurrentFrame >= animation->Frames.Num())
-			{
-				_mCurrentFrame = 0;
-			}
-			if ((_mCurrentFrame+1) < animation->Frames.Num())
-			{
-				++_mCurrentFrame;
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
-			return FReply::Handled();
+			_mCurrentFrame = 0;
 		}
+		if ((_mCurrentFrame + 1) < animation->Frames.Num())
+		{
+			++_mCurrentFrame;
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
 	}
 
 	_mCurrentFrame = 0;
@@ -304,39 +295,36 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickNextFrame()
 }
 FReply FChromaSDKEditorAnimation2DDetails::OnClickAddFrame()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsLoaded())
 		{
-			if (animation->IsLoaded())
-			{
-				animation->Unload();
-			}
-			if (_mCurrentFrame < 0 ||
-				_mCurrentFrame >= animation->Frames.Num())
-			{
-				_mCurrentFrame = 0;
-			}
-			FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
-			frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
-			if (_mCurrentFrame == animation->Frames.Num() ||
-				(_mCurrentFrame+1) == animation->Frames.Num())
-			{
-				animation->Frames.Add(frame);
-				_mCurrentFrame = animation->Frames.Num() - 1;
-			}
-			else
-			{
-				++_mCurrentFrame;
-				animation->Frames.Insert(frame, _mCurrentFrame);
-
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
-			return FReply::Handled();
+			animation->Unload();
 		}
+		if (_mCurrentFrame < 0 ||
+			_mCurrentFrame >= animation->Frames.Num())
+		{
+			_mCurrentFrame = 0;
+		}
+		FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
+		frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+		if (_mCurrentFrame == animation->Frames.Num() ||
+			(_mCurrentFrame + 1) == animation->Frames.Num())
+		{
+			animation->Frames.Add(frame);
+			_mCurrentFrame = animation->Frames.Num() - 1;
+		}
+		else
+		{
+			++_mCurrentFrame;
+			animation->Frames.Insert(frame, _mCurrentFrame);
+
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
 	}
 
 	_mCurrentFrame = 0;
@@ -344,38 +332,35 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickAddFrame()
 }
 FReply FChromaSDKEditorAnimation2DDetails::OnClickDeleteFrame()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsLoaded())
 		{
-			if (animation->IsLoaded())
-			{
-				animation->Unload();
-			}
-			if (_mCurrentFrame < 0 ||
-				_mCurrentFrame >= animation->Frames.Num())
-			{
-				_mCurrentFrame = 0;
-			}
-			if (animation->Frames.Num() == 1)
-			{
-				// reset frame
-				animation->Frames[0].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
-			}
-			else if (animation->Frames.Num() > 0)
-			{
-				animation->Frames.RemoveAt(_mCurrentFrame);
-				if (_mCurrentFrame == animation->Frames.Num())
-				{
-					_mCurrentFrame = animation->Frames.Num() - 1;
-				}
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
-			return FReply::Handled();
+			animation->Unload();
 		}
+		if (_mCurrentFrame < 0 ||
+			_mCurrentFrame >= animation->Frames.Num())
+		{
+			_mCurrentFrame = 0;
+		}
+		if (animation->Frames.Num() == 1)
+		{
+			// reset frame
+			animation->Frames[0].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+		}
+		else if (animation->Frames.Num() > 0)
+		{
+			animation->Frames.RemoveAt(_mCurrentFrame);
+			if (_mCurrentFrame == animation->Frames.Num())
+			{
+				_mCurrentFrame = animation->Frames.Num() - 1;
+			}
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
 	}
 
 	_mCurrentFrame = 0;
@@ -384,30 +369,27 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickDeleteFrame()
 
 void FChromaSDKEditorAnimation2DDetails::CopyPixels(COLORREF* pColor, UINT width, UINT height)
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+		for (int i = 0; i < _mColors.Num() && i < (int)height; i++)
 		{
-			_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
-			for (int i = 0; i < _mColors.Num() && i < (int)height; i++)
+			COLORREF* nextRow = pColor + width;
+			for (int j = 0; j < _mColors[i].Colors.Num() && j < (int)width; j++)
 			{
-				COLORREF* nextRow = pColor + width;
-				for (int j = 0; j < _mColors[i].Colors.Num() && j < (int)width; j++)
-				{
-					float red = GetBValue(*pColor) / 255.0f;
-					float green = GetGValue(*pColor) / 255.0f;
-					float blue = GetRValue(*pColor) / 255.0f;
-					FLinearColor color = FLinearColor(red, green, blue, 1.0f);
-					_mColors[i].Colors[j] = color;
-					pColor++;
-					/*
-					UE_LOG(LogTemp, Log, TEXT("IChromaSDKEditorAnimationBaseDetails r=%f g=%f b=%f"),
-					red, green, blue);
-					*/
-				}
-				pColor = nextRow;
+				float red = GetBValue(*pColor) / 255.0f;
+				float green = GetGValue(*pColor) / 255.0f;
+				float blue = GetRValue(*pColor) / 255.0f;
+				FLinearColor color = FLinearColor(red, green, blue, 1.0f);
+				_mColors[i].Colors[j] = color;
+				pColor++;
+				/*
+				UE_LOG(LogTemp, Log, TEXT("IChromaSDKEditorAnimationBaseDetails r=%f g=%f b=%f"),
+				red, green, blue);
+				*/
 			}
+			pColor = nextRow;
 		}
 	}
 }
@@ -443,19 +425,16 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureImageButton()
 		}
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsLoaded())
 		{
-			if (animation->IsLoaded())
-			{
-				animation->Unload();
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
+			animation->Unload();
 		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
 	}
 
 	return FReply::Handled();
@@ -492,19 +471,16 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureAnimationButton()
 		}
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsLoaded())
 		{
-			if (animation->IsLoaded())
-			{
-				animation->Unload();
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
+			animation->Unload();
 		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
 	}
 
 	return FReply::Handled();
@@ -512,26 +488,23 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureAnimationButton()
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickOverrideButton()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsLoaded())
 		{
-			if (animation->IsLoaded())
-			{
-				animation->Unload();
-			}
-			float frameTime = animation->OverrideFrameTime;
-			float time = 0.0f;
-			for (int i = 0; i < animation->Curve.EditorCurveData.Keys.Num(); ++i)
-			{
-				time += frameTime;
-				animation->Curve.EditorCurveData.Keys[i].Time = time;
-			}
-			animation->RefreshCurve();
-			RefreshFrames();
-			RefreshDevice();
+			animation->Unload();
 		}
+		float frameTime = animation->OverrideFrameTime;
+		float time = 0.0f;
+		for (int i = 0; i < animation->Curve.EditorCurveData.Keys.Num(); ++i)
+		{
+			time += frameTime;
+			animation->Curve.EditorCurveData.Keys[i].Time = time;
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
 	}
 	return FReply::Handled();
 }
@@ -564,47 +537,44 @@ void FChromaSDKEditorAnimation2DDetails::RefreshDevice()
 	// clear grid
 	_mGrid->ClearChildren();
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
+		int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(animation->Device);
+		int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(animation->Device);
+
+		FFormatNamedArguments textArgs;
+		textArgs.Add(TEXT("maxRow"), FText::AsNumber(maxRow));
+		textArgs.Add(TEXT("maxColumn"), FText::AsNumber(maxColumn));
+		_mTextInfo->SetText(FText::Format(LOCTEXT("GridInfo", "{maxRow} x {maxColumn}"), textArgs));
+
+		FChromaSDKColorFrame2D& frame = animation->Frames[_mCurrentFrame];
+		TArray<FChromaSDKColors>& colors = frame.Colors;
+
+		if (colors.Num() == maxRow &&
+			colors[0].Colors.Num() == maxColumn)
 		{
-			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(animation->Device);
-			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(animation->Device);
-
-			FFormatNamedArguments textArgs;
-			textArgs.Add(TEXT("maxRow"), FText::AsNumber(maxRow));
-			textArgs.Add(TEXT("maxColumn"), FText::AsNumber(maxColumn));
-			_mTextInfo->SetText(FText::Format(LOCTEXT("GridInfo", "{maxRow} x {maxColumn}"), textArgs));
-
-			FChromaSDKColorFrame2D& frame = animation->Frames[_mCurrentFrame];
-			TArray<FChromaSDKColors>& colors = frame.Colors;
-
-			if (colors.Num() == maxRow &&
-				colors[0].Colors.Num() == maxColumn)
+			for (int i = 0; i < maxRow; ++i)
 			{
-				for (int i = 0; i < maxRow; ++i)
+				for (int j = 0; j < maxColumn; ++j)
 				{
-					for (int j = 0; j < maxColumn; ++j)
-					{
-						TSharedRef<SOverlay> overlay = SNew(SOverlay)
-							+ SOverlay::Slot()
-							.HAlign(HAlign_Center)
-							.VAlign(VAlign_Center)
-							[
-								SNew(SBorder)
-								.Padding(1.0f)
-								.BorderBackgroundColor(FLinearColor::Black)
-								[
-									SetupColorButton(i, j, colors[i].Colors[j])
-								]
-							];
+					TSharedRef<SOverlay> overlay = SNew(SOverlay)
+						+ SOverlay::Slot()
+						.HAlign(HAlign_Center)
+						.VAlign(VAlign_Center)
+						[
+							SNew(SBorder)
+							.Padding(1.0f)
+						.BorderBackgroundColor(FLinearColor::Black)
+						[
+							SetupColorButton(i, j, colors[i].Colors[j])
+						]
+						];
 
-						(*_mGrid).AddSlot(j, i)
-							.AttachWidget(overlay);
-					}
+					(*_mGrid).AddSlot(j, i)
+						.AttachWidget(overlay);
 				}
 			}
 		}
@@ -613,24 +583,21 @@ void FChromaSDKEditorAnimation2DDetails::RefreshDevice()
 
 void FChromaSDKEditorAnimation2DDetails::OnClickColor(int row, int column)
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		if (frames.Num() > 0 &&
+			row >= 0 &&
+			row < frames[_mCurrentFrame].Colors.Num() &&
+			column >= 0 &&
+			column < frames[_mCurrentFrame].Colors[row].Colors.Num())
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			if (frames.Num() > 0 &&
-				row >= 0 &&
-				row < frames[_mCurrentFrame].Colors.Num() &&
-				column >= 0 &&
-				column < frames[_mCurrentFrame].Colors[row].Colors.Num())
-			{
-				TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
-				colors[row].Colors[column] = _mColor;
-			}
+			TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
+			colors[row].Colors[column] = _mColor;
 		}
 	}
 
@@ -721,19 +688,16 @@ void FChromaSDKEditorAnimation2DDetails::OnColorCommitted(FLinearColor color)
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickClearButton()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		if (frames.Num() > 0)
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			if (frames.Num() > 0)
-			{
-				frames[_mCurrentFrame].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
-			}
+			frames[_mCurrentFrame].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
 		}
 	}
 
@@ -745,27 +709,24 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickClearButton()
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickFillButton()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		if (frames.Num() > 0)
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			if (frames.Num() > 0)
+			FChromaSDKColorFrame2D& frame = frames[_mCurrentFrame];
+			TArray<FChromaSDKColors>& colors = frame.Colors;
+			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(device);
+			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
+			for (int i = 0; i < maxRow; ++i)
 			{
-				FChromaSDKColorFrame2D& frame = frames[_mCurrentFrame];
-				TArray<FChromaSDKColors>& colors = frame.Colors;
-				int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(device);
-				int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
-				for (int i = 0; i < maxRow; ++i)
+				for (int j = 0; j < maxColumn; ++j)
 				{
-					for (int j = 0; j < maxColumn; ++j)
-					{
-						colors[i].Colors[j] = _mColor;
-					}
+					colors[i].Colors[j] = _mColor;
 				}
 			}
 		}
@@ -779,16 +740,13 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickFillButton()
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickCopyButton()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
-		{
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			_mColors = frames[_mCurrentFrame].Colors;
-		}
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		_mColors = frames[_mCurrentFrame].Colors;
 	}
 
 	return FReply::Handled();
@@ -799,22 +757,19 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickPasteButton()
 	// refresh the UI
 	RefreshDevice();
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(device);
+		int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		if (_mColors.Num() == maxRow &&
+			_mColors[0].Colors.Num() == maxColumn)
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(device);
-			int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(device);
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			if (_mColors.Num() == maxRow &&
-				_mColors[0].Colors.Num() == maxColumn)
-			{
-				frames[_mCurrentFrame].Colors = _mColors;
-			}
+			frames[_mCurrentFrame].Colors = _mColors;
 		}
 	}
 
@@ -826,17 +781,14 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickPasteButton()
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickRandomButton()
 {
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
-		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			frames[_mCurrentFrame].Colors = UChromaSDKPluginBPLibrary::CreateRandomColors2D(animation->Device);
-		}
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		frames[_mCurrentFrame].Colors = UChromaSDKPluginBPLibrary::CreateRandomColors2D(animation->Device);
 	}
 
 	// refresh the UI
@@ -849,23 +801,20 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickSetDeviceButton()
 {
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickSetDeviceButton"));
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		animation->Device != _mSelectedDevice)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			animation->Device != _mSelectedDevice)
-		{
-			animation->Reset(_mSelectedDevice);
+		animation->Reset(_mSelectedDevice);
 
-			// reset clipboard
-			_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+		// reset clipboard
+		_mColors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
 
-			// set default frame
-			_mCurrentFrame = 0;
+		// set default frame
+		_mCurrentFrame = 0;
 
-			// refresh the UI
-			RefreshDevice();
-		}
+		// refresh the UI
+		RefreshDevice();
 	}
 
 	return FReply::Handled();
@@ -875,18 +824,15 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickSetKeyButton()
 {
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickSetKeyButton"));
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			animation->Device == EChromaSDKDevice2DEnum::DE_Keyboard &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
-		{
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
-			UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(_mSelectedKey, _mColor, colors);
-		}
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
+		UChromaSDKPluginBPLibrary::SetKeyboardKeyColor(_mSelectedKey, _mColor, colors);
 	}
 
 	// refresh the UI
@@ -899,18 +845,15 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickSetLedButton()
 {
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickSetLedButton"));
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		animation->Device == EChromaSDKDevice2DEnum::DE_Mouse &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			animation->Device == EChromaSDKDevice2DEnum::DE_Mouse &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
-		{
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
-			UChromaSDKPluginBPLibrary::SetMouseLedColor(_mSelectedLed, _mColor, colors);
-		}
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
+		UChromaSDKPluginBPLibrary::SetMouseLedColor(_mSelectedLed, _mColor, colors);
 	}
 
 	// refresh the UI
@@ -929,22 +872,19 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickPreviewButton()
 		UChromaSDKPluginBPLibrary::ChromaSDKInit();
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr &&
+		_mCurrentFrame >= 0 &&
+		_mCurrentFrame < animation->Frames.Num())
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr &&
-			_mCurrentFrame >= 0 &&
-			_mCurrentFrame < animation->Frames.Num())
+		const EChromaSDKDevice2DEnum& device = animation->Device;
+		TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
+		TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
+		FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(device, colors);
+		if (effect.Result == 0)
 		{
-			const EChromaSDKDevice2DEnum& device = animation->Device;
-			TArray<FChromaSDKColorFrame2D>& frames = animation->Frames;
-			TArray<FChromaSDKColors>& colors = frames[_mCurrentFrame].Colors;
-			FChromaSDKEffectResult effect = UChromaSDKPluginBPLibrary::ChromaSDKCreateEffectCustom2D(device, colors);
-			if (effect.Result == 0)
-			{
-				UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
-				UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
-			}
+			UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(effect.EffectId);
+			UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(effect.EffectId);
 		}
 	}
 
@@ -961,23 +901,20 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickPlayButton()
 		UChromaSDKPluginBPLibrary::ChromaSDKInit();
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsPlaying())
 		{
-			if (animation->IsPlaying())
+			UE_LOG(LogTemp, Error, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickPlayButton Animation is already playing!"));
+		}
+		else
+		{
+			if (!animation->IsLoaded())
 			{
-				UE_LOG(LogTemp, Error, TEXT("FChromaSDKEditorAnimation2DDetails::OnClickPlayButton Animation is already playing!"));
+				animation->Load();
 			}
-			else
-			{
-				if (!animation->IsLoaded())
-				{
-					animation->Load();
-				}
-				animation->Play();
-			}
+			animation->Play();
 		}
 	}
 
@@ -994,15 +931,12 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickStopButton()
 		UChromaSDKPluginBPLibrary::ChromaSDKInit();
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsPlaying())
 		{
-			if (animation->IsPlaying())
-			{
-				animation->Stop();
-			}
+			animation->Stop();
 		}
 	}
 
@@ -1019,15 +953,12 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickLoadButton()
 		UChromaSDKPluginBPLibrary::ChromaSDKInit();
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (!animation->IsLoaded())
 		{
-			if (!animation->IsLoaded())
-			{
-				animation->Load();
-			}
+			animation->Load();
 		}
 	}
 
@@ -1044,15 +975,12 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickUnloadButton()
 		UChromaSDKPluginBPLibrary::ChromaSDKInit();
 	}
 
-	if (_mObjectsBeingCustomized.Num() > 0)
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
 	{
-		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
-		if (animation != nullptr)
+		if (animation->IsLoaded())
 		{
-			if (animation->IsLoaded())
-			{
-				animation->Unload();
-			}
+			animation->Unload();
 		}
 	}
 
@@ -1092,7 +1020,7 @@ TArray<const UObject*> FChromaSDKEditorAnimation2DDetails::GetOwners() const
 	TArray<const UObject*> result = TArray<const UObject*>();
 	if (_mObjectsBeingCustomized.Num() > 0)
 	{
-		UObject* animation = (UObject*)_mObjectsBeingCustomized[0].Get();
+		UChromaSDKPluginAnimation2DObject* animation = (UChromaSDKPluginAnimation2DObject*)_mObjectsBeingCustomized[0].Get();
 		if (animation != nullptr)
 		{
 			result.Add(animation);
