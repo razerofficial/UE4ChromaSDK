@@ -6,9 +6,9 @@
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include <string>
 
-using namespace ChromaSDK;
-
 #if PLATFORM_WINDOWS
+
+using namespace ChromaSDK;
 
 // keyboard map
 std::map<EChromaSDKKeyboardKey, int> UChromaSDKPluginBPLibrary::_sKeyboardEnumMap =
@@ -240,21 +240,24 @@ int UChromaSDKPluginBPLibrary::GetMaxColumn(const EChromaSDKDevice2DEnum& device
 
 TArray<FLinearColor> UChromaSDKPluginBPLibrary::CreateColors1D(const EChromaSDKDevice1DEnum& device)
 {
-	int elements = GetMaxLeds(device);
 	TArray<FLinearColor> colors = TArray<FLinearColor>();
+#if PLATFORM_WINDOWS
+	int elements = GetMaxLeds(device);
 	for (int i = 0; i < elements; ++i)
 	{
 		FLinearColor color = FLinearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		colors.Add(color);
 	}
+#endif
 	return colors;
 }
 
 TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateColors2D(const EChromaSDKDevice2DEnum& device)
 {
+	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
+#if PLATFORM_WINDOWS
 	int maxRows = GetMaxRow(device);
 	int maxColumns = GetMaxColumn(device);
-	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
 	for (int i = 0; i < maxRows; ++i)
 	{
 		FChromaSDKColors row = FChromaSDKColors();
@@ -265,13 +268,15 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateColors2D(const EChroma
 		}
 		result.Add(row);
 	}
+#endif
 	return result;
 }
 
 TArray<FLinearColor> UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChromaSDKDevice1DEnum& device)
 {
-	int elements = GetMaxLeds(device);
 	TArray<FLinearColor> colors = TArray<FLinearColor>();
+#if PLATFORM_WINDOWS
+	int elements = GetMaxLeds(device);
 	for (int i = 0; i < elements; ++i)
 	{
 		float red = FMath::RandRange(0.0f, 1.0f);
@@ -281,14 +286,16 @@ TArray<FLinearColor> UChromaSDKPluginBPLibrary::CreateRandomColors1D(const EChro
 		FLinearColor color = FLinearColor(red, green, blue, alpha);
 		colors.Add(color);
 	}
+#endif
 	return colors;
 }
 
 TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(const EChromaSDKDevice2DEnum& device)
 {
+	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
+#if PLATFORM_WINDOWS
 	int maxRows = GetMaxRow(device);
 	int maxColumns = GetMaxColumn(device);
-	TArray<FChromaSDKColors> result = TArray<FChromaSDKColors>();
 	for (int i = 0; i < maxRows; ++i)
 	{
 		FChromaSDKColors row = FChromaSDKColors();
@@ -303,6 +310,7 @@ TArray<FChromaSDKColors> UChromaSDKPluginBPLibrary::CreateRandomColors2D(const E
 		}
 		result.Add(row);
 	}
+#endif
 	return result;
 }
 
@@ -357,14 +365,19 @@ const TArray<FChromaSDKColors>& UChromaSDKPluginBPLibrary::SetMouseLedColor(cons
 
 int UChromaSDKPluginBPLibrary::ChromaSDKInit()
 {
+#if PLATFORM_WINDOWS
 	// Init the SDK
 	int result = FChromaSDKPluginModule::Get().ChromaSDKInit();
 	_sInitialized = result == 0;
 	return result;
+#else
+	return -1;
+#endif
 }
 
 int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
 {
+#if PLATFORM_WINDOWS
 	// unload any 1D animation effects
 	for (TObjectIterator<UChromaSDKPluginAnimation1DObject> iterator; iterator; ++iterator)
 	{
@@ -394,11 +407,18 @@ int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
 		_sInitialized = false;
 	}
 	return result;
+#else
+	return -1;
+#endif
 }
 
 bool UChromaSDKPluginBPLibrary::IsInitialized()
 {
+#if PLATFORM_WINDOWS
 	return _sInitialized;
+#else
+	return false;
+#endif
 }
 
 FString UChromaSDKPluginBPLibrary::DebugToString(const FChromaSDKGuid& effectId)
@@ -796,3 +816,4 @@ void UChromaSDKPluginBPLibrary::ToEffect(const FString& effectString, RZEFFECTID
 	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin::ToEffect EffectString=%s"), *effectString);
 }
 #endif
+

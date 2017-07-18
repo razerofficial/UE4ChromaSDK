@@ -7,6 +7,7 @@
 UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+#if PLATFORM_WINDOWS
 	// start with 1 frame
 	FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
 	frame.Colors = UChromaSDKPluginBPLibrary::CreateColors2D(Device);
@@ -18,10 +19,12 @@ UChromaSDKPluginAnimation2DObject::UChromaSDKPluginAnimation2DObject(const FObje
 	_mIsPlaying = false;
 	_mTime = 0.0f;
 	_mCurrentFrame = 0;
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::Tick(float deltaTime)
 {
+#if PLATFORM_WINDOWS
 	_mTime += deltaTime;
 	float nextTime = GetTime(_mCurrentFrame);
 	if (nextTime < _mTime)
@@ -48,16 +51,25 @@ void UChromaSDKPluginAnimation2DObject::Tick(float deltaTime)
 			_mOnComplete.ExecuteIfBound(this);
 		}
 	}
+#endif
 }
 
 bool UChromaSDKPluginAnimation2DObject::IsTickable() const
 {
+#if PLATFORM_WINDOWS
 	return _mIsPlaying;
+#else
+	return false;
+#endif
 }
 
 bool UChromaSDKPluginAnimation2DObject::IsTickableInEditor() const
 {
+#if PLATFORM_WINDOWS
 	return true;
+#else
+	return false;
+#endif
 }
 
 bool UChromaSDKPluginAnimation2DObject::IsTickableWhenPaused() const
@@ -70,6 +82,7 @@ TStatId UChromaSDKPluginAnimation2DObject::GetStatId() const
 	return TStatId();
 }
 
+#if PLATFORM_WINDOWS
 float UChromaSDKPluginAnimation2DObject::GetTime(int index)
 {
 	if (index >= 0 &&
@@ -79,9 +92,11 @@ float UChromaSDKPluginAnimation2DObject::GetTime(int index)
 	}
 	return 0.033f;
 }
+#endif
 
 void UChromaSDKPluginAnimation2DObject::Load()
 {
+#if PLATFORM_WINDOWS
 	if (_mIsLoaded)
 	{
 		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Load Animation has already been loaded!"));
@@ -100,15 +115,21 @@ void UChromaSDKPluginAnimation2DObject::Load()
 	}
 
 	_mIsLoaded = true;
+#endif
 }
 
 bool UChromaSDKPluginAnimation2DObject::IsLoaded()
 {
+#if PLATFORM_WINDOWS
 	return _mIsLoaded;
+#else
+	return false;
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::Unload()
 {
+#if PLATFORM_WINDOWS
 	if (!_mIsLoaded)
 	{
 		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Unload Animation has already been unloaded!"));
@@ -126,10 +147,12 @@ void UChromaSDKPluginAnimation2DObject::Unload()
 	}
 	_mEffects.Reset();
 	_mIsLoaded = false;
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::Play()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Play"));
 
 	if (!_mIsLoaded)
@@ -158,10 +181,12 @@ void UChromaSDKPluginAnimation2DObject::Play()
 			UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Tick Failed to set effect!"));
 		}
 	}
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnComplete2D onComplete)
 {
+#if PLATFORM_WINDOWS
 	UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::PlayWithOnComplete"));
 
 	if (!_mIsLoaded)
@@ -186,19 +211,26 @@ void UChromaSDKPluginAnimation2DObject::PlayWithOnComplete(FDelegateChomaSDKOnCo
 			UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation2DObject::Tick Failed to set effect!"));
 		}
 	}
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::Stop()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("UChromaSDKPluginAnimation2DObject::Stop"));
 	_mIsPlaying = false;
 	_mTime = 0.0f;
 	_mCurrentFrame = 0;
+#endif
 }
 
 bool UChromaSDKPluginAnimation2DObject::IsPlaying()
 {
+#if PLATFORM_WINDOWS
 	return _mIsPlaying;
+#else
+	return false;
+#endif
 }
 
 TArray<FChromaSDKColorFrame2D>& UChromaSDKPluginAnimation2DObject::GetFrames()
@@ -210,6 +242,7 @@ TArray<FChromaSDKColorFrame2D>& UChromaSDKPluginAnimation2DObject::GetFrames()
 
 void UChromaSDKPluginAnimation2DObject::Reset(EChromaSDKDevice2DEnum device)
 {
+#if PLATFORM_WINDOWS
 	// change device
 	Device = device;
 
@@ -222,10 +255,12 @@ void UChromaSDKPluginAnimation2DObject::Reset(EChromaSDKDevice2DEnum device)
 	Curve.EditorCurveData.Reset();
 	Curve.EditorCurveData.Keys.Reset();
 	Curve.EditorCurveData.AddKey(1.0f, 0.0f);
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::RefreshCurve()
 {
+#if PLATFORM_WINDOWS
 	//copy times
 	TArray<float> times = TArray<float>();
 	for (int i = 0; i < Curve.EditorCurveData.Keys.Num(); ++i)
@@ -269,10 +304,12 @@ void UChromaSDKPluginAnimation2DObject::RefreshCurve()
 		float time = times[i];
 		Curve.EditorCurveData.AddKey(time, 0.0f);
 	}
+#endif
 }
 
 void UChromaSDKPluginAnimation2DObject::RefreshColors()
 {
+#if PLATFORM_WINDOWS
 	int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(Device);
 	int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(Device);
 	for (int i = 0; i < Frames.Num(); ++i)
@@ -296,6 +333,8 @@ void UChromaSDKPluginAnimation2DObject::RefreshColors()
 			}
 		}
 	}
+#endif
 }
 
 #endif
+
