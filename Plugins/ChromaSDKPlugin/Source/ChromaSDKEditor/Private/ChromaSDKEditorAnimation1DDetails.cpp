@@ -59,6 +59,7 @@ UChromaSDKPluginAnimation1DObject* FChromaSDKEditorAnimation1DDetails::GetAnimat
 
 void FChromaSDKEditorAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::CustomizeDetails"));
 
 	if (_mObjectsBeingCustomized.Num() > 0)
@@ -88,10 +89,12 @@ void FChromaSDKEditorAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 	BuildFramesRow(DetailBuilder, category);
 
 	BuildCurveRow(DetailBuilder, category);
+#endif
 }
 
 void FChromaSDKEditorAnimation1DDetails::RefreshFrames()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr)
 	{
@@ -127,10 +130,12 @@ void FChromaSDKEditorAnimation1DDetails::RefreshFrames()
 	_mTextCurrentFrame->SetText(FText::AsNumber(0));
 	_mTextNumberOfFrames->SetText(FText::AsNumber(0));
 	_mTextFrameDuration->SetText(FText::AsNumber(0.0f));
+#endif
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickPreviousFrame()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr)
 	{
@@ -150,10 +155,12 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickPreviousFrame()
 	}
 
 	_mCurrentFrame = 0;
+#endif
 	return FReply::Handled();
 }
 FReply FChromaSDKEditorAnimation1DDetails::OnClickNextFrame()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr)
 	{
@@ -173,10 +180,12 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickNextFrame()
 	}
 
 	_mCurrentFrame = 0;
+#endif
 	return FReply::Handled();
 }
 FReply FChromaSDKEditorAnimation1DDetails::OnClickAddFrame()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr)
 	{
@@ -210,10 +219,12 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickAddFrame()
 	}
 
 	_mCurrentFrame = 0;
+#endif
 	return FReply::Handled();
 }
 FReply FChromaSDKEditorAnimation1DDetails::OnClickDeleteFrame()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr)
 	{
@@ -246,9 +257,11 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickDeleteFrame()
 	}
 
 	_mCurrentFrame = 0;
+#endif
 	return FReply::Handled();
 }
 
+#if PLATFORM_WINDOWS
 void FChromaSDKEditorAnimation1DDetails::CopyPixels(COLORREF* pColor, UINT width, UINT height)
 {
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
@@ -275,9 +288,11 @@ void FChromaSDKEditorAnimation1DDetails::CopyPixels(COLORREF* pColor, UINT width
 		}
 	}
 }
+#endif
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureImageButton()
 {
+#if PLATFORM_WINDOWS
 	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
 	if (DesktopPlatform)
 	{
@@ -319,11 +334,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureImageButton()
 		RefreshDevice();
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureAnimationButton()
 {
+#if PLATFORM_WINDOWS
 	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
 	if (DesktopPlatform)
 	{
@@ -365,11 +382,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureAnimationButton()
 		RefreshDevice();
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickOverrideButton()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr)
 	{
@@ -388,9 +407,11 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickOverrideButton()
 		RefreshFrames();
 		RefreshDevice();
 	}
+#endif
 	return FReply::Handled();
 }
 
+#if PLATFORM_WINDOWS
 TSharedRef<SColorBlock> FChromaSDKEditorAnimation1DDetails::SetupColorButton(int element, const FLinearColor& color)
 {
 	TSharedRef<IChromaSDKEditorButton1D> button =
@@ -406,9 +427,11 @@ TSharedRef<SColorBlock> FChromaSDKEditorAnimation1DDetails::SetupColorButton(int
 
 	return newColor;
 }
+#endif
 
 void FChromaSDKEditorAnimation1DDetails::RefreshDevice()
 {
+#if PLATFORM_WINDOWS
 	// Remove existing button events
 	if (_mColorButtons.Num() > 0)
 	{
@@ -453,10 +476,12 @@ void FChromaSDKEditorAnimation1DDetails::RefreshDevice()
 			}
 		}
 	}
+#endif
 }
 
 void FChromaSDKEditorAnimation1DDetails::OnClickColor(int element)
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr &&
 		_mCurrentFrame >= 0 &&
@@ -474,10 +499,12 @@ void FChromaSDKEditorAnimation1DDetails::OnClickColor(int element)
 	}
 
 	RefreshDevice();
+#endif
 }
 
 void FChromaSDKEditorAnimation1DDetails::OnChangeChromaSDKDevices(TSharedPtr<FString> Item, ESelectInfo::Type SelectInfo)
 {
+#if PLATFORM_WINDOWS
 	FString selectedItem = *Item;
 	UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnChangeChromaSDKDevices Selected=%s"),
 		*selectedItem);
@@ -497,17 +524,21 @@ void FChromaSDKEditorAnimation1DDetails::OnChangeChromaSDKDevices(TSharedPtr<FSt
 			}
 		}
 	}
+#endif
 }
 
 void FChromaSDKEditorAnimation1DDetails::OnColorCommitted(FLinearColor color)
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnColorCommitted"));
 	color.A = 1.0f; //full alpha
 	_mColor = color;
+#endif
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickClearButton()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr &&
 		_mCurrentFrame >= 0 &&
@@ -524,11 +555,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickClearButton()
 	// refresh the UI
 	RefreshDevice();
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickFillButton()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr &&
 		_mCurrentFrame >= 0 &&
@@ -551,11 +584,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickFillButton()
 	// refresh the UI
 	RefreshDevice();
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickCopyButton()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr &&
 		_mCurrentFrame >= 0 &&
@@ -567,11 +602,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickCopyButton()
 		_mColors = frame.Colors;
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickPasteButton()
 {
+#if PLATFORM_WINDOWS
 	// refresh the UI
 	RefreshDevice();
 
@@ -593,11 +630,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickPasteButton()
 	// refresh the UI
 	RefreshDevice();
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickRandomButton()
 {
+#if PLATFORM_WINDOWS
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
 	if (animation != nullptr &&
 		_mCurrentFrame >= 0 &&
@@ -611,11 +650,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickRandomButton()
 	// refresh the UI
 	RefreshDevice();
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickSetDeviceButton()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickSetDeviceButton"));
 
 	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
@@ -634,11 +675,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickSetDeviceButton()
 		RefreshDevice();
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickPreviewButton()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickApplyButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
@@ -664,11 +707,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickPreviewButton()
 		}
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickPlayButton()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickPlayButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
@@ -694,11 +739,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickPlayButton()
 		}
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickStopButton()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickStopButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
@@ -716,11 +763,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickStopButton()
 		}
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickLoadButton()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickLoadButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
@@ -738,11 +787,13 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickLoadButton()
 		}
 	}
 
+#endif
 	return FReply::Handled();
 }
 
 FReply FChromaSDKEditorAnimation1DDetails::OnClickUnloadButton()
 {
+#if PLATFORM_WINDOWS
 	//UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickUnloadButton"));
 
 	bool initialized = UChromaSDKPluginBPLibrary::IsInitialized();
@@ -760,6 +811,7 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickUnloadButton()
 		}
 	}
 
+#endif
 	return FReply::Handled();
 }
 
@@ -828,3 +880,4 @@ bool FChromaSDKEditorAnimation1DDetails::IsValidCurve(FRichCurveEditInfo CurveIn
 #undef LOCTEXT_NAMESPACE
 
 #endif
+

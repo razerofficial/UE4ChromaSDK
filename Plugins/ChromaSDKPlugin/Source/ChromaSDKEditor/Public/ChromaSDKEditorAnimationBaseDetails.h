@@ -21,7 +21,9 @@ protected:
 
 	void ReadImage(const FString& path, bool isAnimation);
 
+#if PLATFORM_WINDOWS
 	virtual void CopyPixels(COLORREF* pColor, UINT width, UINT height) = 0;
+#endif
 
 	void AddChromaSDKDevice(FString& text);
 
@@ -108,3 +110,4 @@ protected:
 };
 
 #endif
+

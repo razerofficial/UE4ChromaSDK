@@ -45,7 +45,9 @@ public:
 
 protected:
 
+#if PLATFORM_WINDOWS
 	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
+#endif
 
 	// import colors from texture image
 	FReply OnClickImportTextureImageButton();
@@ -73,7 +75,9 @@ protected:
 	FReply OnClickUnloadButton();
 
 	// device preview row
+#if PLATFORM_WINDOWS
 	TSharedRef<SColorBlock> SetupColorButton(int element, const FLinearColor& color);
+#endif
 	void RefreshDevice();
 
 	// set the color row
