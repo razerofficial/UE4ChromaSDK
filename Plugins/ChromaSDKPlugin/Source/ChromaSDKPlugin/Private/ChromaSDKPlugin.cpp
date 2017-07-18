@@ -20,8 +20,6 @@ using namespace ChromaSDK::Keypad;
 using namespace ChromaSDK::Mouse;
 using namespace ChromaSDK::Mousepad;
 
-#endif
-
 bool FChromaSDKPluginModule::ValidateGetProcAddress(bool condition, FString methodName)
 {
 	if (condition)
@@ -34,6 +32,8 @@ bool FChromaSDKPluginModule::ValidateGetProcAddress(bool condition, FString meth
 	}
 	return condition;
 }
+
+#endif
 
 void FChromaSDKPluginModule::StartupModule()
 {
