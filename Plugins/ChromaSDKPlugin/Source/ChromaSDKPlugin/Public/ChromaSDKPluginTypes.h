@@ -9,8 +9,10 @@
 #include "RzChromaSDKTypes.h"
 #include "RzErrors.h"
 #include "HideWindowsPlatformTypes.h"
+#endif
 #include "ChromaSDKPluginTypes.generated.h"
 
+#if PLATFORM_WINDOWS
 typedef RZRESULT(*CHROMA_SDK_INIT)(void);
 typedef RZRESULT(*CHROMA_SDK_UNINIT)(void);
 typedef RZRESULT(*CHROMA_SDK_CREATE_EFFECT)(RZDEVICEID DeviceId, ChromaSDK::EFFECT_TYPE Effect, PRZPARAM pParam, RZEFFECTID *pEffectId);
