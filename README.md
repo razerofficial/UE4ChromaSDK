@@ -30,35 +30,11 @@
 <a name="engine-versions"></a>
 ## Engine Versions
 
-The `Plugin` was created in UE4 `4.16`.
+[Releases](https://github.com/RazerOfficial/UE4ChromaSDK/releases/tag/1.0) have binary versions of the `Plugin` for Unreal `4.15` and  `4.16`. Earlier versions can be added upon request.
 
-**Note: To compile the plugin on versions before `4.16`, adjust the comments in the module build files.**
+* Unpack `ChromaSDKPlugin_4_15.zip` to `ProjectFolder/Plugins` for Unreal `4.15`
 
-### ChromaSDKPlugin.Build.cs
-
-The runtime module - `Plugins\ChromaSDKPlugin\Source\ChromaSDKPlugin\ChromaSDKPlugin.Build.cs`
-
-```c++
-using UnrealBuildTool;
-
-public class ChromaSDKPlugin : ModuleRules
-{
-	public ChromaSDKPlugin(TargetInfo Target) //4.15 or lower
-	//public ChromaSDKPlugin(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
-```
-
-### ChromaSDKEditor.Build.cs
-
-The editor module - `Plugins\ChromaSDKPlugin\Source\ChromaSDKEditor\ChromaSDKEditor.Build.cs`
-
-```c++
-using UnrealBuildTool;
-
-public class ChromaSDKEditor : ModuleRules
-{
-	public ChromaSDKEditor(TargetInfo Target) //4.15 or lower
-	//public ChromaSDKEditor(ReadOnlyTargetRules Target) : base(Target) // 4.16 or better
-```
+* Unpack `ChromaSDKPlugin_4_16.zip` to `ProjectFolder/Plugins` for Unreal `4.16`
 
 <a name="usage"></a>
 ## Usage
