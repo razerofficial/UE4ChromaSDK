@@ -4,7 +4,11 @@ using UnrealBuildTool;
 
 public class UE4ChromaSDK : ModuleRules
 {
+#if WITH_FORWARDED_MODULE_RULES_CTOR
 	public UE4ChromaSDK(ReadOnlyTargetRules Target) : base(Target)
+#else
+    public UE4ChromaSDK(TargetInfo Target) //4.15 or lower
+#endif
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
