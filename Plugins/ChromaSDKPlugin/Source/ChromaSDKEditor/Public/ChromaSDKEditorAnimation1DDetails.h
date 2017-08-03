@@ -46,8 +46,15 @@ public:
 protected:
 
 #if PLATFORM_WINDOWS
+	void ReadChromaFile(const FString& path);
 	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
 #endif
+
+	// import chroma animation
+	FReply OnClickImportButton();
+
+	// export chroma animation
+	FReply OnClickExportButton();
 
 	// import colors from texture image
 	FReply OnClickImportTextureImageButton();
@@ -84,10 +91,13 @@ protected:
 	void OnColorCommitted(FLinearColor color);
 
 	// animation frames row
+	FReply OnClickFirstFrame();
 	FReply OnClickPreviousFrame();
 	FReply OnClickNextFrame();
+	FReply OnClickLastFrame();
 	FReply OnClickAddFrame();
 	FReply OnClickDeleteFrame();
+	FReply OnClickResetFrame();
 	void RefreshFrames();
 
 private:

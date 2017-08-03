@@ -19,6 +19,8 @@
 #include "Widgets/Layout/SGridPanel.h"
 #include "SlateApplication.h"
 
+typedef unsigned char byte;
+#define ANIMATION_VERSION 1
 #define LOCTEXT_NAMESPACE "ChromaAnimation2DDetails"
 
 TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstance()
@@ -83,6 +85,158 @@ UChromaSDKPluginAnimation2DObject* FChromaSDKEditorAnimation2DDetails::GetAnimat
 		return nullptr;
 	}
 }
+
+#if PLATFORM_WINDOWS
+
+void FChromaSDKEditorAnimation2DDetails::ReadChromaFile(const FString& path)
+{
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		const char* strPath = TCHAR_TO_ANSI(*path);
+		fprintf(stdout, "OpenAnimation: %s\r\n", strPath);
+		FILE* stream;
+		if (0 == fopen_s(&stream, strPath, "rb") &&
+			stream)
+		{
+			long read = 0;
+			long expectedRead = 1;
+			long expectedSize = sizeof(byte);
+
+			//version
+			int version = 0;
+			expectedSize = sizeof(int);
+			read = fread(&version, expectedSize, 1, stream);
+			if (read != expectedRead)
+			{
+				fprintf(stderr, "OpenAnimation: Failed to read version!\r\n");
+				std::fclose(stream);
+				return;
+			}
+			if (version != ANIMATION_VERSION)
+			{
+				fprintf(stderr, "OpenAnimation: Unexpected Version!\r\n");
+				std::fclose(stream);
+				return;
+			}
+
+			fprintf(stdout, "OpenAnimation: Version: %d\r\n", version);
+
+			//device
+			byte device = 0;
+
+			// device type
+			byte deviceType = 0;
+			expectedSize = sizeof(byte);
+			read = fread(&deviceType, expectedSize, 1, stream);
+			if (read == expectedRead)
+			{
+				//device
+				switch ((EChromaSDKDeviceTypeEnum)deviceType)
+				{
+				case EChromaSDKDeviceTypeEnum::DE_1D:
+				case EChromaSDKDeviceTypeEnum::DE_2D:
+					break;
+				default:
+					fprintf(stderr, "OpenAnimation: Unexpected DeviceType!\r\n");
+					std::fclose(stream);
+					return;
+				}
+
+				switch ((EChromaSDKDeviceTypeEnum)deviceType)
+				{
+				case EChromaSDKDeviceTypeEnum::DE_2D:
+					read = fread(&device, expectedSize, 1, stream);
+					if (read == expectedRead)
+					{
+						//device
+						animation->Device = (EChromaSDKDevice2DEnum)device;
+
+						//frame count
+						int frameCount;
+
+						expectedSize = sizeof(int);
+						read = fread(&frameCount, expectedSize, 1, stream);
+						if (read != expectedRead)
+						{
+							fprintf(stderr, "OpenAnimation: Error detected reading frame count!\r\n");
+							std::fclose(stream);
+							return;
+						}
+						else
+						{
+							TArray<FChromaSDKColorFrame2D>& frames = animation->GetFrames();
+							for (int index = 0; index < frameCount; ++index)
+							{
+								FChromaSDKColorFrame2D frame = FChromaSDKColorFrame2D();
+								int maxRow = UChromaSDKPluginBPLibrary::GetMaxRow(animation->Device);
+								int maxColumn = UChromaSDKPluginBPLibrary::GetMaxColumn(animation->Device);
+
+								//duration
+								float duration = 0.0f;
+								expectedSize = sizeof(float);
+								read = fread(&duration, expectedSize, 1, stream);
+								if (read != expectedRead)
+								{
+									fprintf(stderr, "OpenAnimation: Error detected reading duration!\r\n");
+									std::fclose(stream);
+									return;
+								}
+								else
+								{
+									// set duration
+
+									// colors
+									expectedSize = sizeof(int);
+									for (int i = 0; i < maxRow; ++i)
+									{
+										FChromaSDKColors row = FChromaSDKColors();
+										for (int j = 0; j < maxColumn; ++j)
+										{
+											int color = 0;
+											read = fread(&color, expectedSize, 1, stream);
+											if (read != expectedRead)
+											{
+												fprintf(stderr, "OpenAnimation: Error detected reading color!\r\n");
+												std::fclose(stream);
+												return;
+											}
+											else
+											{
+												float red = GetBValue(color) / 255.0f;
+												float green = GetGValue(color) / 255.0f;
+												float blue = GetRValue(color) / 255.0f;
+												FLinearColor linearColor = FLinearColor(red, green, blue, 1.0f);
+												row.Colors.Add(linearColor);
+											}
+										}
+										frame.Colors.Add(row);
+									}
+									if (index == 0)
+									{
+										frames[0] = frame;
+									}
+									else
+									{
+										frames.Add(frame);
+									}
+								}
+							}
+						}
+					}
+					break;
+				}
+			}
+
+			std::fclose(stream);
+
+			RefreshFrames();
+			RefreshDevice();
+		}
+	}
+}
+
+#endif
 
 void FChromaSDKEditorAnimation2DDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
@@ -251,6 +405,21 @@ void FChromaSDKEditorAnimation2DDetails::RefreshFrames()
 #endif
 }
 
+FReply FChromaSDKEditorAnimation2DDetails::OnClickFirstFrame()
+{
+#if PLATFORM_WINDOWS
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		_mCurrentFrame = 0;
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
+	}
+#endif
+	return FReply::Handled();
+}
 FReply FChromaSDKEditorAnimation2DDetails::OnClickPreviousFrame()
 {
 #if PLATFORM_WINDOWS
@@ -298,6 +467,29 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickNextFrame()
 	}
 
 	_mCurrentFrame = 0;
+#endif
+	return FReply::Handled();
+}
+FReply FChromaSDKEditorAnimation2DDetails::OnClickLastFrame()
+{
+#if PLATFORM_WINDOWS
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		if (_mCurrentFrame < 0 ||
+			_mCurrentFrame >= animation->Frames.Num())
+		{
+			_mCurrentFrame = 0;
+		}
+		if (animation->Frames.Num() > 0)
+		{
+			_mCurrentFrame = animation->Frames.Num() - 1;
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
+	}
 #endif
 	return FReply::Handled();
 }
@@ -379,6 +571,34 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickDeleteFrame()
 #endif
 	return FReply::Handled();
 }
+FReply FChromaSDKEditorAnimation2DDetails::OnClickResetFrame()
+{
+#if PLATFORM_WINDOWS
+	UChromaSDKPluginAnimation2DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		if (animation->IsLoaded())
+		{
+			animation->Unload();
+		}
+		_mCurrentFrame = 0;
+		while (animation->Frames.Num() > 1)
+		{
+			animation->Frames.RemoveAt(0);
+		}
+		if (animation->Frames.Num() == 1)
+		{
+			// reset frame
+			animation->Frames[0].Colors = UChromaSDKPluginBPLibrary::CreateColors2D(animation->Device);
+		}
+		animation->RefreshCurve();
+		RefreshFrames();
+		RefreshDevice();
+		return FReply::Handled();
+	}
+#endif
+	return FReply::Handled();
+}
 
 #if PLATFORM_WINDOWS
 void FChromaSDKEditorAnimation2DDetails::CopyPixels(COLORREF* pColor, UINT width, UINT height)
@@ -408,6 +628,50 @@ void FChromaSDKEditorAnimation2DDetails::CopyPixels(COLORREF* pColor, UINT width
 	}
 }
 #endif
+
+// import chroma animation
+FReply FChromaSDKEditorAnimation2DDetails::OnClickImportButton()
+{
+#if PLATFORM_WINDOWS
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString importPath;
+		FString Filter = TEXT("Chroma Files (*.chroma)| *.chroma; ||");
+		TArray<FString> OutFiles;
+		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+		if (DesktopPlatform->OpenFileDialog(
+			parentWindowWindowHandle,
+			TEXT("Import Chroma..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				importPath = OutFiles[0];
+				/*
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickImportButton Selected=%s"),
+				*importPath);
+				*/
+
+				ReadChromaFile(importPath);
+			}
+		}
+	}
+#endif
+	return FReply::Handled();
+}
+
+// export chroma animation
+FReply FChromaSDKEditorAnimation2DDetails::OnClickExportButton()
+{
+#if PLATFORM_WINDOWS
+#endif
+	return FReply::Handled();
+}
 
 FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureImageButton()
 {

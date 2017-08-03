@@ -30,6 +30,13 @@ typedef RZRESULT(*CHROMA_SDK_QUERY_DEVICE)(RZDEVICEID DeviceId, ChromaSDK::DEVIC
 #endif
 
 UENUM(BlueprintType)
+enum class EChromaSDKDeviceTypeEnum : uint8
+{
+	DE_1D			UMETA(DisplayName = "1D"),
+	DE_2D			UMETA(DisplayName = "2D")
+};
+
+UENUM(BlueprintType)
 enum class EChromaSDKDeviceEnum : uint8
 {
 	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),

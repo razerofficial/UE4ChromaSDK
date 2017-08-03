@@ -117,8 +117,6 @@ void FChromaSDKPluginModule::StartupModule()
 	{
 		return;
 	}
-
-	RZRESULT Result = RZRESULT_INVALID;
 #pragma warning(default: 4191)
 #endif
 }

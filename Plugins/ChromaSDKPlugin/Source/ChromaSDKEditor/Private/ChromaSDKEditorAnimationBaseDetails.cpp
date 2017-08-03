@@ -292,10 +292,22 @@ void IChromaSDKEditorAnimationBaseDetails::BuildImportRow(IDetailLayoutBuilder& 
 			+ SGridPanel::Slot(0, 0)
 			[
 				SNew(SButton)
+				.Text(LOCTEXT("Import", "Import"))
+				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickImportButton)
+			]
+			+ SGridPanel::Slot(1, 0)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Export", "Export"))
+				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickExportButton)
+			]
+			+ SGridPanel::Slot(2, 0)
+			[
+				SNew(SButton)
 				.Text(LOCTEXT("Import image", "Import image"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickImportTextureImageButton)
 			]
-			+ SGridPanel::Slot(1, 0)
+			+ SGridPanel::Slot(3, 0)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Import texture", "Import animation"))
@@ -551,26 +563,44 @@ void IChromaSDKEditorAnimationBaseDetails::BuildFramesRow(IDetailLayoutBuilder& 
 			+ SGridPanel::Slot(0, 2)
 			[
 				SNew(SButton)
+				.Text(LOCTEXT("First", "First"))
+				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickFirstFrame)
+			]
+			+ SGridPanel::Slot(1, 2)
+			[
+				SNew(SButton)
 				.Text(LOCTEXT("Previous", "Previous"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickPreviousFrame)
 			]
-			+ SGridPanel::Slot(1, 2)
+			+ SGridPanel::Slot(2, 2)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Next","Next"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickNextFrame)
 			]
-			+ SGridPanel::Slot(2, 2)
+			+ SGridPanel::Slot(3, 2)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Last", "Last"))
+				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickLastFrame)
+			]
+			+ SGridPanel::Slot(0, 3)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Add","Add"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickAddFrame)
 			]
-			+ SGridPanel::Slot(3, 2)
+			+ SGridPanel::Slot(1, 3)
 			[
 				SNew(SButton)
 				.Text(LOCTEXT("Delete","Delete"))
 				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickDeleteFrame)
+			]
+			+ SGridPanel::Slot(2, 3)
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("Reset","Reset"))
+				.OnClicked(this, &IChromaSDKEditorAnimationBaseDetails::OnClickResetFrame)
 			]
 		];
 

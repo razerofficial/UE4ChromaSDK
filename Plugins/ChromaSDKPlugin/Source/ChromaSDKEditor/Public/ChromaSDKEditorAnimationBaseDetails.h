@@ -22,6 +22,7 @@ protected:
 	void ReadImage(const FString& path, bool isAnimation);
 
 #if PLATFORM_WINDOWS
+	virtual void ReadChromaFile(const FString& path) = 0;
 	virtual void CopyPixels(COLORREF* pColor, UINT width, UINT height) = 0;
 #endif
 
@@ -45,6 +46,12 @@ protected:
 	void BuildFramesRow(IDetailLayoutBuilder& DetailBuilder, IDetailCategoryBuilder& category);
 
 	void BuildCurveRow(IDetailLayoutBuilder& DetailBuilder, IDetailCategoryBuilder& category);
+
+	// import chroma animation
+	virtual FReply OnClickImportButton() = 0;
+
+	// export chroma animation
+	virtual FReply OnClickExportButton() = 0;
 
 	// import colors from texture image
 	virtual FReply OnClickImportTextureImageButton() = 0;
@@ -78,10 +85,13 @@ protected:
 	virtual void OnColorCommitted(FLinearColor color) = 0;
 
 	// animation frames row
+	virtual FReply OnClickFirstFrame() = 0;
 	virtual FReply OnClickPreviousFrame() = 0;
 	virtual FReply OnClickNextFrame() = 0;
+	virtual FReply OnClickLastFrame() = 0;
 	virtual FReply OnClickAddFrame() = 0;
 	virtual FReply OnClickDeleteFrame() = 0;
+	virtual FReply OnClickResetFrame() = 0;
 	virtual void RefreshFrames() = 0;
 
 	// object being inspected
