@@ -10,7 +10,9 @@ public class UE4ChromaSDK : ModuleRules
     public UE4ChromaSDK(TargetInfo Target) //4.15 or lower
 #endif
 	{
+#if WITH_FORWARDED_MODULE_RULES_CTOR
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+#endif
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 

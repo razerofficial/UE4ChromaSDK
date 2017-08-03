@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKPluginBPLibrary.h"
 #include "ChromaSDKPlugin.h"
+#include "ChromaSDKPluginBPLibrary.h"
 #include "ChromaSDKPluginAnimation1DObject.h"
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include <string>

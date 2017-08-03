@@ -10,7 +10,9 @@ public class ChromaSDKPlugin : ModuleRules
     public ChromaSDKPlugin(TargetInfo Target) //4.15 or lower
 #endif
     {
+#if WITH_FORWARDED_MODULE_RULES_CTOR
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+#endif
 		
 		PublicIncludePaths.AddRange(
 			new string[] {

@@ -1,7 +1,7 @@
 ﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
+#include "ChromaSDKEditor.h"
 #if WITH_EDITOR
-
 #include "ChromaSDKEditorAnimationBaseDetails.h"
 #include "ChromaSDKPluginBPLibrary.h"
 #include "DesktopPlatformModule.h"

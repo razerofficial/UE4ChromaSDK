@@ -1,7 +1,7 @@
 ﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
+#include "ChromaSDKEditor.h"
 #if WITH_EDITOR
-
 #include "ChromaSDKEditorButton1D.h"
 
 TSharedRef<IChromaSDKEditorButton1D> IChromaSDKEditorButton1D::MakeInstance()
