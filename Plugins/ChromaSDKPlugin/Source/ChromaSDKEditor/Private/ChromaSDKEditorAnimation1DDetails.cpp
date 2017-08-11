@@ -142,7 +142,15 @@ void FChromaSDKEditorAnimation1DDetails::ReadChromaFile(const FString& path)
 						}
 						else
 						{
+							//time
+							float time = 0;
+							animation->Curve.EditorCurveData.Reset();
+							animation->Curve.EditorCurveData.Keys.Reset();
+
+							//frames
 							TArray<FChromaSDKColorFrame1D>& frames = animation->GetFrames();
+							frames.Reset();
+
 							for (int index = 0; index < frameCount; ++index)
 							{
 								FChromaSDKColorFrame1D frame = FChromaSDKColorFrame1D();
@@ -161,6 +169,8 @@ void FChromaSDKEditorAnimation1DDetails::ReadChromaFile(const FString& path)
 								else
 								{
 									// set duration
+									time += duration;
+									animation->Curve.EditorCurveData.AddKey(time, 0.0f);
 
 									// colors
 									expectedSize = sizeof(int);
@@ -183,16 +193,11 @@ void FChromaSDKEditorAnimation1DDetails::ReadChromaFile(const FString& path)
 											frame.Colors.Add(linearColor);
 										}
 									}
-									if (index == 0)
-									{
-										frames[0] = frame;
-									}
-									else
-									{
-										frames.Add(frame);
-									}
+									frames.Add(frame);
 								}
 							}
+
+							animation->RefreshCurve();
 						}
 					}
 					break;
@@ -200,9 +205,84 @@ void FChromaSDKEditorAnimation1DDetails::ReadChromaFile(const FString& path)
 			}
 
 			std::fclose(stream);
+		}
+		RefreshFrames();
+		RefreshDevice();
+	}
+}
 
-			RefreshFrames();
-			RefreshDevice();
+void FChromaSDKEditorAnimation1DDetails::WriteChromaFile(const FString& path)
+{
+	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		const char* strPath = TCHAR_TO_ANSI(*path);
+		fprintf(stdout, "WriteChromaFile: %s\r\n", strPath);
+		FILE* stream;
+		if (0 == fopen_s(&stream, strPath, "wb") &&
+			stream)
+		{
+			long write = 0;
+			long expectedWrite = 1;
+			long expectedSize = 0;
+
+			//version
+			int version = ANIMATION_VERSION;
+			expectedSize = sizeof(int);
+			write = fwrite(&version, expectedSize, 1, stream);
+			if (expectedWrite != write)
+			{
+				fprintf(stderr, "SaveFile: Failed to write version!\r\n");
+				std::fclose(stream);
+				return;
+			}
+
+			//device
+			byte device = 0;
+
+			//device type
+			byte deviceType = (byte)EChromaSDKDeviceTypeEnum::DE_1D;
+			expectedSize = sizeof(byte);
+			fwrite(&deviceType, expectedSize, 1, stream);
+
+			//device
+			device = (byte)animation->Device;
+			fwrite(&device, expectedSize, 1, stream);
+
+			//frames
+			TArray<FChromaSDKColorFrame1D>& frames = animation->Frames;
+
+			//frame count
+			unsigned int frameCount = frames.Num();
+			expectedSize = sizeof(unsigned int);
+			fwrite(&frameCount, expectedSize, 1, stream);
+
+			//frames
+			COLORREF color = RGB(0, 0, 0);
+			for (int index = 0; index < frames.Num(); ++index)
+			{
+				//duration
+				float duration = GetDuration(index);
+				expectedSize = sizeof(float);
+				fwrite(&duration, expectedSize, 1, stream);
+
+				//colors
+				FChromaSDKColorFrame1D& frame = frames[index];
+				for (int i = 0; i < frame.Colors.Num(); ++i)
+				{
+					//color
+					FLinearColor& color = frame.Colors[i];
+					int red = color.B * 255;
+					int green = color.G * 255;
+					int blue = color.R * 255;
+					int bgrInt = RGB(red, green, blue);
+					expectedSize = sizeof(int);
+					fwrite(&bgrInt, expectedSize, 1, stream);
+				}
+			}
+
+			fflush(stream);
+			std::fclose(stream);
 		}
 	}
 }
@@ -242,6 +322,40 @@ void FChromaSDKEditorAnimation1DDetails::CustomizeDetails(IDetailLayoutBuilder& 
 
 	BuildCurveRow(DetailBuilder, category);
 #endif
+}
+
+float FChromaSDKEditorAnimation1DDetails::GetDuration(int index)
+{
+	if (index < 0)
+	{
+		return 0;
+	}
+#if PLATFORM_WINDOWS
+	UChromaSDKPluginAnimation1DObject* animation = GetAnimation();
+	if (animation != nullptr)
+	{
+		if (index >= animation->Curve.EditorCurveData.Keys.Num())
+		{
+			return 0;
+		}
+		float duration = 0.0f;
+		if (index >= 0 &&
+			index < animation->Curve.EditorCurveData.Keys.Num())
+		{
+			if (index == 0)
+			{
+				return animation->Curve.EditorCurveData.Keys[index].Time;
+			}
+			else
+			{
+				return
+					animation->Curve.EditorCurveData.Keys[index].Time -
+					animation->Curve.EditorCurveData.Keys[index - 1].Time;
+			}
+		}
+	}
+#endif
+	return 0;
 }
 
 void FChromaSDKEditorAnimation1DDetails::RefreshFrames()
@@ -512,6 +626,33 @@ void FChromaSDKEditorAnimation1DDetails::CopyPixels(COLORREF* pColor, UINT width
 FReply FChromaSDKEditorAnimation1DDetails::OnClickImportButton()
 {
 #if PLATFORM_WINDOWS
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString importPath;
+		FString Filter = TEXT("Chroma Files (*.chroma)| *.chroma; ||");
+		TArray<FString> OutFiles;
+		if (DesktopPlatform->OpenFileDialog(
+			GetParentWindowWindowHandle(),
+			TEXT("Import Chroma..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				importPath = OutFiles[0];
+				/*
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickImportButton Selected=%s"),
+				*importPath);
+				*/
+
+				ReadChromaFile(importPath);
+			}
+		}
+	}
 #endif
 	return FReply::Handled();
 }
@@ -520,6 +661,33 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickImportButton()
 FReply FChromaSDKEditorAnimation1DDetails::OnClickExportButton()
 {
 #if PLATFORM_WINDOWS
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform)
+	{
+		FString exportPath;
+		FString Filter = TEXT("Chroma Files (*.chroma)| *.chroma; ||");
+		TArray<FString> OutFiles;
+		if (DesktopPlatform->SaveFileDialog(
+			GetParentWindowWindowHandle(),
+			TEXT("Export Chroma..."),
+			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
+			TEXT(""),
+			Filter,
+			EFileDialogFlags::None,
+			OutFiles))
+		{
+			if (OutFiles.Num() > 0)
+			{
+				exportPath = OutFiles[0];
+				/*
+				UE_LOG(LogTemp, Log, TEXT("FChromaSDKEditorAnimation1DDetails::OnClickExportButton Selected=%s"),
+				*importPath);
+				*/
+
+				WriteChromaFile(exportPath);
+			}
+		}
+	}
 #endif
 	return FReply::Handled();
 }

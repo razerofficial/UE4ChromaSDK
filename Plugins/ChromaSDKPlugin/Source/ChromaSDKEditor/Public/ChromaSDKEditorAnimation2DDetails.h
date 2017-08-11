@@ -64,6 +64,7 @@ protected:
 #if PLATFORM_WINDOWS
 	void ReadChromaFile(const FString& path);
 	void CopyPixels(COLORREF* pColor, UINT width, UINT height);
+	void WriteChromaFile(const FString& path);
 #endif
 
 	// import chroma animation
@@ -114,6 +115,8 @@ protected:
 	FReply OnClickAddFrame();
 	FReply OnClickDeleteFrame();
 	FReply OnClickResetFrame();
+
+	float GetDuration(int index);
 	void RefreshFrames();
 
 private:

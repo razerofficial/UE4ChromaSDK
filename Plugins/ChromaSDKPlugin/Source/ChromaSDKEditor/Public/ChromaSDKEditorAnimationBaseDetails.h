@@ -37,6 +37,7 @@ protected:
 #if PLATFORM_WINDOWS
 	virtual void ReadChromaFile(const FString& path) = 0;
 	virtual void CopyPixels(COLORREF* pColor, UINT width, UINT height) = 0;
+	virtual void WriteChromaFile(const FString& path) = 0;
 #endif
 
 	void AddChromaSDKDevice(FString& text);
