@@ -1,11 +1,15 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKEditor.h"
-#if WITH_EDITOR
+//#include "ChromaSDKEditor.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "ChromaSDKEditorAnimation1DDetails.h"
+#include "ChromaSDKEditor.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
+
+#if WITH_EDITOR
 #include "ChromaSDKEditorButton1D.h"
 #include "ChromaSDKPluginAnimation1DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
+
+#include "AllowWindowsPlatformTypes.h" 
 #include "DesktopPlatformModule.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
@@ -529,9 +533,8 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureImageButton()
 		FString texturePath;
 		FString Filter = TEXT("Image Files (*.bmp;*.jpg;*.png)| *.bmp;*.jpg;*.png; ||");
 		TArray<FString> OutFiles;
-		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
-			parentWindowWindowHandle,
+			GetParentWindowWindowHandle(),
 			TEXT("Import texture..."),
 			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
 			TEXT(""),
@@ -577,9 +580,8 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickImportTextureAnimationButton()
 		FString texturePath;
 		FString Filter = TEXT("Image Files (*.gif)| *.gif; ||");
 		TArray<FString> OutFiles;
-		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
-			parentWindowWindowHandle,
+			GetParentWindowWindowHandle(),
 			TEXT("Import texture..."),
 			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
 			TEXT(""),
@@ -1109,5 +1111,6 @@ bool FChromaSDKEditorAnimation1DDetails::IsValidCurve(FRichCurveEditInfo CurveIn
 
 #undef LOCTEXT_NAMESPACE
 
-#endif
+#include "HideWindowsPlatformTypes.h"
 
+#endif

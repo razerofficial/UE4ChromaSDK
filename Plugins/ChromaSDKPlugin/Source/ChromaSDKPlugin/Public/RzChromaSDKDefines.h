@@ -7,7 +7,9 @@
 #pragma once
 
 #ifndef GUID_DEFINED
+#include "AllowWindowsPlatformTypes.h" 
 #include <Guiddef.h>
+#include "HideWindowsPlatformTypes.h"
 #endif
 
 namespace ChromaSDK

@@ -1,9 +1,10 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKPlugin.h"
+//#include "ChromaSDKPlugin.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "ChromaSDKPluginAnimation1DObject.h"
+#include "ChromaSDKPlugin.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
+
 #include "ChromaSDKPluginBPLibrary.h"
-#include "LogMacros.h"
 
 UChromaSDKPluginAnimation1DObject::UChromaSDKPluginAnimation1DObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -133,7 +134,7 @@ void UChromaSDKPluginAnimation1DObject::Unload()
 #if PLATFORM_WINDOWS
 	if (!_mIsLoaded)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation1DObject::Unload Animation has already been unloaded!"));
+		//ignore
 		return;
 	}
 
@@ -158,8 +159,7 @@ void UChromaSDKPluginAnimation1DObject::Play()
 
 	if (!_mIsLoaded)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation1DObject::Play Animation has not been loaded!"));
-		return;
+		Load();
 	}
 
 	// clear on play to avoid unsetting on a loop
@@ -192,8 +192,7 @@ void UChromaSDKPluginAnimation1DObject::PlayWithOnComplete(FDelegateChomaSDKOnCo
 
 	if (!_mIsLoaded)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UChromaSDKPluginAnimation1DObject::PlayWithOnComplete Animation has not been loaded!"));
-		return;
+		Load();
 	}
 
 	_mOnComplete = onComplete;

@@ -3,14 +3,13 @@
 #pragma once
 
 #include "ModuleManager.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 //expose HMODULE
 #if PLATFORM_WINDOWS
-#include "AllowWindowsPlatformTypes.h"
 #include "RzChromaSDKDefines.h"
 #include "RzChromaSDKTypes.h"
 #include "RzErrors.h"
-#include "HideWindowsPlatformTypes.h"
 
 typedef RZRESULT(*CHROMA_SDK_INIT)(void);
 typedef RZRESULT(*CHROMA_SDK_UNINIT)(void);

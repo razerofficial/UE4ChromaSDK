@@ -1,8 +1,10 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKEditor.h"
-#if WITH_EDITOR
+//#include "ChromaSDKEditor.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "ChromaSDKEditorButton2D.h"
+#include "ChromaSDKEditor.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
+
+#if WITH_EDITOR
 
 TSharedRef<IChromaSDKEditorButton2D> IChromaSDKEditorButton2D::MakeInstance()
 {

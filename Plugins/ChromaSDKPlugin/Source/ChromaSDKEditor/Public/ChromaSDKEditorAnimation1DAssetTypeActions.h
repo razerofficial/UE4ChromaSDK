@@ -1,11 +1,14 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
+#include "ChromaSDKEditor.h"
+
 #if WITH_EDITOR
 
-#include "AssetTypeActions_Base.h"
 #include "UnrealEd.h"
+#include "Runtime/Launch/Resources/Version.h"
+#include "AssetTypeActions_Base.h"
 #include "ChromaSDKPluginAnimation1DObject.h"
 
 class FChromaSDKEditorAnimation1DAssetTypeActions : public FAssetTypeActions_Base

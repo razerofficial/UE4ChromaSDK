@@ -1,14 +1,13 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
+#include "ChromaSDKPlugin.h"
 #include "Engine.h"
 #if PLATFORM_WINDOWS
-#include "AllowWindowsPlatformTypes.h"
 #include "RzChromaSDKDefines.h"
 #include "RzChromaSDKTypes.h"
 #include "RzErrors.h"
-#include "HideWindowsPlatformTypes.h"
 #endif
 #include "ChromaSDKPluginTypes.generated.h"
 

@@ -1,11 +1,15 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKEditor.h"
-#if WITH_EDITOR
+//#include "ChromaSDKEditor.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "ChromaSDKEditorAnimation2DDetails.h"
+#include "ChromaSDKEditor.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
+
+#if WITH_EDITOR
 #include "ChromaSDKEditorButton2D.h"
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
+
+#include "AllowWindowsPlatformTypes.h" 
 #include "DesktopPlatformModule.h"
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
@@ -18,6 +22,7 @@
 #include "Widgets/Input/SComboBox.h"
 #include "Widgets/Layout/SGridPanel.h"
 #include "SlateApplication.h"
+#include "SharedPointer.h"
 
 typedef unsigned char byte;
 #define ANIMATION_VERSION 1
@@ -47,8 +52,14 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstanc
 	{
 		for (int k = 0; (k+1) < keyEnumPtr->NumEnums(); ++k)
 		{
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
 			FString text = keyEnumPtr->GetDisplayNameTextByValue(k).ToString();
 			instance->_mChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
+
+#else
+			FString* text = new FString(keyEnumPtr->GetDisplayNameTextByValue(k).ToString());
+			instance->_mChromaSDKKeyboardKeys.Add(MakeShareable<FString>(text));
+#endif
 		}
 	}
 	//set default key
@@ -60,8 +71,13 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstanc
 	{
 		for (int k = 0; (k + 1) < ledEnumPtr->NumEnums(); ++k)
 		{
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
 			FString text = ledEnumPtr->GetDisplayNameTextByValue(k).ToString();
 			instance->_mChromaSDKMouseLeds.Add(MakeShared<FString>(text));
+#else
+			FString* text = new FString(ledEnumPtr->GetDisplayNameTextByValue(k).ToString());
+			instance->_mChromaSDKMouseLeds.Add(MakeShareable<FString>(text));
+#endif
 		}
 	}
 	//set default led
@@ -639,9 +655,8 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickImportButton()
 		FString importPath;
 		FString Filter = TEXT("Chroma Files (*.chroma)| *.chroma; ||");
 		TArray<FString> OutFiles;
-		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
-			parentWindowWindowHandle,
+			GetParentWindowWindowHandle(),
 			TEXT("Import Chroma..."),
 			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
 			TEXT(""),
@@ -682,9 +697,8 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureImageButton()
 		FString texturePath;
 		FString Filter = TEXT("Image Files (*.bmp;*.jpg;*.png)| *.bmp;*.jpg;*.png; ||");
 		TArray<FString> OutFiles;
-		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
-			parentWindowWindowHandle,
+			GetParentWindowWindowHandle(),
 			TEXT("Import texture..."),
 			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
 			TEXT(""),
@@ -730,9 +744,8 @@ FReply FChromaSDKEditorAnimation2DDetails::OnClickImportTextureAnimationButton()
 		FString texturePath;
 		FString Filter = TEXT("Image Files (*.gif)| *.gif; ||");
 		TArray<FString> OutFiles;
-		const void* parentWindowWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
 		if (DesktopPlatform->OpenFileDialog(
-			parentWindowWindowHandle,
+			GetParentWindowWindowHandle(),
 			TEXT("Import texture..."),
 			FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_IMPORT),
 			TEXT(""),
@@ -1375,5 +1388,7 @@ bool FChromaSDKEditorAnimation2DDetails::IsValidCurve(FRichCurveEditInfo CurveIn
 /* end of FCurveOwnerInterface */
 
 #undef LOCTEXT_NAMESPACE
+
+#include "HideWindowsPlatformTypes.h"
 
 #endif

@@ -1,10 +1,12 @@
-﻿//! \file RzChromaSDKTypes.h
+//! \file RzChromaSDKTypes.h
 //! \brief Data types.
 
 #ifndef _RZCHROMASDKTYPES_H_
 #define _RZCHROMASDKTYPES_H_
 
 #pragma once
+
+#include "AllowWindowsPlatformTypes.h" 
 
 typedef LONG            RZRESULT;           //!< Return result.
 typedef GUID            RZEFFECTID;         //!< Effect Id.
@@ -809,5 +811,7 @@ namespace ChromaSDK
         } STATIC_EFFECT_TYPE;
     }
 }
+
+#include "HideWindowsPlatformTypes.h"
 
 #endif

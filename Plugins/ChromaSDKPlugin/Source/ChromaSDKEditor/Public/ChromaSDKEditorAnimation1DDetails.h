@@ -1,11 +1,17 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
+#include "ChromaSDKEditor.h"
+
 #if WITH_EDITOR
 
+#include "UnrealEd.h"
+#include "Runtime/Launch/Resources/Version.h"
 #include "ChromaSDKEditorAnimationBaseDetails.h"
 #include "ChromaSDKEditorButton1D.h"
+
+#include "AllowWindowsPlatformTypes.h" 
 
 class FChromaSDKEditorAnimation1DDetails : public IChromaSDKEditorAnimationBaseDetails
 {
@@ -116,5 +122,7 @@ private:
 	// for copy/paste for the grid colors
 	TArray<FLinearColor> _mColors;
 };
+
+#include "HideWindowsPlatformTypes.h"
 
 #endif

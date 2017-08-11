@@ -66,7 +66,8 @@ public class ChromaSDKEditor : ModuleRules
 				"PropertyEditor",
 				"Slate",
 				"SlateCore",
-			}
+                "MainFrame",
+            }
 			);
 		
 		

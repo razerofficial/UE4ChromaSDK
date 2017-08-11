@@ -3,6 +3,8 @@
 #pragma once
 
 #include "ModuleManager.h"
+#include "UnrealEd.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 class FChromaSDKEditorModule : public IModuleInterface
 {

@@ -1,23 +1,36 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
+#include "ChromaSDKEditor.h"
+
 #if WITH_EDITOR
 
+#include "UnrealEd.h"
+#include "Runtime/Launch/Resources/Version.h"
+#include "AllowWindowsPlatformTypes.h" 
 #include "IDetailCustomization.h"
 #include "ChromaSDKPluginTypes.h"
+#if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 15)
 #include "Curves/CurveOwnerInterface.h"
+#endif
 #include "DetailCategoryBuilder.h"
 #include "Widgets/Layout/SGridPanel.h"
 
 class SCurveEditor;
 struct FRuntimeFloatCurve;
 
+#if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 15)
 class IChromaSDKEditorAnimationBaseDetails : public IDetailCustomization, public FCurveOwnerInterface
+#else
+class IChromaSDKEditorAnimationBaseDetails : public IDetailCustomization
+#endif
 {
 protected:
 
 	void Initialize();
+
+	const void* GetParentWindowWindowHandle();
 
 	void ReadImage(const FString& path, bool isAnimation);
 
@@ -119,5 +132,6 @@ protected:
 	TSharedPtr<SCurveEditor> _mCurveWidget;
 };
 
-#endif
+#include "HideWindowsPlatformTypes.h"
 
+#endif

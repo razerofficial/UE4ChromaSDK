@@ -1,9 +1,13 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "ChromaSDKEditor.h"
-#if WITH_EDITOR
+//#include "ChromaSDKEditor.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "ChromaSDKEditorAnimationBaseDetails.h"
+#include "ChromaSDKEditor.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
+
+#if WITH_EDITOR
 #include "ChromaSDKPluginBPLibrary.h"
+
+#include "AllowWindowsPlatformTypes.h"
 #include "DesktopPlatformModule.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
@@ -16,8 +20,23 @@
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SComboBox.h"
 #include "Widgets/Layout/SGridPanel.h"
+#if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION <= 15)
+#include "ModuleManager.h"
+#include "IMainFrameModule.h"
+#include "SharedPointer.h"
+#endif
 
 #if PLATFORM_WINDOWS
+
+#define LOCTEXT_NAMESPACE "ChromaAnimationBaseDetails"
+
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
+#define CHROMA_SDK_IMPORT_TEXTURES true
+#else
+#define CHROMA_SDK_IMPORT_TEXTURES false
+#endif
+
+#if CHROMA_SDK_IMPORT_TEXTURES
 #include "objbase.h"
 #include "Windows/WindowsHWrapper.h"
 THIRD_PARTY_INCLUDES_START
@@ -26,8 +45,6 @@ THIRD_PARTY_INCLUDES_START
 THIRD_PARTY_INCLUDES_END
 #pragma comment( lib, "windowscodecs.lib" )
 #endif
-
-#define LOCTEXT_NAMESPACE "ChromaAnimationBaseDetails"
 
 void IChromaSDKEditorAnimationBaseDetails::Initialize()
 {
@@ -38,9 +55,24 @@ void IChromaSDKEditorAnimationBaseDetails::Initialize()
 	_mCurveWidget.Reset();
 }
 
+const void* IChromaSDKEditorAnimationBaseDetails::GetParentWindowWindowHandle()
+{
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 15)
+	return FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+#else
+	IMainFrameModule& MainFrameModule = FModuleManager::LoadModuleChecked<IMainFrameModule>(TEXT("MainFrame"));
+	const TSharedPtr<SWindow>& MainFrameParentWindow = MainFrameModule.GetParentWindow();
+	if (MainFrameParentWindow.IsValid() && MainFrameParentWindow->GetNativeWindow().IsValid())
+	{
+		return MainFrameParentWindow->GetNativeWindow()->GetOSWindowHandle();
+	}
+	return nullptr;
+#endif
+}
+
 void IChromaSDKEditorAnimationBaseDetails::ReadImage(const FString& path, bool isAnimation)
 {
-#if PLATFORM_WINDOWS
+#if (PLATFORM_WINDOWS && CHROMA_SDK_IMPORT_TEXTURES)
 
 	HRESULT hr = CoInitialize(NULL);
 
@@ -264,7 +296,8 @@ void IChromaSDKEditorAnimationBaseDetails::ReadImage(const FString& path, bool i
 
 void IChromaSDKEditorAnimationBaseDetails::AddChromaSDKDevice(FString& text)
 {
-	_mChromaSDKDevices.Add(MakeShared<FString>(text));
+	FString* ptrText = new FString(text);
+	_mChromaSDKDevices.Add(MakeShareable<FString>(ptrText));
 }
 
 TSharedRef<SWidget> IChromaSDKEditorAnimationBaseDetails::GenerateDropdownEnum(TSharedPtr<FString> InItem)
@@ -628,9 +661,15 @@ void IChromaSDKEditorAnimationBaseDetails::BuildCurveRow(IDetailLayoutBuilder& D
 			.DesiredSize(FVector2D(512, 128))
 		];
 
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
 	_mCurveWidget->SetCurveOwner(this);
+#endif
 }
 
 #undef LOCTEXT_NAMESPACE
+
+#endif
+
+#include "HideWindowsPlatformTypes.h"
 
 #endif

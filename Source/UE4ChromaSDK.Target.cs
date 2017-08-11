@@ -1,29 +1,33 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#if WITH_FORWARDED_MODULE_RULES_CTOR
+#define ENGINE_4_16_OR_NEWER
+#endif
+
 using UnrealBuildTool;
 using System.Collections.Generic;
 
 public class UE4ChromaSDKTarget : TargetRules
 {
-#if WITH_FORWARDED_MODULE_RULES_CTOR
-	public UE4ChromaSDKTarget(ReadOnlyTargetRules Target) : base(Target)
+#if ENGINE_4_16_OR_NEWER
+    public UE4ChromaSDKTarget(TargetInfo Target) : base(Target)
 #else
-	public UE4ChromaSDKTarget(TargetInfo Target)
+    public UE4ChromaSDKTarget(TargetInfo Target)
 #endif
-	{
-		Type = TargetType.Game;
+    {
+        Type = TargetType.Game;
 
-#if WITH_FORWARDED_MODULE_RULES_CTOR
-		ExtraModuleNames.AddRange( new string[] { "UE4ChromaSDK" } );
+#if ENGINE_4_16_OR_NEWER
+        ExtraModuleNames.AddRange( new string[] { "UE4ChromaSDK" } );
 #endif
 	}
-	
-#if !WITH_FORWARDED_MODULE_RULES_CTOR
-	//
-	// TargetRules interface.
-	//
 
-	public override void SetupBinaries(
+#if !ENGINE_4_16_OR_NEWER
+    //
+    // TargetRules interface.
+    //
+
+    public override void SetupBinaries(
 		TargetInfo Target,
 		ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
 		ref List<string> OutExtraModuleNames
