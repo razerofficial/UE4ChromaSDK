@@ -30,21 +30,9 @@
 
 #define LOCTEXT_NAMESPACE "ChromaAnimationBaseDetails"
 
-#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
-#define CHROMA_SDK_IMPORT_TEXTURES true
-#else
-#define CHROMA_SDK_IMPORT_TEXTURES false
-#endif
-
-#if CHROMA_SDK_IMPORT_TEXTURES
-#include "objbase.h"
-#include "Windows/WindowsHWrapper.h"
-THIRD_PARTY_INCLUDES_START
 #include <strsafe.h>
-#include <wincodec.h>
-THIRD_PARTY_INCLUDES_END
+#include "wincodec.h"
 #pragma comment( lib, "windowscodecs.lib" )
-#endif
 
 void IChromaSDKEditorAnimationBaseDetails::Initialize()
 {
@@ -72,7 +60,7 @@ const void* IChromaSDKEditorAnimationBaseDetails::GetParentWindowWindowHandle()
 
 void IChromaSDKEditorAnimationBaseDetails::ReadImage(const FString& path, bool isAnimation)
 {
-#if (PLATFORM_WINDOWS && CHROMA_SDK_IMPORT_TEXTURES)
+#if (PLATFORM_WINDOWS)
 
 	HRESULT hr = CoInitialize(NULL);
 
