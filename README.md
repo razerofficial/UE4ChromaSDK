@@ -6,6 +6,7 @@
 * [Frameworks supported](#frameworks-supported)
 * [Prerequisites](#prerequisites)
 * [Engine Versions](#engine-versions)
+* [Tutorials](#tutorials)
 * [Usage](#usage)
 * [Assets](#assets)
 * [Blueprint objects](#blueprint-objects)
@@ -35,7 +36,6 @@
 ## Prerequisites
 
 - Install [Visual Studio](https://www.visualstudio.com/)
-- Install [Windows Software Development Kit (SDK) for Windows 8.1](https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk)
 - Install [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk)
 - Install `Templates->Other Languages->Visual C++->Visual C++ 2015 Tools for Windows Desktop` which can be installed through the `Visual Studio New Project Dialog`
 
@@ -49,6 +49,23 @@
 * Unpack `ChromaSDKPlugin_4_15.zip` to `ProjectFolder/Plugins` for Unreal `4.15`
 
 * Unpack `ChromaSDKPlugin_4_16.zip` to `ProjectFolder/Plugins` for Unreal `4.16`
+
+
+<a name="tutorials"></a>
+## Tutorials
+
+[Razer Chroma Playlist](https://www.youtube.com/playlist?list=PL4mjXeDqRBMRE19MjB8aiNPRnm_nYtct7)
+
+
+**Import Runtime and Editor Modules**
+
+<a target="_blank" href="https://www.youtube.com/watch?v=gcqFIOUq0bg"><img src="https://img.youtube.com/vi/gcqFIOUq0bg/0.jpg"/></a>
+
+
+**Import Animation From Unity**
+
+<a target="_blank" href="https://www.youtube.com/watch?v=4-NjkEHckkM"><img src="https://img.youtube.com/vi/4-NjkEHckkM/0.jpg"/></a>
+
 
 <a name="usage"></a>
 ## Usage
