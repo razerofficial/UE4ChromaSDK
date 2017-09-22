@@ -169,6 +169,10 @@ void FChromaSDKEditorAnimation1DDetails::ReadChromaFile(const FString& path)
 								else
 								{
 									// set duration
+									if (duration < 0.1f)
+									{
+										duration = 0.1f;
+									}
 									time += duration;
 									animation->Curve.EditorCurveData.AddKey(time, 0.0f);
 
@@ -263,6 +267,10 @@ void FChromaSDKEditorAnimation1DDetails::WriteChromaFile(const FString& path)
 			{
 				//duration
 				float duration = GetDuration(index);
+				if (duration < 0.1f)
+				{
+					duration = 0.1f;
+				}
 				expectedSize = sizeof(float);
 				fwrite(&duration, expectedSize, 1, stream);
 
