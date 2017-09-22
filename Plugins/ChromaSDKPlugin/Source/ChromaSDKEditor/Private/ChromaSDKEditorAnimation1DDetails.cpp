@@ -186,9 +186,9 @@ void FChromaSDKEditorAnimation1DDetails::ReadChromaFile(const FString& path)
 										}
 										else
 										{
-											float red = GetBValue(color) / 255.0f;
+											float red = GetRValue(color) / 255.0f;
 											float green = GetGValue(color) / 255.0f;
-											float blue = GetRValue(color) / 255.0f;
+											float blue = GetBValue(color) / 255.0f;
 											FLinearColor linearColor = FLinearColor(red, green, blue, 1.0f);
 											frame.Colors.Add(linearColor);
 										}
@@ -272,9 +272,9 @@ void FChromaSDKEditorAnimation1DDetails::WriteChromaFile(const FString& path)
 				{
 					//color
 					FLinearColor& color = frame.Colors[i];
-					int red = color.B * 255;
+					int red = color.R * 255;
 					int green = color.G * 255;
-					int blue = color.R * 255;
+					int blue = color.B * 255;
 					int bgrInt = RGB(red, green, blue);
 					expectedSize = sizeof(int);
 					fwrite(&bgrInt, expectedSize, 1, stream);

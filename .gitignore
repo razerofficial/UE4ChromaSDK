@@ -9,8 +9,5 @@ UE4ChromaSDK.VC.db
 Binaries/
 UE4ChromaSDK.sln
 *.zip
-Intermediate_old/
-Intermediate_old2/
-Intermediate_old3/
 UnrealEngineVersionChanger/bin/
 UnrealEngineVersionChanger/obj/
