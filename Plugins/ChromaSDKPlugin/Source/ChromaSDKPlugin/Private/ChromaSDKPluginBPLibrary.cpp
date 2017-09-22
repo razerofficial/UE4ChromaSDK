@@ -771,19 +771,19 @@ int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effec
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::PlayAnimation(FString& animationName, bool loop)
+void UChromaSDKPluginBPLibrary::PlayAnimation(FString animationName, bool loop)
 {
 #if PLATFORM_WINDOWS
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::StopAnimation(FString& animationName)
+void UChromaSDKPluginBPLibrary::StopAnimation(FString animationName)
 {
 #if PLATFORM_WINDOWS
 #endif
 }
 
-bool UChromaSDKPluginBPLibrary::IsPlaying(FString& animationName)
+bool UChromaSDKPluginBPLibrary::IsPlaying(FString animationName)
 {
 #if PLATFORM_WINDOWS
 	return false;
