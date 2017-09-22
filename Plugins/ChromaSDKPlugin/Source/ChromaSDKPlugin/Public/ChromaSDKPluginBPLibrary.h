@@ -93,14 +93,26 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionL
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "DeleteEffect", Keywords = "Delete Effect with Effect Id"), Category = "ChromaSDK")
 	static int ChromaSDKDeleteEffect(const FChromaSDKGuid& effectId);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PlayAnimation", Keywords = "Play the .chroma Animation"), Category = "ChromaSDK")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PlayAnimation", Keywords = "Play the *.chroma Animation"), Category = "ChromaSDK")
 	static void PlayAnimation(FString animationName, bool loop);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAnimation", Keywords = "Stop the .chroma Animation"), Category = "ChromaSDK")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAnimation", Keywords = "Stop the *.chroma Animation"), Category = "ChromaSDK")
 	static void StopAnimation(FString animationName);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsPlaying", Keywords = "Is the .chroma Animation playing?"), Category = "ChromaSDK")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsPlaying", Keywords = "Is the *.chroma Animation playing?"), Category = "ChromaSDK")
 	static bool IsPlaying(FString animationName);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PlayAnimations", Keywords = "Play an array of *.chroma Animations"), Category = "ChromaSDK")
+	static void PlayAnimations(TArray<FString> animationNames, bool loop);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAnimations", Keywords = "Stop an array *.chroma Animations"), Category = "ChromaSDK")
+	static void StopAnimations(TArray<FString> animationNames);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PlayAnimationComposite", Keywords = "Play a set of *_Device.chroma Animations"), Category = "ChromaSDK")
+	static void PlayAnimationComposite(FString animationName, bool loop);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAnimationComposite", Keywords = "Stop a set of *_Device.chroma Animations"), Category = "ChromaSDK")
+	static void StopAnimationComposite(FString animationName);
 
 #if PLATFORM_WINDOWS
 private:

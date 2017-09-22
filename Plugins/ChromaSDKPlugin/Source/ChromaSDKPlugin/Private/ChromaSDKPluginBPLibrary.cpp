@@ -792,6 +792,30 @@ bool UChromaSDKPluginBPLibrary::IsPlaying(FString animationName)
 #endif
 }
 
+void UChromaSDKPluginBPLibrary::PlayAnimations(TArray<FString> animationNames, bool loop)
+{
+#if PLATFORM_WINDOWS
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::StopAnimations(TArray<FString> animationNames)
+{
+#if PLATFORM_WINDOWS
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::PlayAnimationComposite(FString animationName, bool loop)
+{
+#if PLATFORM_WINDOWS
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::StopAnimationComposite(FString animationName)
+{
+#if PLATFORM_WINDOWS
+#endif
+}
+
 #if PLATFORM_WINDOWS
 void UChromaSDKPluginBPLibrary::ToString(const RZEFFECTID& effectId, FString& effectString)
 {
