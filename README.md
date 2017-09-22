@@ -48,12 +48,7 @@
 <a name="engine-versions"></a>
 ## Engine Versions
 
-[Releases](https://github.com/RazerOfficial/UE4ChromaSDK/releases/tag/1.0) have binary versions of the `Plugin` for Unreal `4.15` and  `4.16`. Earlier versions can be added upon request.
-
-* Unpack `ChromaSDKPlugin_4_15.zip` to `ProjectFolder/Plugins` for Unreal `4.15`
-
-* Unpack `ChromaSDKPlugin_4_16.zip` to `ProjectFolder/Plugins` for Unreal `4.16`
-
+[Releases](https://github.com/RazerOfficial/UE4ChromaSDK/releases/tag/1.0) have binary versions of the `Plugin` which can be added upon request.
 
 <a name="tutorials"></a>
 ## Tutorials
