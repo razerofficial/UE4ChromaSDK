@@ -93,6 +93,15 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionL
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "DeleteEffect", Keywords = "Delete Effect with Effect Id"), Category = "ChromaSDK")
 	static int ChromaSDKDeleteEffect(const FChromaSDKGuid& effectId);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "PlayAnimation", Keywords = "Play the .chroma Animation"), Category = "ChromaSDK")
+	static void PlayAnimation(FString& animationName, bool loop);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAnimation", Keywords = "Stop the .chroma Animation"), Category = "ChromaSDK")
+	static void StopAnimation(FString& animationName);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsPlaying", Keywords = "Is the .chroma Animation playing?"), Category = "ChromaSDK")
+	static bool IsPlaying(FString& animationName);
+
 #if PLATFORM_WINDOWS
 private:
 	static void ToString(const RZEFFECTID& effectId, FString& effectString);
