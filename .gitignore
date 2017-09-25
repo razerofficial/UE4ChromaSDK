@@ -19,3 +19,10 @@ Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKPlugin.pdb
 Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKPlugin.dll
 Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKEditor.pdb
 Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKEditor.dll
+Binaries/Win64/UE4ChromaSDK.pdb
+Binaries/Win64/UE4ChromaSDK.lib
+Binaries/Win64/UE4ChromaSDK.exp
+Binaries/Win64/UE4ChromaSDK.exe
+Binaries/Win64/UE4ChromaSDK.target
+Build/
+Plugins/ChromaSDKPlugin/Binaries/
