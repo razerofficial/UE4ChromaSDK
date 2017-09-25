@@ -6,8 +6,16 @@ Saved/
 .vs/
 UE4ChromaSDK.VC.VC.opendb
 UE4ChromaSDK.VC.db
-Binaries/
 UE4ChromaSDK.sln
 *.zip
 UnrealEngineVersionChanger/bin/
 UnrealEngineVersionChanger/obj/
+Binaries/Win64/UE4Editor.modules
+Binaries/Win64/UE4Editor-UE4ChromaSDK.pdb
+Binaries/Win64/UE4Editor-UE4ChromaSDK.dll
+Binaries/Win64/UE4ChromaSDKEditor.target
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor.modules
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKPlugin.pdb
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKPlugin.dll
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKEditor.pdb
+Plugins/ChromaSDKPlugin/Binaries/Win64/UE4Editor-ChromaSDKEditor.dll

@@ -10,6 +10,10 @@
 #include "RzChromaSDKDefines.h"
 #include "RzChromaSDKTypes.h"
 #include "RzErrors.h"
+#include <map>
+#include <string>
+#include "ChromaSDKDevice1DEnum.h"
+#include "ChromaSDKDevice2DEnum.h"
 
 typedef RZRESULT(*CHROMA_SDK_INIT)(void);
 typedef RZRESULT(*CHROMA_SDK_UNINIT)(void);
@@ -27,6 +31,11 @@ typedef RZRESULT(*CHROMA_SDK_UNREGISTER_EVENT_NOTIFICATION)(void);
 typedef RZRESULT(*CHROMA_SDK_QUERY_DEVICE)(RZDEVICEID DeviceId, ChromaSDK::DEVICE_INFO_TYPE &DeviceInfo);
 #endif
 
+namespace ChromaSDK
+{
+	class AnimationBase;
+}
+
 class FChromaSDKPluginModule : public IModuleInterface
 {
 public:
@@ -43,13 +52,14 @@ public:
 	*/
 	static inline FChromaSDKPluginModule& Get()
 	{
-		return FModuleManager::LoadModuleChecked<FChromaSDKPluginModule>("ChromaSDKPlugin");
+		return FModuleManager::GetModuleChecked<FChromaSDKPluginModule>("ChromaSDKPlugin");
 	}
 
 #if PLATFORM_WINDOWS
 	// SDK Methods
 	int ChromaSDKInit();
 	int ChromaSDKUnInit();
+	bool IsInitialized();
 	RZRESULT ChromaSDKCreateEffect(RZDEVICEID deviceId, ChromaSDK::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
 	RZRESULT ChromaSDKCreateChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
 	RZRESULT ChromaSDKCreateHeadsetEffect(ChromaSDK::Headset::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
@@ -59,11 +69,28 @@ public:
 	RZRESULT ChromaSDKCreateMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE effect, PRZPARAM pParam, RZEFFECTID* pEffectId);
 	RZRESULT ChromaSDKSetEffect(RZEFFECTID effectId);
 	RZRESULT ChromaSDKDeleteEffect(RZEFFECTID effectId);
+
+	static int ToBGR(const FLinearColor& color);
+	static FLinearColor ToLinearColor(int color);
+	static int GetMaxLeds(const EChromaSDKDevice1DEnum& device);
+	static int GetMaxRow(const EChromaSDKDevice2DEnum& device);
+	static int GetMaxColumn(const EChromaSDKDevice2DEnum& device);
+	int OpenAnimation(const char* path);
+	int GetAnimation(const char* path);
+	void StopAnimationByType(int animationId, ChromaSDK::AnimationBase* animation);
+	void PlayAnimation(int animationId, bool loop);
+	void PlayAnimation(const char* path, bool loop);
+	void StopAnimation(int animationId);
+	void StopAnimation(const char* path);
+	bool IsAnimationPlaying(int animationId);
+	bool IsAnimationPlaying(const char* path);
 #endif
 
 private:
 #if PLATFORM_WINDOWS
 	bool ValidateGetProcAddress(bool condition, FString methodName);
+
+	bool _mInitialized;
 
 	HMODULE _mLibraryChroma = nullptr;
 
@@ -79,5 +106,11 @@ private:
 	CHROMA_SDK_SET_EFFECT _mMethodSetEffect = NULL;
 	CHROMA_SDK_DELETE_EFFECT _mMethodDeleteEffect = NULL;
 	CHROMA_SDK_QUERY_DEVICE _mMethodQueryDevice = NULL;
+
+	int _mAnimationId;
+	std::map<std::string, int> _mAnimationMapID;
+	std::map<int, ChromaSDK::AnimationBase*> _mAnimations;
+	std::map<EChromaSDKDevice1DEnum, int> _mPlayMap1D;
+	std::map<EChromaSDKDevice2DEnum, int> _mPlayMap2D;
 #endif
 };

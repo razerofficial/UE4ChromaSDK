@@ -4,6 +4,9 @@
 
 #include "ChromaSDKPlugin.h"
 #include "Engine.h"
+#include "ChromaSDKDeviceTypeEnum.h"
+#include "ChromaSDKDevice1DEnum.h"
+#include "ChromaSDKDevice2DEnum.h"
 #if PLATFORM_WINDOWS
 #include "RzChromaSDKDefines.h"
 #include "RzChromaSDKTypes.h"
@@ -29,13 +32,6 @@ typedef RZRESULT(*CHROMA_SDK_QUERY_DEVICE)(RZDEVICEID DeviceId, ChromaSDK::DEVIC
 #endif
 
 UENUM(BlueprintType)
-enum class EChromaSDKDeviceTypeEnum : uint8
-{
-	DE_1D			UMETA(DisplayName = "1D"),
-	DE_2D			UMETA(DisplayName = "2D")
-};
-
-UENUM(BlueprintType)
 enum class EChromaSDKDeviceEnum : uint8
 {
 	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
@@ -44,22 +40,6 @@ enum class EChromaSDKDeviceEnum : uint8
 	DE_Keypad		UMETA(DisplayName = "Keypad"),
 	DE_Mouse		UMETA(DisplayName = "Mouse"),
 	DE_Mousepad		UMETA(DisplayName = "Mousepad")
-};
-
-UENUM(BlueprintType)
-enum class EChromaSDKDevice1DEnum : uint8
-{
-	DE_ChromaLink	UMETA(DisplayName = "ChromaLink"),
-	DE_Headset		UMETA(DisplayName = "Headset"),
-	DE_Mousepad		UMETA(DisplayName = "Mousepad")
-};
-
-UENUM(BlueprintType)
-enum class EChromaSDKDevice2DEnum : uint8
-{
-	DE_Keyboard		UMETA(DisplayName = "Keyboard"),
-	DE_Keypad		UMETA(DisplayName = "Keypad"),
-	DE_Mouse		UMETA(DisplayName = "Mouse"),
 };
 
 UENUM(BlueprintType)
@@ -286,9 +266,12 @@ struct CHROMASDKPLUGIN_API FChromaSDKColorFrame1D
 	UPROPERTY(EditAnywhere)
 	TArray<FLinearColor> Colors;
 
+	float Duration;
+
 	//Constructor
 	FChromaSDKColorFrame1D()
 	{
+		Duration = 1;
 	}
 };
 
@@ -300,8 +283,11 @@ struct CHROMASDKPLUGIN_API FChromaSDKColorFrame2D
 	UPROPERTY(EditAnywhere)
 	TArray<FChromaSDKColors> Colors;
 
+	float Duration;
+
 	//Constructor
 	FChromaSDKColorFrame2D()
 	{
+		Duration = 1;
 	}
 };

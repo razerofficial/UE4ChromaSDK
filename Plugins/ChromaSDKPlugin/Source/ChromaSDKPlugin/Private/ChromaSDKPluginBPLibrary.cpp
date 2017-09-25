@@ -13,6 +13,7 @@
 #include "AllowWindowsPlatformTypes.h" 
 
 using namespace ChromaSDK;
+using namespace std;
 
 // keyboard map
 std::map<EChromaSDKKeyboardKey, int> UChromaSDKPluginBPLibrary::_sKeyboardEnumMap =
@@ -771,49 +772,75 @@ int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effec
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::PlayAnimation(FString animationName, bool loop)
+void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool loop)
 {
 #if PLATFORM_WINDOWS
+	FString path = FPaths::GameDir();
+	path += "Binaries/Win64/" + animationName + ".chroma";
+	UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	FChromaSDKPluginModule::Get().PlayAnimation(pathArg, loop);
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::StopAnimation(FString animationName)
+void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName)
 {
 #if PLATFORM_WINDOWS
+	FString path = FPaths::GameDir();
+	path += "Binaries/Win64/" + animationName + ".chroma";
+	UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	FChromaSDKPluginModule::Get().StopAnimation(pathArg);
 #endif
 }
 
-bool UChromaSDKPluginBPLibrary::IsPlaying(FString animationName)
+bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName)
 {
 #if PLATFORM_WINDOWS
-	return false;
+	FString path = FPaths::GameDir();
+	path += "Binaries/Win64/" + animationName + ".chroma";
+	UE_LOG(LogTemp, Log, TEXT("IsAnimationPlaying: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	return FChromaSDKPluginModule::Get().IsAnimationPlaying(pathArg);
 #else
 	return false;
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::PlayAnimations(TArray<FString> animationNames, bool loop)
+void UChromaSDKPluginBPLibrary::PlayAnimations(const TArray<FString>& animationNames, bool loop)
 {
-#if PLATFORM_WINDOWS
-#endif
+	for (int i = 0; i < animationNames.Num(); ++i)
+	{
+		PlayAnimation(animationNames[i], loop);
+	}
 }
 
-void UChromaSDKPluginBPLibrary::StopAnimations(TArray<FString> animationNames)
+void UChromaSDKPluginBPLibrary::StopAnimations(const TArray<FString>& animationNames)
 {
-#if PLATFORM_WINDOWS
-#endif
+	for (int i = 0; i < animationNames.Num(); ++i)
+	{
+		StopAnimation(animationNames[i]);
+	}
 }
 
-void UChromaSDKPluginBPLibrary::PlayAnimationComposite(FString animationName, bool loop)
+void UChromaSDKPluginBPLibrary::PlayAnimationComposite(const FString& animationName, bool loop)
 {
-#if PLATFORM_WINDOWS
-#endif
+	PlayAnimation(animationName + "_ChromaLink", loop);
+	PlayAnimation(animationName + "_Headset", loop);
+	PlayAnimation(animationName + "_Keyboard", loop);
+	PlayAnimation(animationName + "_Keypad", loop);
+	PlayAnimation(animationName + "_Mouse", loop);
+	PlayAnimation(animationName + "_Mousepad", loop);
 }
 
-void UChromaSDKPluginBPLibrary::StopAnimationComposite(FString animationName)
+void UChromaSDKPluginBPLibrary::StopAnimationComposite(const FString& animationName)
 {
-#if PLATFORM_WINDOWS
-#endif
+	StopAnimation(animationName + "_ChromaLink");
+	StopAnimation(animationName + "_Headset");
+	StopAnimation(animationName + "_Keyboard");
+	StopAnimation(animationName + "_Keypad");
+	StopAnimation(animationName + "_Mouse");
+	StopAnimation(animationName + "_Mousepad");
 }
 
 #if PLATFORM_WINDOWS
