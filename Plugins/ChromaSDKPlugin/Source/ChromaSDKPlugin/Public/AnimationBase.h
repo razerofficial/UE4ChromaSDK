@@ -14,7 +14,7 @@ namespace ChromaSDK
 		int GetCurrentFrame();
 		void SetCurrentFrame(int index);
 		virtual int GetFrameCount() = 0;
-		virtual void Play() = 0;
+		virtual void Play(bool loop) = 0;
 		bool IsPlaying();
 		virtual void Load() = 0;
 		virtual void Unload() = 0;

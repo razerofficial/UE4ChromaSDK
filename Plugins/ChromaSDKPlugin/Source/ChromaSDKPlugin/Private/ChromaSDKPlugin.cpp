@@ -177,6 +177,7 @@ int FChromaSDKPluginModule::ChromaSDKInit()
 
 	int result = _mMethodInit();
 	_mInitialized = true;
+	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin [INITIALIZED] result=%d"), result);
 	return result;
 }
 
@@ -190,6 +191,7 @@ int FChromaSDKPluginModule::ChromaSDKUnInit()
 
 	int result = _mMethodUnInit();
 	_mInitialized = false;
+	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin [UNINITIALIZED] result=%d"), result);
 	return result;
 }
 
@@ -703,6 +705,11 @@ void FChromaSDKPluginModule::StopAnimationByType(int animationId, AnimationBase*
 
 void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
 {
+	if (!_mInitialized)
+	{
+		ChromaSDKInit();
+	}
+
 	if (_mAnimations.find(animationId) != _mAnimations.end())
 	{
 		AnimationBase* animation = _mAnimations[animationId];
@@ -712,7 +719,7 @@ void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
 			return;
 		}
 		StopAnimationByType(animationId, animation);
-		animation->Play();
+		animation->Play(loop);
 	}
 }
 
@@ -729,6 +736,11 @@ void FChromaSDKPluginModule::PlayAnimation(const char* path, bool loop)
 
 void FChromaSDKPluginModule::StopAnimation(int animationId)
 {
+	if (!_mInitialized)
+	{
+		ChromaSDKInit();
+	}
+
 	if (_mAnimations.find(animationId) != _mAnimations.end())
 	{
 		AnimationBase* animation = _mAnimations[animationId];
@@ -754,6 +766,11 @@ void FChromaSDKPluginModule::StopAnimation(const char* path)
 
 bool FChromaSDKPluginModule::IsAnimationPlaying(int animationId)
 {
+	if (!_mInitialized)
+	{
+		ChromaSDKInit();
+	}
+
 	if (_mAnimations.find(animationId) != _mAnimations.end())
 	{
 		AnimationBase* animation = _mAnimations[animationId];

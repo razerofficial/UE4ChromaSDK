@@ -29,6 +29,7 @@ void Animation1D::Reset()
 	_mIsLoaded = false;
 	_mTime = 0.0f;
 	_mCurrentFrame = 0;
+	_mLoop = false;
 }
 
 EChromaSDKDeviceTypeEnum Animation1D::GetDeviceType()
@@ -133,7 +134,7 @@ void Animation1D::Unload()
 	_mIsLoaded = false;
 }
 
-void Animation1D::Play()
+void Animation1D::Play(bool loop)
 {
 	if (!_mIsLoaded)
 	{
@@ -143,6 +144,7 @@ void Animation1D::Play()
 	_mTime = 0.0f;
 	_mCurrentFrame = -1;
 	_mIsPlaying = true;
+	_mLoop = loop;
 
 	if (ChromaThread::Instance())
 	{
@@ -213,10 +215,18 @@ void Animation1D::Update(float deltaTime)
 			}
 			else
 			{
-				//fprintf(stdout, "Update: Animation Complete.\r\n");
-				_mIsPlaying = false;
-				_mTime = 0.0f;
-				_mCurrentFrame = 0;
+				if (_mLoop)
+				{
+					_mTime = 0.0f;
+					_mCurrentFrame = -1;
+				}
+				else
+				{
+					//fprintf(stdout, "Update: Animation Complete.\r\n");
+					_mIsPlaying = false;
+					_mTime = 0.0f;
+					_mCurrentFrame = 0;
+				}
 			}
 		}
 	}
