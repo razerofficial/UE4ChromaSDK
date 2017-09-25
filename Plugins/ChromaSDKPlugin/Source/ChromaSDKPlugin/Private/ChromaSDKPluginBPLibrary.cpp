@@ -182,6 +182,9 @@ UChromaSDKPluginBPLibrary::UChromaSDKPluginBPLibrary(const FObjectInitializer& O
 	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE5] = Mouse::RZLED2::RZLED2_RIGHT_SIDE5;
 	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE6] = Mouse::RZLED2::RZLED2_RIGHT_SIDE6;
 	_sMouseEnumMap[EChromaSDKMouseLed::ML_RIGHT_SIDE7] = Mouse::RZLED2::RZLED2_RIGHT_SIDE7;
+
+	FModuleManager::LoadModuleChecked<FChromaSDKPluginModule>("ChromaSDKPlugin");
+	ChromaSDKInit();
 #endif
 }
 

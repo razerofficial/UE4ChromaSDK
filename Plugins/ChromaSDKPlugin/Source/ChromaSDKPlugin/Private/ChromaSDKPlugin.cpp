@@ -705,11 +705,6 @@ void FChromaSDKPluginModule::StopAnimationByType(int animationId, AnimationBase*
 
 void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
 {
-	if (!_mInitialized)
-	{
-		ChromaSDKInit();
-	}
-
 	if (_mAnimations.find(animationId) != _mAnimations.end())
 	{
 		AnimationBase* animation = _mAnimations[animationId];
@@ -736,11 +731,6 @@ void FChromaSDKPluginModule::PlayAnimation(const char* path, bool loop)
 
 void FChromaSDKPluginModule::StopAnimation(int animationId)
 {
-	if (!_mInitialized)
-	{
-		ChromaSDKInit();
-	}
-
 	if (_mAnimations.find(animationId) != _mAnimations.end())
 	{
 		AnimationBase* animation = _mAnimations[animationId];
@@ -766,11 +756,6 @@ void FChromaSDKPluginModule::StopAnimation(const char* path)
 
 bool FChromaSDKPluginModule::IsAnimationPlaying(int animationId)
 {
-	if (!_mInitialized)
-	{
-		ChromaSDKInit();
-	}
-
 	if (_mAnimations.find(animationId) != _mAnimations.end())
 	{
 		AnimationBase* animation = _mAnimations[animationId];
