@@ -6,6 +6,7 @@
 * [Frameworks supported](#frameworks-supported)
 * [Prerequisites](#prerequisites)
 * [Engine Versions](#engine-versions)
+* [Quick Start](#quick-start)
 * [Tutorials](#tutorials)
 * [Usage](#usage)
 * [Assets](#assets)
@@ -50,6 +51,92 @@
 
 [Releases](https://github.com/RazerOfficial/UE4ChromaSDK/releases/tag/1.0) have binary versions of the `Plugin` which can be added upon request.
 
+<a name="quick-start"></a>
+## Quick Start
+
+
+**Set of Animations**
+
+A set of animations refers to the following given an `AnimationName`. 
+
+```
+AnimationName_ChromaLink.chroma
+AnimationName_Headset.chroma
+AnimationName_Keyboard.chroma
+AnimationName_Keypad.chroma
+AnimationName_Mouse.chroma
+AnimationName_Mousepad.chroma
+```
+
+**PlayAnimationComposite**
+
+Play a set of *_Device.chroma Animations. With `loop` set to false, the animations will play once. With `loop` set to true, the animations will loop.
+
+```c++
+void UChromaSDKPluginBPLibrary::PlayAnimationComposite(const FString& animationName, bool loop);
+```
+<br>
+
+**StopAnimationComposite**
+
+Stop a set of *_Device.chroma Animations
+
+```c++
+void UChromaSDKPluginBPLibrary::StopAnimationComposite(const FString& animationName);
+```
+<br>
+
+
+**PlayAnimation**
+
+Play the *.chroma Animation. With `loop` set to false, the animation will play once. With `loop` set to true, the animation will loop.
+
+```c++
+void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool loop);
+```
+<br>
+
+
+**StopAnimation**
+
+Stop the *.chroma Animation
+
+```c++
+void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName);
+```
+<br>
+
+
+**IsAnimationPlaying**
+
+Is the *.chroma Animation playing?
+
+```c++
+bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName);
+```
+<br>
+
+
+**PlayAnimations**
+
+Play an array of *.chroma Animations
+
+```c++
+void UChromaSDKPluginBPLibrary::PlayAnimations(const TArray<FString>& animationNames, bool loop);
+```
+<br>
+
+
+**StopAnimations**
+
+Stop an array *.chroma Animations
+
+```c++
+void UChromaSDKPluginBPLibrary::StopAnimations(const TArray<FString>& animationNames);
+```
+<br>
+
+
 <a name="tutorials"></a>
 ## Tutorials
 
@@ -64,6 +151,11 @@
 **Import Animation From Unity**
 
 <a target="_blank" href="https://www.youtube.com/watch?v=4-NjkEHckkM"><img src="https://img.youtube.com/vi/4-NjkEHckkM/0.jpg"/></a>
+
+
+**Play Composite Animations From Content Folder**
+
+<a target="_blank" href="https://www.youtube.com/watch?v=QFH_PZ50ROc"><img src="https://img.youtube.com/vi/QFH_PZ50ROc/0.jpg"/></a>
 
 
 <a name="usage"></a>
