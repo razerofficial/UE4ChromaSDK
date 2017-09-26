@@ -778,8 +778,8 @@ int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effec
 void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool loop)
 {
 #if PLATFORM_WINDOWS
-	FString path = FPaths::GameDir();
-	path += "Binaries/Win64/" + animationName + ".chroma";
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
 	UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
 	const char* pathArg = TCHAR_TO_ANSI(*path);
 	FChromaSDKPluginModule::Get().PlayAnimation(pathArg, loop);
@@ -789,8 +789,8 @@ void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool
 void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName)
 {
 #if PLATFORM_WINDOWS
-	FString path = FPaths::GameDir();
-	path += "Binaries/Win64/" + animationName + ".chroma";
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
 	UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *path);
 	const char* pathArg = TCHAR_TO_ANSI(*path);
 	FChromaSDKPluginModule::Get().StopAnimation(pathArg);
@@ -800,8 +800,8 @@ void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName)
 bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName)
 {
 #if PLATFORM_WINDOWS
-	FString path = FPaths::GameDir();
-	path += "Binaries/Win64/" + animationName + ".chroma";
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
 	UE_LOG(LogTemp, Log, TEXT("IsAnimationPlaying: %s"), *path);
 	const char* pathArg = TCHAR_TO_ANSI(*path);
 	return FChromaSDKPluginModule::Get().IsAnimationPlaying(pathArg);

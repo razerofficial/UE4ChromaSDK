@@ -369,7 +369,7 @@ int FChromaSDKPluginModule::OpenAnimation(const char* path)
 	if (0 != fopen_s(&stream, path, "rb") ||
 		stream == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("OpenAnimation: Failed to open animation! %s"), path);
+		UE_LOG(LogTemp, Error, TEXT("OpenAnimation: Failed to open animation! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return -1;
 	}
 
@@ -637,11 +637,11 @@ int FChromaSDKPluginModule::OpenAnimation(const char* path)
 
 	if (animation == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("OpenAnimation: Animation is null! name=%s"), path);
+		UE_LOG(LogTemp, Error, TEXT("OpenAnimation: Animation is null! name=%s"), *FString(UTF8_TO_TCHAR(path)));
 		return -1;
 	}
 
-	//UE_LOG(LogTemp, Log, TEXT("OpenAnimation: Loaded %s"), path);
+	//UE_LOG(LogTemp, Log, TEXT("OpenAnimation: Loaded %s"), *FString(UTF8_TO_TCHAR(path)));
 	int id = _mAnimationId;
 	_mAnimations[id] = animation;
 	++_mAnimationId;
@@ -723,7 +723,7 @@ void FChromaSDKPluginModule::PlayAnimation(const char* path, bool loop)
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayAnimation: Animation not found! %s"), path);
+		UE_LOG(LogTemp, Error, TEXT("PlayAnimation: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return;
 	}
 	PlayAnimation(animationId, loop);
@@ -748,7 +748,7 @@ void FChromaSDKPluginModule::StopAnimation(const char* path)
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("StopAnimation: Animation not found! %s"), path);
+		UE_LOG(LogTemp, Error, TEXT("StopAnimation: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return;
 	}
 	StopAnimation(animationId);
@@ -774,7 +774,7 @@ bool FChromaSDKPluginModule::IsAnimationPlaying(const char* path)
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("IsAnimationPlaying: Animation not found! %s"), path);
+		UE_LOG(LogTemp, Error, TEXT("IsAnimationPlaying: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return false;
 	}
 	return IsAnimationPlaying(animationId);
