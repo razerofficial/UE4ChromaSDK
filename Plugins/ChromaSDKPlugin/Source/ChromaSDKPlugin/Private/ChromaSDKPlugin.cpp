@@ -642,6 +642,7 @@ int FChromaSDKPluginModule::OpenAnimation(const char* path)
 	}
 
 	//UE_LOG(LogTemp, Log, TEXT("OpenAnimation: Loaded %s"), *FString(UTF8_TO_TCHAR(path)));
+	animation->SetName(path);
 	int id = _mAnimationId;
 	_mAnimations[id] = animation;
 	++_mAnimationId;
@@ -714,6 +715,7 @@ void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
 			return;
 		}
 		StopAnimationByType(animationId, animation);
+		UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
 		animation->Play(loop);
 	}
 }
@@ -739,6 +741,7 @@ void FChromaSDKPluginModule::StopAnimation(int animationId)
 			UE_LOG(LogTemp, Error, TEXT("StopAnimation: Animation is null! id=%d"), animationId);
 			return;
 		}
+		UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
 		animation->Stop();
 	}
 }

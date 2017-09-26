@@ -2,6 +2,7 @@
 
 #include "ChromaSDKPlugin.h"
 #include "ChromaSDKPluginTypes.h"
+#include <string>
 #include <vector>
 
 namespace ChromaSDK
@@ -10,6 +11,8 @@ namespace ChromaSDK
 	{
 	public:
 		AnimationBase();
+		const std::string& GetName();
+		void SetName(const std::string& name);
 		virtual EChromaSDKDeviceTypeEnum GetDeviceType() = 0;
 		int GetCurrentFrame();
 		void SetCurrentFrame(int index);
@@ -23,6 +26,7 @@ namespace ChromaSDK
 		virtual void ResetFrames() = 0;
 		virtual int Save(const char* path) = 0;
 	protected:
+		std::string _mName;
 		int _mCurrentFrame;
 		bool _mIsLoaded;
 		bool _mIsPlaying;
