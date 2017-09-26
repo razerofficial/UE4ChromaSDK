@@ -9,6 +9,7 @@
 #include "ChromaSDKPluginAnimation2DObject.h"
 #include "ChromaSDKPluginBPLibrary.h"
 
+#if PLATFORM_WINDOWS
 #include "AllowWindowsPlatformTypes.h" 
 #include "DesktopPlatformModule.h"
 #include "DetailCategoryBuilder.h"
@@ -23,6 +24,7 @@
 #include "Widgets/Layout/SGridPanel.h"
 #include "SlateApplication.h"
 #include "SharedPointer.h"
+#endif
 
 typedef unsigned char byte;
 #define ANIMATION_VERSION 1
@@ -31,6 +33,7 @@ typedef unsigned char byte;
 TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstance()
 {
 	TSharedRef<FChromaSDKEditorAnimation2DDetails> instance = MakeShareable(new FChromaSDKEditorAnimation2DDetails);
+#if PLATFORM_WINDOWS
 	instance->_mDetails = instance;
 
 	//populate list of device enums
@@ -86,6 +89,8 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstanc
 	// initialize
 	instance->Initialize();
 
+#endif
+    
 	return instance;
 }
 
@@ -1544,6 +1549,8 @@ bool FChromaSDKEditorAnimation2DDetails::IsValidCurve(FRichCurveEditInfo CurveIn
 
 #undef LOCTEXT_NAMESPACE
 
+#if PLATFORM_WINDOWS
 #include "HideWindowsPlatformTypes.h"
+#endif
 
 #endif

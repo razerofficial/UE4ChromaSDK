@@ -7,6 +7,8 @@
 #if WITH_EDITOR
 #include "ChromaSDKPluginBPLibrary.h"
 
+#if PLATFORM_WINDOWS
+
 #include "AllowWindowsPlatformTypes.h"
 #include "DesktopPlatformModule.h"
 #include "DetailLayoutBuilder.h"
@@ -25,8 +27,6 @@
 #include "IMainFrameModule.h"
 #include "SharedPointer.h"
 #endif
-
-#if PLATFORM_WINDOWS
 
 #define LOCTEXT_NAMESPACE "ChromaAnimationBaseDetails"
 
@@ -658,6 +658,8 @@ void IChromaSDKEditorAnimationBaseDetails::BuildCurveRow(IDetailLayoutBuilder& D
 
 #endif
 
+#if PLATFORM_WINDOWS
 #include "HideWindowsPlatformTypes.h"
+#endif
 
 #endif

@@ -11,7 +11,9 @@
 #include "ChromaSDKEditorAnimationBaseDetails.h"
 #include "ChromaSDKEditorButton1D.h"
 
+#if PLATFORM_WINDOWS
 #include "AllowWindowsPlatformTypes.h" 
+#endif
 
 class FChromaSDKEditorAnimation1DDetails : public IChromaSDKEditorAnimationBaseDetails
 {
@@ -126,6 +128,8 @@ private:
 	TArray<FLinearColor> _mColors;
 };
 
+#if PLATFORM_WINDOWS
 #include "HideWindowsPlatformTypes.h"
+#endif
 
 #endif

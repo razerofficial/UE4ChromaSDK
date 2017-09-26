@@ -8,7 +8,9 @@
 
 #include "UnrealEd.h"
 #include "Runtime/Launch/Resources/Version.h"
-#include "AllowWindowsPlatformTypes.h" 
+#if PLATFORM_WINDOWS
+#include "AllowWindowsPlatformTypes.h"
+#endif
 #include "IDetailCustomization.h"
 #include "ChromaSDKPluginTypes.h"
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 15)
@@ -133,6 +135,8 @@ protected:
 	TSharedPtr<SCurveEditor> _mCurveWidget;
 };
 
+#if PLATFORM_WINDOWS
 #include "HideWindowsPlatformTypes.h"
+#endif
 
 #endif
