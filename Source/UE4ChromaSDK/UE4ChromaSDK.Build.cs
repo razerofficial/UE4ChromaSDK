@@ -14,9 +14,10 @@ public class UE4ChromaSDK : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 #endif
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ChromaSDKPlugin" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+
+        PrivateDependencyModuleNames.AddRange(new string[] { "ChromaSDKPlugin" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
