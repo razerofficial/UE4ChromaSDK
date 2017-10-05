@@ -267,7 +267,6 @@ void FChromaSDKEditorAnimation1DDetails::WriteChromaFile(const FString& path)
 			fwrite(&frameCount, expectedSize, 1, stream);
 
 			//frames
-			COLORREF color = RGB(0, 0, 0);
 			for (int index = 0; index < frames.Num(); ++index)
 			{
 				//duration

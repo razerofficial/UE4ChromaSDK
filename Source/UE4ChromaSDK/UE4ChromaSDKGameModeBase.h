@@ -12,20 +12,12 @@
 #endif
 #include "UE4ChromaSDKGameModeBase.generated.h"
 
-#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
-// (support above 4.12)
-// class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameModeBase
-#else
-#pragma message("UE4ChromaSDKGameModeBase.h: Use UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameMode")
-// (support 4.12 or below)
-// class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameMode
-#endif
-
 /**
  * 
  */
 UCLASS()
-class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameModeBase
+//class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameMode //(support 4.12)___HACK_UE4_WANTS_GAME_MODE
+class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameModeBase //(support above 4.12)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 	GENERATED_BODY()
 };

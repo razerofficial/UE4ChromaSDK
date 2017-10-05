@@ -1,4 +1,6 @@
+#//include "ChromaSDKPlugin.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "ChromaThread.h"
+#include "ChromaSDKPlugin.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
 #include <chrono>
 
 using namespace ChromaSDK;

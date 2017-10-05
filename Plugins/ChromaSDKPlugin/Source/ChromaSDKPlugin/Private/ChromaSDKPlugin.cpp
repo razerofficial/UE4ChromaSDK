@@ -10,6 +10,8 @@
 
 #if PLATFORM_WINDOWS
 
+#include "AllowWindowsPlatformTypes.h" 
+
 #ifdef _WIN64
 #define CHROMASDKDLL        _T("RzChromaSDK64.dll")
 #else
@@ -782,6 +784,8 @@ bool FChromaSDKPluginModule::IsAnimationPlaying(const char* path)
 	}
 	return IsAnimationPlaying(animationId);
 }
+
+#include "HideWindowsPlatformTypes.h"
 
 #endif
 

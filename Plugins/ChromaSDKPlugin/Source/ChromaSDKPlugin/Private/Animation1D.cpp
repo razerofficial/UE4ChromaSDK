@@ -1,9 +1,12 @@
+#//include "ChromaSDKPlugin.h" //(support 4.15 or below)___HACK_UE4_WANTS_MODULE_FIRST
 #include "Animation1D.h"
-#include "ChromaSDKPlugin.h"
+#include "ChromaSDKPlugin.h" //(support 4.16 or above)___HACK_UE4_WANTS_HEADER_FIRST
 #include "ChromaSDKPluginBPLibrary.h"
 #include "ChromaThread.h"
 
 #if PLATFORM_WINDOWS
+
+#include "AllowWindowsPlatformTypes.h" 
 
 typedef unsigned char byte;
 #define ANIMATION_VERSION 1
@@ -281,8 +284,6 @@ int Animation1D::Save(const char* path)
 		UE_LOG(LogTemp, Log, TEXT("Save: FrameCount: %d\r\n"), frameCount);
 
 		//frames
-		float duration = 0.0f;
-		COLORREF color = RGB(0, 0, 0);
 		for (unsigned int index = 0; index < frameCount; ++index)
 		{
 			//duration
@@ -312,5 +313,7 @@ int Animation1D::Save(const char* path)
 
 	return -1;
 }
+
+#include "HideWindowsPlatformTypes.h"
 
 #endif
