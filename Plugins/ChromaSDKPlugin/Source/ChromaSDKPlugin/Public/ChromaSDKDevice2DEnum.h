@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ChromaSDKPlugin.h"
+#include "Engine.h"
 #include "ChromaSDKDevice2DEnum.generated.h"
 
 UENUM(BlueprintType)

@@ -4,7 +4,7 @@
 
 #include "UE4ChromaSDK.h"
 #include "Runtime/Launch/Resources/Version.h"
-#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 14)
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #else

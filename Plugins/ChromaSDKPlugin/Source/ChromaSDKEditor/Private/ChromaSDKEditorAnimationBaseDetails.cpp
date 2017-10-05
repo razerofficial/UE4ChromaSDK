@@ -649,7 +649,7 @@ void IChromaSDKEditorAnimationBaseDetails::BuildCurveRow(IDetailLayoutBuilder& D
 			.DesiredSize(FVector2D(512, 128))
 		];
 
-#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 14)
 	_mCurveWidget->SetCurveOwner(this);
 #endif
 }
