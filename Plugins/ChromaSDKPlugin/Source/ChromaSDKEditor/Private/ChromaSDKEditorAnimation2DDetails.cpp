@@ -55,7 +55,7 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstanc
 	{
 		for (int k = 0; (k+1) < keyEnumPtr->NumEnums(); ++k)
 		{
-#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 13)
 			FString text = keyEnumPtr->GetDisplayNameTextByValue(k).ToString();
 			instance->_mChromaSDKKeyboardKeys.Add(MakeShared<FString>(text));
 
@@ -74,7 +74,7 @@ TSharedRef<IDetailCustomization> FChromaSDKEditorAnimation2DDetails::MakeInstanc
 	{
 		for (int k = 0; (k + 1) < ledEnumPtr->NumEnums(); ++k)
 		{
-#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 12)
+#if (ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION > 13)
 			FString text = ledEnumPtr->GetDisplayNameTextByValue(k).ToString();
 			instance->_mChromaSDKMouseLeds.Add(MakeShared<FString>(text));
 #else

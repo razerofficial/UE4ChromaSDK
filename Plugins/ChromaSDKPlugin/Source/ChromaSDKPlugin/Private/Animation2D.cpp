@@ -284,7 +284,6 @@ int Animation2D::Save(const char* path)
 		UE_LOG(LogTemp, Log, TEXT("Save: FrameCount: %d\r\n"), frameCount);
 
 		//frames
-		COLORREF color = RGB(0, 0, 0);
 		for (unsigned int index = 0; index < frameCount; ++index)
 		{
 			//duration

@@ -16,8 +16,8 @@
  * 
  */
 UCLASS()
-//class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameMode //(support 4.12)___HACK_UE4_WANTS_GAME_MODE
-class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameModeBase //(support above 4.12)___HACK_UE4_WANTS_BASE_GAME_MODE
+//class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameMode //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+class UE4CHROMASDK_API AUE4ChromaSDKGameModeBase : public AGameModeBase //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 	GENERATED_BODY()
 };
