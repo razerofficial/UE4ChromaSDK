@@ -2,7 +2,9 @@
 
 #pragma once
 
+#if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 17)
 #include "ChromaSDKPlugin.h"
+#endif
 #include "Engine.h"
 #include "ChromaSDKDevice1DEnum.generated.h"
 
