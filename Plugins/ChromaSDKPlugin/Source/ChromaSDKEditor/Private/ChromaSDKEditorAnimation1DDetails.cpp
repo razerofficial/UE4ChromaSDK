@@ -677,7 +677,7 @@ FReply FChromaSDKEditorAnimation1DDetails::OnClickExportButton()
 	if (DesktopPlatform)
 	{
 		FString exportPath;
-		FString Filter = TEXT("Chroma Files (*.chroma)| *.chroma; ||");
+		FString Filter = TEXT("Chroma Files (*.chroma)| *.chroma ||");
 		TArray<FString> OutFiles;
 		if (DesktopPlatform->SaveFileDialog(
 			GetParentWindowWindowHandle(),
