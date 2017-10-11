@@ -76,6 +76,7 @@ public:
 	static int GetMaxRow(const EChromaSDKDevice2DEnum& device);
 	static int GetMaxColumn(const EChromaSDKDevice2DEnum& device);
 	int OpenAnimation(const char* path);
+	int CloseAnimation(int animationId);
 	int GetAnimation(const char* path);
 	void StopAnimationByType(int animationId, ChromaSDK::AnimationBase* animation);
 	void PlayAnimation(int animationId, bool loop);
