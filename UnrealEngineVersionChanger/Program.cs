@@ -9,6 +9,7 @@ namespace UnrealEngineVersionChanger
         {
             UNKNOWN,
             UE4_12,
+            UE4_13,
             UE4_15,
             UE4_16,
         };
@@ -107,7 +108,7 @@ namespace UnrealEngineVersionChanger
                         hasChange = true;
                         continue;
                     }
-                    if (EditLine(ref contents, ref i, lastNewline, TOKEN_GAME_MODE, TOKEN_BASE_GAME_MODE, _sVersion == Versions.UE4_12))
+                    if (EditLine(ref contents, ref i, lastNewline, TOKEN_GAME_MODE, TOKEN_BASE_GAME_MODE, _sVersion == Versions.UE4_12 || _sVersion == Versions.UE4_13))
                     {
                         hasChange = true;
                         continue;
@@ -196,6 +197,9 @@ namespace UnrealEngineVersionChanger
             {
                 case "4.12":
                     _sVersion = Versions.UE4_12;
+                    break;
+                case "4.13":
+                    _sVersion = Versions.UE4_13;
                     break;
                 case "4.15":
                     _sVersion = Versions.UE4_15;
