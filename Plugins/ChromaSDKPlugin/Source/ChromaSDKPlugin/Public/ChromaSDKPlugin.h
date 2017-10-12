@@ -92,10 +92,10 @@ public:
 	int GetFrameCountName(const char* path);
 	void SetKeyColor(int animationId, int frameId, int rzkey, COLORREF color);
 	void SetKeyColorName(const char* path, int frameId, int rzkey, COLORREF color);
-	void Load(int animationId);
-	void LoadName(const char* path);
-	void Unload(int animationId);
-	void UnloadName(const char* path);
+	void LoadAnimation(int animationId);
+	void LoadAnimationName(const char* path);
+	void UnloadAnimation(int animationId);
+	void UnloadAnimationName(const char* path);
 #endif
 
 private:

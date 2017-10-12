@@ -766,7 +766,7 @@ void FChromaSDKPluginModule::SetKeyColorName(const char* path, int frameId, int 
 	SetKeyColor(animationId, frameId, rzkey, color);
 }
 
-void FChromaSDKPluginModule::Load(int animationId)
+void FChromaSDKPluginModule::LoadAnimation(int animationId)
 {
 	AnimationBase* animation = GetAnimationInstance(animationId);
 	if (nullptr == animation)
@@ -776,7 +776,7 @@ void FChromaSDKPluginModule::Load(int animationId)
 	animation->Load();
 }
 
-void FChromaSDKPluginModule::LoadName(const char* path)
+void FChromaSDKPluginModule::LoadAnimationName(const char* path)
 {
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
@@ -784,10 +784,10 @@ void FChromaSDKPluginModule::LoadName(const char* path)
 		UE_LOG(LogTemp, Error, TEXT("LoadName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return;
 	}
-	Load(animationId);
+	LoadAnimation(animationId);
 }
 
-void FChromaSDKPluginModule::Unload(int animationId)
+void FChromaSDKPluginModule::UnloadAnimation(int animationId)
 {
 	AnimationBase* animation = GetAnimationInstance(animationId);
 	if (nullptr == animation)
@@ -797,7 +797,7 @@ void FChromaSDKPluginModule::Unload(int animationId)
 	animation->Unload();
 }
 
-void FChromaSDKPluginModule::UnloadName(const char* path)
+void FChromaSDKPluginModule::UnloadAnimationName(const char* path)
 {
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
@@ -805,7 +805,7 @@ void FChromaSDKPluginModule::UnloadName(const char* path)
 		UE_LOG(LogTemp, Error, TEXT("UnloadName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return;
 	}
-	Unload(animationId);
+	UnloadAnimation(animationId);
 }
 
 int FChromaSDKPluginModule::GetAnimation(const char* path)

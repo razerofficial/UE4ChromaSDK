@@ -775,6 +775,97 @@ int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid& effec
 #endif
 }
 
+int UChromaSDKPluginBPLibrary::GetAnimationId(const FString& animationName)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	return FChromaSDKPluginModule::Get().GetAnimation(pathArg);
+#else
+	return -1;
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::LoadAnimation(const int animationId)
+{
+#if PLATFORM_WINDOWS
+	FChromaSDKPluginModule::Get().LoadAnimation(animationId);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::LoadAnimationName(const FString& animationName)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	FChromaSDKPluginModule::Get().LoadAnimationName(pathArg);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::CloseAnimation(const int animationId)
+{
+#if PLATFORM_WINDOWS
+	FChromaSDKPluginModule::Get().CloseAnimation(animationId);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::CloseAnimationName(const FString& animationName)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	FChromaSDKPluginModule::Get().CloseAnimationName(pathArg);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::UnloadAnimation(const int animationId)
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().UnloadAnimation(animationId);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::UnloadAnimationName(const FString& animationName)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	FChromaSDKPluginModule::Get().UnloadAnimationName(pathArg);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::SetKeyColor(int animationId, int frameIndex, const EChromaSDKKeyboardKey& key, const FLinearColor& color)
+{
+	int rzkey = _sKeyboardEnumMap[key];
+	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+	{
+		FChromaSDKPluginModule::Get().SetKeyColor(animationId, frameIndex, rzkey, FChromaSDKPluginModule::ToBGR(color));
+	}
+}
+
+void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName, const int frameIndex, const EChromaSDKKeyboardKey& key, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	int rzkey = _sKeyboardEnumMap[key];
+	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+	{
+		FChromaSDKPluginModule::Get().SetKeyColorName(pathArg, frameIndex, rzkey, FChromaSDKPluginModule::ToBGR(color));
+	}
+#endif
+}
+
 void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool loop)
 {
 #if PLATFORM_WINDOWS
@@ -795,6 +886,55 @@ void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName)
 	const char* pathArg = TCHAR_TO_ANSI(*path);
 	FChromaSDKPluginModule::Get().StopAnimationName(pathArg);
 #endif
+}
+
+void UChromaSDKPluginBPLibrary::StopAnimationType(const EChromaSDKDeviceEnum& device)
+{
+#if PLATFORM_WINDOWS
+	switch (device)
+	{
+	case EChromaSDKDeviceEnum::DE_ChromaLink:
+		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_ChromaLink);
+		break;
+	case EChromaSDKDeviceEnum::DE_Headset:
+		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_Headset);
+		break;
+	case EChromaSDKDeviceEnum::DE_Keyboard:
+		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_2D, (int)EChromaSDKDevice2DEnum::DE_Keyboard);
+		break;
+	case EChromaSDKDeviceEnum::DE_Keypad:
+		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_2D, (int)EChromaSDKDevice2DEnum::DE_Keypad);
+		break;
+	case EChromaSDKDeviceEnum::DE_Mouse:
+		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_2D, (int)EChromaSDKDevice2DEnum::DE_Mouse);
+		break;
+	case EChromaSDKDeviceEnum::DE_Mousepad:
+		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_Mousepad);
+		break;
+	}
+#endif
+}
+
+bool UChromaSDKPluginBPLibrary::IsAnimationTypePlaying(const EChromaSDKDeviceEnum& device)
+{
+#if PLATFORM_WINDOWS
+	switch (device)
+	{
+	case EChromaSDKDeviceEnum::DE_ChromaLink:
+		return FChromaSDKPluginModule::Get().IsAnimationPlayingType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_ChromaLink);
+	case EChromaSDKDeviceEnum::DE_Headset:
+		return FChromaSDKPluginModule::Get().IsAnimationPlayingType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_Headset);
+	case EChromaSDKDeviceEnum::DE_Keyboard:
+		return FChromaSDKPluginModule::Get().IsAnimationPlayingType((int)EChromaSDKDeviceTypeEnum::DE_2D, (int)EChromaSDKDevice2DEnum::DE_Keyboard);
+	case EChromaSDKDeviceEnum::DE_Keypad:
+		return FChromaSDKPluginModule::Get().IsAnimationPlayingType((int)EChromaSDKDeviceTypeEnum::DE_2D, (int)EChromaSDKDevice2DEnum::DE_Keypad);
+	case EChromaSDKDeviceEnum::DE_Mouse:
+		return FChromaSDKPluginModule::Get().IsAnimationPlayingType((int)EChromaSDKDeviceTypeEnum::DE_2D, (int)EChromaSDKDevice2DEnum::DE_Mouse);
+	case EChromaSDKDeviceEnum::DE_Mousepad:
+		return FChromaSDKPluginModule::Get().IsAnimationPlayingType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_Mousepad);
+	}
+#endif
+	return false;
 }
 
 bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName)
