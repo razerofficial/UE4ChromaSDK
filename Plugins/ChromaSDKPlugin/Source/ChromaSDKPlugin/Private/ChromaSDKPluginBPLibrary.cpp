@@ -937,6 +937,28 @@ bool UChromaSDKPluginBPLibrary::IsAnimationTypePlaying(const EChromaSDKDeviceEnu
 	return false;
 }
 
+int UChromaSDKPluginBPLibrary::GetFrameCount(const int animationId)
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().GetAnimationFrameCount(animationId);
+#else
+	return -1;
+#endif
+}
+
+int UChromaSDKPluginBPLibrary::GetFrameCountName(const FString& animationName)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	//UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *path);
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	return FChromaSDKPluginModule::Get().GetAnimationFrameCountName(pathArg);
+#else
+	return -1;
+#endif
+}
+
 bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName)
 {
 #if PLATFORM_WINDOWS

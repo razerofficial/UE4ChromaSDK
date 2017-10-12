@@ -712,7 +712,7 @@ AnimationBase* FChromaSDKPluginModule::GetAnimationInstance(int animationId)
 	return nullptr;
 }
 
-int FChromaSDKPluginModule::GetFrameCount(int animationId)
+int FChromaSDKPluginModule::GetAnimationFrameCount(int animationId)
 {
 	AnimationBase* animation = GetAnimationInstance(animationId);
 	if (nullptr == animation)
@@ -722,7 +722,7 @@ int FChromaSDKPluginModule::GetFrameCount(int animationId)
 	return animation->GetFrameCount();
 }
 
-int FChromaSDKPluginModule::GetFrameCountName(const char* path)
+int FChromaSDKPluginModule::GetAnimationFrameCountName(const char* path)
 {
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
@@ -730,7 +730,7 @@ int FChromaSDKPluginModule::GetFrameCountName(const char* path)
 		UE_LOG(LogTemp, Error, TEXT("GetFrameCountName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return -1;
 	}
-	return GetFrameCount(animationId);
+	return GetAnimationFrameCount(animationId);
 }
 
 void FChromaSDKPluginModule::SetKeyColor(int animationId, int frameId, int rzkey, COLORREF color)

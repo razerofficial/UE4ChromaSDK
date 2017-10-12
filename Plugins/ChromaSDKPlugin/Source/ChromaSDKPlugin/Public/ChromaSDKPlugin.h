@@ -88,8 +88,8 @@ public:
 	bool IsAnimationPlaying(int animationId);
 	bool IsAnimationPlayingName(const char* path);
 	bool IsAnimationPlayingType(int deviceType, int device);
-	int GetFrameCount(int animationId);
-	int GetFrameCountName(const char* path);
+	int GetAnimationFrameCount(int animationId);
+	int GetAnimationFrameCountName(const char* path);
 	void SetKeyColor(int animationId, int frameId, int rzkey, COLORREF color);
 	void SetKeyColorName(const char* path, int frameId, int rzkey, COLORREF color);
 	void LoadAnimation(int animationId);
