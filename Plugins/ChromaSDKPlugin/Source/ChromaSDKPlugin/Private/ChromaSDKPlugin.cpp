@@ -63,7 +63,7 @@ void FChromaSDKPluginModule::StartupModule()
 		UE_LOG(LogTemp, Error, TEXT("ChromaSDKPlugin failed to load!"));
 		return;
 	}
-	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded."));
+	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin loaded."));
 
 	// GetProcAddress will throw 4191 because it's an unsafe type cast
 #pragma warning(disable: 4191)
@@ -158,7 +158,7 @@ void FChromaSDKPluginModule::ShutdownModule()
 		_mLibraryChroma = nullptr;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin unloaded."));
+	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin unloaded."));
 #endif
 }
 
@@ -208,7 +208,7 @@ int FChromaSDKPluginModule::ChromaSDKUnInit()
 	_mAnimations.clear();
 	_mPlayMap1D.clear();
 	_mPlayMap2D.clear();
-	UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin [UNINITIALIZED] result=%d"), result);
+	//UE_LOG(LogTemp, Log, TEXT("ChromaSDKPlugin [UNINITIALIZED] result=%d"), result);
 	return result;
 }
 
@@ -914,7 +914,7 @@ void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
 			_mPlayMap2D[(EChromaSDKDevice2DEnum)animation->GetDeviceId()] = animationId;
 			break;
 		}
-		UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
+		//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
 		animation->Play(loop);
 	}
 }
@@ -948,7 +948,7 @@ void FChromaSDKPluginModule::StopAnimation(int animationId)
 			UE_LOG(LogTemp, Error, TEXT("StopAnimation: Animation is null! id=%d"), animationId);
 			return;
 		}
-		UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
+		//UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
 		animation->Stop();
 	}
 }
@@ -1029,7 +1029,7 @@ bool FChromaSDKPluginModule::IsAnimationPlayingName(const char* path)
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("IsAnimationPlaying: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		UE_LOG(LogTemp, Error, TEXT("IsAnimationPlayingName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return false;
 	}
 	return IsAnimationPlaying(animationId);
