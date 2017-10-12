@@ -680,6 +680,11 @@ int FChromaSDKPluginModule::CloseAnimation(int animationId)
 				return -1;
 			}
 			animation->Stop();
+			string animationName = animation->GetName();
+			if (_mAnimationMapID.find(animationName) != _mAnimationMapID.end())
+			{
+				_mAnimationMapID.erase(animationName);
+			}
 			delete _mAnimations[animationId];
 			_mAnimations.erase(animationId);
 			return animationId;
