@@ -7,6 +7,7 @@
 * [Prerequisites](#prerequisites)
 * [Engine Versions](#engine-versions)
 * [Quick Start](#quick-start)
+* [Key Bindings](#key-bindings)
 * [Tutorials](#tutorials)
 * [Usage](#usage)
 * [Assets](#assets)
@@ -135,6 +136,44 @@ Stop an array *.chroma Animations
 void UChromaSDKPluginBPLibrary::StopAnimations(const TArray<FString>& animationNames);
 ```
 <br>
+
+
+<a name="key-bndings"></a>
+## Key Bindings
+
+Games often need to highlight hotkeys that are tied to game play. This can be for general `WASD` movement, interacting with the game, or display cooldowns.
+
+Just displaying hotkeys by themselves is less visually interesting. Hotkeys can be shown on top of existing .chroma animations.
+
+This allows environmental effects or other animations to be shown as the base layer with hotkeys on top of that.
+
+In the below image, a loaded animation has the hotkeys added to each frame and then the animation plays.
+
+1 When a .chroma animation is referenced by name, it's loaded from the game's `Content` folder into memory.
+
+2 `Make Literal String` stores the .chroma animation name which is reused in multiple steps. In this case `Random_Keyboard` is stored.
+
+2 `UnloadAnimationName` takes the animation name and unloads the Chroma color frames that were previously loaded so they can be modified.
+
+3 `GetFrameCountName` takes the animaton name and returns the number of frames in the animation.
+
+4 `For Loop` is used to iterate over all the frames in the animation.
+
+5 `SetKeyColorName` takes the animation name, the color frame index, the key binding to update, and the color to show on the key. A constant color could be used, but to be more visually interesting, the example lerps between two colors using the frame index as the increment.
+
+6 `PlayAnimation` takes the animation name to play the animation after the `For Loop` completes.
+
+![image_45](images/image_45.png)
+
+In the image below, an animation is reloaded from disk to hide the hotkeys.
+
+1 `CloseAnimationName` takes the animation name and destroys the instance in memory.
+
+2 `PlayAnimation` loads the animation name from disk in the original state without the hotkeys applied.
+
+This process could be used to hide the hotkeys, or to reload the animation after the keybindings change to highlight new keys.
+
+![image_46](images/image_46.png)
 
 
 <a name="tutorials"></a>
