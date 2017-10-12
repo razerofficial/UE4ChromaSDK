@@ -771,6 +771,70 @@ void FChromaSDKPluginModule::SetKeyColorName(const char* path, int frameId, int 
 	SetKeyColor(animationId, frameId, rzkey, color);
 }
 
+void FChromaSDKPluginModule::CopyKeyColor(int sourceAnimationId, int targetAnimationId, int frameId, int rzkey)
+{
+	StopAnimation(targetAnimationId);
+	AnimationBase* sourceAnimation = GetAnimationInstance(sourceAnimationId);
+	if (nullptr == sourceAnimation)
+	{
+		return;
+	}
+	AnimationBase* targetAnimation = GetAnimationInstance(targetAnimationId);
+	if (nullptr == targetAnimation)
+	{
+		return;
+	}
+	if (sourceAnimation->GetDeviceType() != EChromaSDKDeviceTypeEnum::DE_2D ||
+		sourceAnimation->GetDeviceId() != (int)EChromaSDKDevice2DEnum::DE_Keyboard)
+	{
+		return;
+	}
+	if (targetAnimation->GetDeviceType() != EChromaSDKDeviceTypeEnum::DE_2D ||
+		targetAnimation->GetDeviceId() != (int)EChromaSDKDevice2DEnum::DE_Keyboard)
+	{
+		return;
+	}
+	if (frameId < 0)
+	{
+		return;
+	}
+	Animation2D* sourceAnimation2D = (Animation2D*)(sourceAnimation);
+	Animation2D* targetAnimation2D = (Animation2D*)(targetAnimation);
+	vector<FChromaSDKColorFrame2D>& sourceFrames = sourceAnimation2D->GetFrames();
+	vector<FChromaSDKColorFrame2D>& targetFrames = targetAnimation2D->GetFrames();
+	if (sourceFrames.size() == 0)
+	{
+		return;
+	}
+	if (targetFrames.size() == 0)
+	{
+		return;
+	}
+	if (frameId < targetFrames.size())
+	{
+		FChromaSDKColorFrame2D& sourceFrame = sourceFrames[frameId % sourceFrames.size()];
+		FChromaSDKColorFrame2D& targetFrame = targetFrames[frameId];
+		targetFrame.Colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = sourceFrame.Colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)];
+	}
+}
+
+void FChromaSDKPluginModule::CopyKeyColorName(const char* sourceAnimation, const char* targetAnimation, int frameId, int rzkey)
+{
+	int sourceAnimationId = GetAnimation(sourceAnimation);
+	if (sourceAnimationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CopyKeyColorName: Source Animation not found! %s"), *FString(UTF8_TO_TCHAR(sourceAnimation)));
+		return;
+	}
+	int targetAnimationId = GetAnimation(targetAnimation);
+	if (targetAnimationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CopyKeyColorName: Target Animation not found! %s"), *FString(UTF8_TO_TCHAR(targetAnimation)));
+		return;
+	}
+	CopyKeyColor(sourceAnimationId, targetAnimationId, frameId, rzkey);
+}
+
 void FChromaSDKPluginModule::LoadAnimation(int animationId)
 {
 	AnimationBase* animation = GetAnimationInstance(animationId);

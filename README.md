@@ -175,6 +175,11 @@ This process could be used to hide the hotkeys, or to reload the animation after
 
 ![image_46](images/image_46.png)
 
+In the image below, a source animation color can be copied into a target animation. In this case a fire animation can play on selected hotkeys.
+
+`CopyKeyColorName` takes the source animation name, target animation name, the frame index, and the key binding to update. The target animation will set the color from the source animation.
+
+![image_47](images/image_47.png)
 
 <a name="tutorials"></a>
 ## Tutorials

@@ -149,6 +149,12 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionL
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SetKeyColorName", Keywords = "Set the animation frame's key to the supplied color"), Category = "ChromaSDK")
 	static void SetKeyColorName(const FString& animationName, const int frameIndex, const EChromaSDKKeyboardKey& key, const FLinearColor& color);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CopyKeyColor", Keywords = "Set the target animation frame's key to the source color"), Category = "ChromaSDK")
+	static void CopyKeyColor(int sourceAnimationId, int targetAnimationId, int frameIndex, const EChromaSDKKeyboardKey& key);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "CopyKeyColorName", Keywords = "Set the target animation frame's key to the source color"), Category = "ChromaSDK")
+	static void CopyKeyColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const EChromaSDKKeyboardKey& key);
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetFrameCount", Keywords = "Get the .chroma animation frame count"), Category = "ChromaSDK")
 	static int GetFrameCount(const int animationId);
 
