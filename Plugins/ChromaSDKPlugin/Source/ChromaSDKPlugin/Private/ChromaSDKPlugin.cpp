@@ -799,6 +799,7 @@ void FChromaSDKPluginModule::UnloadAnimation(int animationId)
 	{
 		return;
 	}
+	animation->Stop();
 	animation->Unload();
 }
 
