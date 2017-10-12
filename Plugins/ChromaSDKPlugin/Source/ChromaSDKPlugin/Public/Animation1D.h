@@ -15,6 +15,7 @@ namespace ChromaSDK
 		EChromaSDKDeviceTypeEnum GetDeviceType();
 		EChromaSDKDevice1DEnum GetDevice();
 		bool SetDevice(EChromaSDKDevice1DEnum device);
+		int GetDeviceId();
 		std::vector<FChromaSDKColorFrame1D>& GetFrames();
 		int GetFrameCount();
 		float GetDuration(unsigned int index);

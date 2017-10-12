@@ -692,6 +692,122 @@ int FChromaSDKPluginModule::CloseAnimation(int animationId)
 	return -1;
 }
 
+int FChromaSDKPluginModule::CloseAnimationName(const char* path)
+{
+	int animationId = GetAnimation(path);
+	if (animationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CloseAnimationName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		return -1;
+	}
+	return CloseAnimation(animationId);
+}
+
+AnimationBase* FChromaSDKPluginModule::GetAnimationInstance(int animationId)
+{
+	if (_mAnimations.find(animationId) != _mAnimations.end())
+	{
+		return _mAnimations[animationId];
+	}
+	return nullptr;
+}
+
+int FChromaSDKPluginModule::GetFrameCount(int animationId)
+{
+	AnimationBase* animation = GetAnimationInstance(animationId);
+	if (nullptr == animation)
+	{
+		return -1;
+	}
+	return animation->GetFrameCount();
+}
+
+int FChromaSDKPluginModule::GetFrameCountName(const char* path)
+{
+	int animationId = GetAnimation(path);
+	if (animationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("GetFrameCountName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		return -1;
+	}
+	return GetFrameCount(animationId);
+}
+
+void FChromaSDKPluginModule::SetKeyColor(int animationId, int frameId, int rzkey, COLORREF color)
+{
+	StopAnimation(animationId);
+	AnimationBase* animation = GetAnimationInstance(animationId);
+	if (nullptr == animation)
+	{
+		return;
+	}
+	if (animation->GetDeviceType() == EChromaSDKDeviceTypeEnum::DE_2D &&
+		animation->GetDeviceId() == (int)EChromaSDKDevice2DEnum::DE_Keyboard)
+	{
+		Animation2D* animation2D = (Animation2D*)(animation);
+		vector<FChromaSDKColorFrame2D>& frames = animation2D->GetFrames();
+		if (frameId >= 0 &&
+			frameId < frames.size())
+		{
+			FChromaSDKColorFrame2D& frame = frames[frameId];
+			frame.Colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = ToLinearColor(color);
+		}
+	}
+}
+
+void FChromaSDKPluginModule::SetKeyColorName(const char* path, int frameId, int rzkey, COLORREF color)
+{
+	int animationId = GetAnimation(path);
+	if (animationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SetKeyColorName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		return;
+	}
+	SetKeyColor(animationId, frameId, rzkey, color);
+}
+
+void FChromaSDKPluginModule::Load(int animationId)
+{
+	AnimationBase* animation = GetAnimationInstance(animationId);
+	if (nullptr == animation)
+	{
+		return;
+	}
+	animation->Load();
+}
+
+void FChromaSDKPluginModule::LoadName(const char* path)
+{
+	int animationId = GetAnimation(path);
+	if (animationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("LoadName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		return;
+	}
+	Load(animationId);
+}
+
+void FChromaSDKPluginModule::Unload(int animationId)
+{
+	AnimationBase* animation = GetAnimationInstance(animationId);
+	if (nullptr == animation)
+	{
+		return;
+	}
+	animation->Unload();
+}
+
+void FChromaSDKPluginModule::UnloadName(const char* path)
+{
+	int animationId = GetAnimation(path);
+	if (animationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UnloadName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		return;
+	}
+	Unload(animationId);
+}
+
 int FChromaSDKPluginModule::GetAnimation(const char* path)
 {
 	for (std::map<string, int>::iterator it = _mAnimationMapID.begin(); it != _mAnimationMapID.end(); ++it)
@@ -702,48 +818,6 @@ int FChromaSDKPluginModule::GetAnimation(const char* path)
 		}
 	}
 	return OpenAnimation(path);
-}
-
-void FChromaSDKPluginModule::StopAnimationByType(int animationId, AnimationBase* animation)
-{
-	if (animation == nullptr)
-	{
-		return;
-	}
-
-	switch (animation->GetDeviceType())
-	{
-	case EChromaSDKDeviceTypeEnum::DE_1D:
-		{
-			Animation1D* animation1D = (Animation1D*)(animation);
-			EChromaSDKDevice1DEnum device = animation1D->GetDevice();
-			if (_mPlayMap1D.find(device) != _mPlayMap1D.end())
-			{
-				int prevAnimation = _mPlayMap1D[device];
-				if (prevAnimation != -1)
-				{
-					StopAnimation(prevAnimation);
-				}
-			}
-			_mPlayMap1D[device] = animationId;
-		}
-		break;
-	case EChromaSDKDeviceTypeEnum::DE_2D:
-		{
-			Animation2D* animation2D = (Animation2D*)(animation);
-			EChromaSDKDevice2DEnum device = animation2D->GetDevice();
-			if (_mPlayMap2D.find(device) != _mPlayMap2D.end())
-			{
-				int prevAnimation = _mPlayMap2D[device];
-				if (prevAnimation != -1)
-				{
-					StopAnimation(prevAnimation);
-				}
-			}
-			_mPlayMap2D[device] = animationId;
-		}
-		break;
-	}
 }
 
 void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
@@ -760,13 +834,22 @@ void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
 			UE_LOG(LogTemp, Error, TEXT("PlayAnimation: Animation is null! id=%d"), animationId);
 			return;
 		}
-		StopAnimationByType(animationId, animation);
+		StopAnimationType(animation->GetDeviceTypeId(), animation->GetDeviceId());
+		switch (animation->GetDeviceType())
+		{
+		case EChromaSDKDeviceTypeEnum::DE_1D:
+			_mPlayMap1D[(EChromaSDKDevice1DEnum)animation->GetDeviceId()] = animationId;
+			break;
+		case EChromaSDKDeviceTypeEnum::DE_2D:
+			_mPlayMap2D[(EChromaSDKDevice2DEnum)animation->GetDeviceId()] = animationId;
+			break;
+		}
 		UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *FString(UTF8_TO_TCHAR(animation->GetName().c_str())));
 		animation->Play(loop);
 	}
 }
 
-void FChromaSDKPluginModule::PlayAnimation(const char* path, bool loop)
+void FChromaSDKPluginModule::PlayAnimationName(const char* path, bool loop)
 {
 	if (!IsInitialized())
 	{
@@ -775,7 +858,7 @@ void FChromaSDKPluginModule::PlayAnimation(const char* path, bool loop)
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayAnimation: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		UE_LOG(LogTemp, Error, TEXT("PlayAnimationName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return;
 	}
 	PlayAnimation(animationId, loop);
@@ -800,7 +883,7 @@ void FChromaSDKPluginModule::StopAnimation(int animationId)
 	}
 }
 
-void FChromaSDKPluginModule::StopAnimation(const char* path)
+void FChromaSDKPluginModule::StopAnimationName(const char* path)
 {
 	if (!IsInitialized())
 	{
@@ -809,10 +892,43 @@ void FChromaSDKPluginModule::StopAnimation(const char* path)
 	int animationId = GetAnimation(path);
 	if (animationId < 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("StopAnimation: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		UE_LOG(LogTemp, Error, TEXT("StopAnimationName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
 		return;
 	}
 	StopAnimation(animationId);
+}
+
+void FChromaSDKPluginModule::StopAnimationType(int deviceType, int device)
+{
+	switch ((EChromaSDKDeviceTypeEnum)deviceType)
+	{
+	case EChromaSDKDeviceTypeEnum::DE_1D:
+		{
+			if (_mPlayMap1D.find((EChromaSDKDevice1DEnum)device) != _mPlayMap1D.end())
+			{
+				int prevAnimation = _mPlayMap1D[(EChromaSDKDevice1DEnum)device];
+				if (prevAnimation != -1)
+				{
+					StopAnimation(prevAnimation);
+					_mPlayMap1D[(EChromaSDKDevice1DEnum)device] = -1;
+				}
+			}
+		}
+		break;
+	case EChromaSDKDeviceTypeEnum::DE_2D:
+		{
+			if (_mPlayMap2D.find((EChromaSDKDevice2DEnum)device) != _mPlayMap2D.end())
+			{
+				int prevAnimation = _mPlayMap2D[(EChromaSDKDevice2DEnum)device];
+				if (prevAnimation != -1)
+				{
+					StopAnimation(prevAnimation);
+					_mPlayMap2D[(EChromaSDKDevice2DEnum)device] = -1;
+				}
+			}
+		}
+		break;
+	}
 }
 
 bool FChromaSDKPluginModule::IsAnimationPlaying(int animationId)
@@ -834,7 +950,7 @@ bool FChromaSDKPluginModule::IsAnimationPlaying(int animationId)
 	return false;
 }
 
-bool FChromaSDKPluginModule::IsAnimationPlaying(const char* path)
+bool FChromaSDKPluginModule::IsAnimationPlayingName(const char* path)
 {
 	if (!IsInitialized())
 	{
@@ -847,6 +963,38 @@ bool FChromaSDKPluginModule::IsAnimationPlaying(const char* path)
 		return false;
 	}
 	return IsAnimationPlaying(animationId);
+}
+
+bool FChromaSDKPluginModule::IsAnimationPlayingType(int deviceType, int device)
+{
+	switch ((EChromaSDKDeviceTypeEnum)deviceType)
+	{
+	case EChromaSDKDeviceTypeEnum::DE_1D:
+		{
+			if (_mPlayMap1D.find((EChromaSDKDevice1DEnum)device) != _mPlayMap1D.end())
+			{
+				int prevAnimation = _mPlayMap1D[(EChromaSDKDevice1DEnum)device];
+				if (prevAnimation != -1)
+				{
+					return IsAnimationPlaying(prevAnimation);
+				}
+			}
+		}
+		break;
+	case EChromaSDKDeviceTypeEnum::DE_2D:
+		{
+			if (_mPlayMap2D.find((EChromaSDKDevice2DEnum)device) != _mPlayMap2D.end())
+			{
+				int prevAnimation = _mPlayMap2D[(EChromaSDKDevice2DEnum)device];
+				if (prevAnimation != -1)
+				{
+					return IsAnimationPlaying(prevAnimation);
+				}
+			}
+		}
+		break;
+	}
+	return false;
 }
 
 #include "HideWindowsPlatformTypes.h"

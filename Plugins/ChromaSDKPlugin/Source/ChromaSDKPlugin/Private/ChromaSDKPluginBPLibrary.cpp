@@ -782,7 +782,7 @@ void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool
 	path += animationName + ".chroma";
 	//UE_LOG(LogTemp, Log, TEXT("PlayAnimation: %s"), *path);
 	const char* pathArg = TCHAR_TO_ANSI(*path);
-	FChromaSDKPluginModule::Get().PlayAnimation(pathArg, loop);
+	FChromaSDKPluginModule::Get().PlayAnimationName(pathArg, loop);
 #endif
 }
 
@@ -793,7 +793,7 @@ void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName)
 	path += animationName + ".chroma";
 	//UE_LOG(LogTemp, Log, TEXT("StopAnimation: %s"), *path);
 	const char* pathArg = TCHAR_TO_ANSI(*path);
-	FChromaSDKPluginModule::Get().StopAnimation(pathArg);
+	FChromaSDKPluginModule::Get().StopAnimationName(pathArg);
 #endif
 }
 
@@ -804,7 +804,7 @@ bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName)
 	path += animationName + ".chroma";
 	//UE_LOG(LogTemp, Log, TEXT("IsAnimationPlaying: %s"), *path);
 	const char* pathArg = TCHAR_TO_ANSI(*path);
-	return FChromaSDKPluginModule::Get().IsAnimationPlaying(pathArg);
+	return FChromaSDKPluginModule::Get().IsAnimationPlayingName(pathArg);
 #else
 	return false;
 #endif

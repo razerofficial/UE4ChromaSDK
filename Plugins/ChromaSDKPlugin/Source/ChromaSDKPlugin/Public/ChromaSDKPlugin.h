@@ -77,14 +77,25 @@ public:
 	static int GetMaxColumn(const EChromaSDKDevice2DEnum& device);
 	int OpenAnimation(const char* path);
 	int CloseAnimation(int animationId);
+	int CloseAnimationName(const char* path);
 	int GetAnimation(const char* path);
-	void StopAnimationByType(int animationId, ChromaSDK::AnimationBase* animation);
+	ChromaSDK::AnimationBase* GetAnimationInstance(int animationId);
 	void PlayAnimation(int animationId, bool loop);
-	void PlayAnimation(const char* path, bool loop);
+	void PlayAnimationName(const char* path, bool loop);
 	void StopAnimation(int animationId);
-	void StopAnimation(const char* path);
+	void StopAnimationName(const char* path);
+	void StopAnimationType(int deviceType, int device);
 	bool IsAnimationPlaying(int animationId);
-	bool IsAnimationPlaying(const char* path);
+	bool IsAnimationPlayingName(const char* path);
+	bool IsAnimationPlayingType(int deviceType, int device);
+	int GetFrameCount(int animationId);
+	int GetFrameCountName(const char* path);
+	void SetKeyColor(int animationId, int frameId, int rzkey, COLORREF color);
+	void SetKeyColorName(const char* path, int frameId, int rzkey, COLORREF color);
+	void Load(int animationId);
+	void LoadName(const char* path);
+	void Unload(int animationId);
+	void UnloadName(const char* path);
 #endif
 
 private:

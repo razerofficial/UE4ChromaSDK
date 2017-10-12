@@ -59,6 +59,11 @@ bool Animation2D::SetDevice(EChromaSDKDevice2DEnum device)
 	}
 }
 
+int Animation2D::GetDeviceId()
+{
+	return (int)GetDevice();
+}
+
 vector<FChromaSDKColorFrame2D>& Animation2D::GetFrames()
 {
 	return _mFrames;

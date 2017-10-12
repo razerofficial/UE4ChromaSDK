@@ -22,6 +22,11 @@ void AnimationBase::SetName(const std::string& name)
 	_mName = name;
 }
 
+int AnimationBase::GetDeviceTypeId()
+{
+	return (int)GetDeviceType();
+}
+
 int AnimationBase::GetCurrentFrame()
 {
 	return _mCurrentFrame;

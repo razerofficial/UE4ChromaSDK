@@ -14,6 +14,8 @@ namespace ChromaSDK
 		const std::string& GetName();
 		void SetName(const std::string& name);
 		virtual EChromaSDKDeviceTypeEnum GetDeviceType() = 0;
+		int GetDeviceTypeId();
+		virtual int GetDeviceId() = 0;
 		int GetCurrentFrame();
 		void SetCurrentFrame(int index);
 		virtual int GetFrameCount() = 0;
