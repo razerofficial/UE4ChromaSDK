@@ -863,6 +863,119 @@ void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName, co
 #endif
 }
 
+void UChromaSDKPluginBPLibrary::SetKeysColor(int animationId, int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	int colorArg = FChromaSDKPluginModule::ToBGR(color);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			FChromaSDKPluginModule::Get().SetKeyColor(animationId, frameIndex, rzkey, colorArg);
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	int colorArg = FChromaSDKPluginModule::ToBGR(color);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			FChromaSDKPluginModule::Get().SetKeyColorName(pathArg, frameIndex, rzkey, colorArg);
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::SetKeyColorAllFrames(int animationId, const EChromaSDKKeyboardKey& key, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	int rzkey = _sKeyboardEnumMap[key];
+	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+	{
+		int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCount(animationId);
+		int colorArg = FChromaSDKPluginModule::ToBGR(color);
+		for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex)
+		{
+			FChromaSDKPluginModule::Get().SetKeyColor(animationId, frameIndex, rzkey, colorArg);
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animationName, const EChromaSDKKeyboardKey& key, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	int rzkey = _sKeyboardEnumMap[key];
+	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+	{
+		int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCountName(pathArg);
+		int colorArg = FChromaSDKPluginModule::ToBGR(color);
+		for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex)
+		{
+			FChromaSDKPluginModule::Get().SetKeyColorName(pathArg, frameIndex, rzkey, colorArg);
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::SetKeysColorAllFrames(int animationId, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCount(animationId);
+	int colorArg = FChromaSDKPluginModule::ToBGR(color);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex)
+			{
+				FChromaSDKPluginModule::Get().SetKeyColor(animationId, frameIndex, rzkey, colorArg);
+			}
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+{
+#if PLATFORM_WINDOWS
+	FString path = FPaths::GameContentDir();
+	path += animationName + ".chroma";
+	const char* pathArg = TCHAR_TO_ANSI(*path);
+	int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCountName(pathArg);
+	int colorArg = FChromaSDKPluginModule::ToBGR(color);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex)
+			{
+				FChromaSDKPluginModule::Get().SetKeyColorName(pathArg, frameIndex, rzkey, colorArg);
+			}
+		}
+	}
+#endif
+}
+
 void UChromaSDKPluginBPLibrary::CopyKeyColor(int sourceAnimationId, int targetAnimationId, int frameIndex, const EChromaSDKKeyboardKey& key)
 {
 #if PLATFORM_WINDOWS
@@ -887,6 +1000,86 @@ void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationN
 	if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
 	{
 		FChromaSDKPluginModule::Get().CopyKeyColorName(sourcePathArg, targetPathArg, frameIndex, rzkey);
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::CopyKeysColor(int sourceAnimationId, int targetAnimationId, int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys)
+{
+#if PLATFORM_WINDOWS
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			FChromaSDKPluginModule::Get().CopyKeyColor(sourceAnimationId, targetAnimationId, frameIndex, rzkey);
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys)
+{
+#if PLATFORM_WINDOWS
+	FString sourcePath = FPaths::GameContentDir();
+	sourcePath += sourceAnimationName + ".chroma";
+	const char* sourcePathArg = TCHAR_TO_ANSI(*sourcePath);
+	FString targetPath = FPaths::GameContentDir();
+	targetPath += targetAnimationName + ".chroma";
+	const char* targetPathArg = TCHAR_TO_ANSI(*targetPath);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			FChromaSDKPluginModule::Get().CopyKeyColorName(sourcePathArg, targetPathArg, frameIndex, rzkey);
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::CopyKeysColorAllFrames(int sourceAnimationId, int targetAnimationId, const TArray<EChromaSDKKeyboardKey>& keys)
+{
+#if PLATFORM_WINDOWS
+	int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCount(targetAnimationId);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex)
+			{
+				FChromaSDKPluginModule::Get().CopyKeyColor(sourceAnimationId, targetAnimationId, frameIndex, rzkey);
+			}
+		}
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName, const TArray<EChromaSDKKeyboardKey>& keys)
+{
+#if PLATFORM_WINDOWS
+	FString sourcePath = FPaths::GameContentDir();
+	sourcePath += sourceAnimationName + ".chroma";
+	const char* sourcePathArg = TCHAR_TO_ANSI(*sourcePath);
+	FString targetPath = FPaths::GameContentDir();
+	targetPath += targetAnimationName + ".chroma";
+	const char* targetPathArg = TCHAR_TO_ANSI(*targetPath);
+	int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCountName(targetPathArg);
+	for (int k = 0; k < keys.Num(); ++k)
+	{
+		EChromaSDKKeyboardKey key = keys[k];
+		int rzkey = _sKeyboardEnumMap[key];
+		if (rzkey != ChromaSDK::Keyboard::RZKEY::RZKEY_INVALID)
+		{
+			for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex)
+			{
+				FChromaSDKPluginModule::Get().CopyKeyColorName(sourcePathArg, targetPathArg, frameIndex, rzkey);
+			}
+		}
 	}
 #endif
 }
