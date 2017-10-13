@@ -181,6 +181,10 @@ In the image below, a source animation color can be copied into a target animati
 
 ![image_47](images/image_47.png)
 
+In the image below, an array of keys are set to the colors from a source animation. Another array of keys is set to a specific linear color. All the animation frames are copied or assigned for a set of keys by calling the `AllFrames` method.
+
+![image_48](images/image_48.png)
+
 <a name="tutorials"></a>
 ## Tutorials
 
