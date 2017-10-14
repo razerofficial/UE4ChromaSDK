@@ -863,7 +863,8 @@ void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName, co
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::SetKeysColor(int animationId, int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+//void UChromaSDKPluginBPLibrary::SetKeysColor(int animationId, int frameIndex, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys, const FLinearColor& color) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::SetKeysColor(int animationId, int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	int colorArg = FChromaSDKPluginModule::ToBGR(color);
@@ -879,7 +880,8 @@ void UChromaSDKPluginBPLibrary::SetKeysColor(int animationId, int frameIndex, co
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+//void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, const int frameIndex, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys, const FLinearColor& color) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	FString path = FPaths::GameContentDir();
@@ -933,7 +935,8 @@ void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animatio
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::SetKeysColorAllFrames(int animationId, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+//void UChromaSDKPluginBPLibrary::SetKeysColorAllFrames(int animationId, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys, const FLinearColor& color) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::SetKeysColorAllFrames(int animationId, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCount(animationId);
@@ -953,7 +956,8 @@ void UChromaSDKPluginBPLibrary::SetKeysColorAllFrames(int animationId, const TAr
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color)
+//void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys, const FLinearColor& color) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	FString path = FPaths::GameContentDir();
@@ -1004,7 +1008,8 @@ void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationN
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::CopyKeysColor(int sourceAnimationId, int targetAnimationId, int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys)
+//void UChromaSDKPluginBPLibrary::CopyKeysColor(int sourceAnimationId, int targetAnimationId, int frameIndex, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::CopyKeysColor(int sourceAnimationId, int targetAnimationId, int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	for (int k = 0; k < keys.Num(); ++k)
@@ -1019,7 +1024,8 @@ void UChromaSDKPluginBPLibrary::CopyKeysColor(int sourceAnimationId, int targetA
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys)
+//void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	FString sourcePath = FPaths::GameContentDir();
@@ -1040,7 +1046,8 @@ void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimation
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::CopyKeysColorAllFrames(int sourceAnimationId, int targetAnimationId, const TArray<EChromaSDKKeyboardKey>& keys)
+//void UChromaSDKPluginBPLibrary::CopyKeysColorAllFrames(int sourceAnimationId, int targetAnimationId, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::CopyKeysColorAllFrames(int sourceAnimationId, int targetAnimationId, const TArray<EChromaSDKKeyboardKey>& keys) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	int frameCount = FChromaSDKPluginModule::Get().GetAnimationFrameCount(targetAnimationId);
@@ -1059,7 +1066,8 @@ void UChromaSDKPluginBPLibrary::CopyKeysColorAllFrames(int sourceAnimationId, in
 #endif
 }
 
-void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName, const TArray<EChromaSDKKeyboardKey>& keys)
+//void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName, const TArray<TEnumAsByte<EChromaSDKKeyboardKey>>& keys) //(support 4.13 and below)___HACK_UE4_WANTS_GAME_MODE
+void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName, const TArray<EChromaSDKKeyboardKey>& keys) //(support above 4.13)___HACK_UE4_WANTS_BASE_GAME_MODE
 {
 #if PLATFORM_WINDOWS
 	FString sourcePath = FPaths::GameContentDir();
