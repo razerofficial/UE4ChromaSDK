@@ -98,22 +98,22 @@ void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool
 <br>
 
 
-**StopAnimation**
-
-Stop the *.chroma Animation
-
-```c++
-void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName);
-```
-<br>
-
-
 **IsAnimationPlaying**
 
 Is the *.chroma Animation playing?
 
 ```c++
 bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName);
+```
+<br>
+
+
+**IsAnimationTypePlaying**
+
+Is the Animation type playing?"
+
+```c++
+bool UChromaSDKPluginBPLibrary::IsAnimationTypePlaying(const EChromaSDKDeviceEnum& device);
 ```
 <br>
 
@@ -128,6 +128,16 @@ void UChromaSDKPluginBPLibrary::PlayAnimations(const TArray<FString>& animationN
 <br>
 
 
+**StopAnimation**
+
+Stop the *.chroma Animation
+
+```c++
+void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName);
+```
+<br>
+
+
 **StopAnimations**
 
 Stop an array *.chroma Animations
@@ -138,51 +148,86 @@ void UChromaSDKPluginBPLibrary::StopAnimations(const TArray<FString>& animationN
 <br>
 
 
+**StopAnimationType**
+
+Stop playing the Animation type
+
+```c++
+void UChromaSDKPluginBPLibrary::StopAnimationType(const EChromaSDKDeviceEnum& device);
+```
+<br>
+
+
 **SetKeyColorName**
 
 `SetKeyColorName` - Set the animation frame's key to the supplied color
+
+```c++
+void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName, const int frameIndex, const EChromaSDKKeyboardKey& key, const FLinearColor& color);
+```
 <br>
 
 
 **SetKeysColorName**
 
 Set the animation frame to the supplied color for a set of keys
+```c++
+void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color);
+```
 <br>
 
 
 **SetKeyColorAllFramesName**
 
 Set the key to the supplied color for all animation frames
+```c++
+void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animationName, const EChromaSDKKeyboardKey& key, const FLinearColor& color);
+```
 <br>
 
 
 **SetKeysColorAllFramesName**
 
 Set the keys to the supplied color for all animation frames
+```c++
+void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color);
+```
 <br>
 
 
 **CopyKeyColorName**
 
 Copy color from a source animation to a target animation for a key
+```c++
+void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const EChromaSDKKeyboardKey& key);
+```
 <br>
 
 
 **CopyKeysColorName**
 
 Copy color from a source animation to a target animation for a set of keys
+```c++
+void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys);
+```
 <br>
 
 
 **CopyKeysColorAllFramesName**
 
 Copy color from a source animation to a target animation for a set of keys for all frames
+```c++
+void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName, const TArray<EChromaSDKKeyboardKey>& keys);
+```
 <br>
 
 
 **GetFrameCountName**
 
 Get the .chroma animation frame count
+```c++
+int UChromaSDKPluginBPLibrary::GetFrameCountName(const FString& animationName);
+```
 <br>
 
 
