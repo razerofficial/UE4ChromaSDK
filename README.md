@@ -141,41 +141,49 @@ void UChromaSDKPluginBPLibrary::StopAnimations(const TArray<FString>& animationN
 **SetKeyColorName**
 
 `SetKeyColorName` - Set the animation frame's key to the supplied color
+<br>
 
 
 **SetKeysColorName**
 
-`SetKeysColorName` - Set the animation frame to the supplied color for a set of keys
+Set the animation frame to the supplied color for a set of keys
+<br>
 
 
 **SetKeyColorAllFramesName**
 
-`SetKeyColorAllFramesName` - Set the key to the supplied color for all animation frames
+Set the key to the supplied color for all animation frames
+<br>
 
 
 **SetKeysColorAllFramesName**
 
-`SetKeysColorAllFramesName` - Set the keys to the supplied color for all animation frames
+Set the keys to the supplied color for all animation frames
+<br>
 
 
 **CopyKeyColorName**
 
-`CopyKeyColorName` - Copy color from a source animation to a target animation for a key
+Copy color from a source animation to a target animation for a key
+<br>
 
 
 **CopyKeysColorName**
 
-`CopyKeysColorName` - Copy color from a source animation to a target animation for a set of keys
+Copy color from a source animation to a target animation for a set of keys
+<br>
 
 
 **CopyKeysColorAllFramesName**
 
-`CopyKeysColorAllFramesName` - Copy color from a source animation to a target animation for a set of keys for all frames
+Copy color from a source animation to a target animation for a set of keys for all frames
+<br>
 
 
 **GetFrameCountName**
 
-`GetFrameCountName` - Get the .chroma animation frame count
+Get the .chroma animation frame count
+<br>
 
 
 <a name="key-bndings"></a>
