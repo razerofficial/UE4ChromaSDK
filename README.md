@@ -160,10 +160,11 @@ void UChromaSDKPluginBPLibrary::StopAnimationType(const EChromaSDKDeviceEnum& de
 
 **SetKeyColorName**
 
-`SetKeyColorName` - Set the animation frame's key to the supplied color
+Set the animation frame's key to the supplied color
 
 ```c++
-void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName, const int frameIndex, const EChromaSDKKeyboardKey& key, const FLinearColor& color);
+void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName,
+    const int frameIndex, const EChromaSDKKeyboardKey& key, const FLinearColor& color);
 ```
 <br>
 
@@ -172,7 +173,8 @@ void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName, co
 
 Set the animation frame to the supplied color for a set of keys
 ```c++
-void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color);
+void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName,
+    const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color);
 ```
 <br>
 
@@ -181,7 +183,8 @@ void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName, c
 
 Set the key to the supplied color for all animation frames
 ```c++
-void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animationName, const EChromaSDKKeyboardKey& key, const FLinearColor& color);
+void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animationName,
+    const EChromaSDKKeyboardKey& key, const FLinearColor& color);
 ```
 <br>
 
@@ -190,7 +193,8 @@ void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animatio
 
 Set the keys to the supplied color for all animation frames
 ```c++
-void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName, const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color);
+void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animationName,
+    const TArray<EChromaSDKKeyboardKey>& keys, const FLinearColor& color);
 ```
 <br>
 
@@ -199,7 +203,8 @@ void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animati
 
 Copy color from a source animation to a target animation for a key
 ```c++
-void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const EChromaSDKKeyboardKey& key);
+void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationName,
+    const FString& targetAnimationName, const int frameIndex, const EChromaSDKKeyboardKey& key);
 ```
 <br>
 
@@ -208,7 +213,8 @@ void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationN
 
 Copy color from a source animation to a target animation for a set of keys
 ```c++
-void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName, const FString& targetAnimationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys);
+void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimationName,
+    const FString& targetAnimationName, const int frameIndex, const TArray<EChromaSDKKeyboardKey>& keys);
 ```
 <br>
 
@@ -217,7 +223,8 @@ void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimation
 
 Copy color from a source animation to a target animation for a set of keys for all frames
 ```c++
-void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName, const TArray<EChromaSDKKeyboardKey>& keys);
+void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& sourceAnimationName,
+    const FString& targetAnimationName, const TArray<EChromaSDKKeyboardKey>& keys);
 ```
 <br>
 
