@@ -7,6 +7,7 @@
 * [Prerequisites](#prerequisites)
 * [Engine Versions](#engine-versions)
 * [Quick Start](#quick-start)
+* [API](#api)
 * [Key Bindings](#key-bindings)
 * [Tutorials](#tutorials)
 * [Usage](#usage)
@@ -70,6 +71,29 @@ AnimationName_Keypad.chroma
 AnimationName_Mouse.chroma
 AnimationName_Mousepad.chroma
 ```
+
+
+<a name="api"></a>
+## API
+
+* [CopyKeyColorName](#CopyKeyColorName)
+* [CopyKeysColorName](#CopyKeysColorName)
+* [CopyKeysColorAllFramesName](#CopyKeysColorAllFramesName)
+* [GetFrameCountName](#GetFrameCountName)
+* [IsAnimationPlaying](#IsAnimationPlaying)
+* [IsAnimationTypePlaying](#IsAnimationTypePlaying)
+* [PlayAnimation](#PlayAnimation)
+* [PlayAnimations](#PlayAnimations)
+* [PlayAnimationComposite](#PlayAnimationComposite)
+* [SetKeyColorAllFramesName](#SetKeyColorAllFramesName)
+* [SetKeyColorName](#SetKeyColorName)
+* [SetKeysColorAllFramesName](#SetKeysColorAllFramesName)
+* [SetKeysColorName](#SetKeysColorName)
+* [StopAnimation](#StopAnimation)
+* [StopAnimations](#StopAnimations)
+* [StopAnimationType](#StopAnimationType)
+* [StopAnimationComposite](#StopAnimationComposite)
+
 
 **PlayAnimationComposite**
 
