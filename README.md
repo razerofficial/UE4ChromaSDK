@@ -95,6 +95,7 @@ AnimationName_Mousepad.chroma
 * [StopAnimationComposite](#StopAnimationComposite)
 
 
+<a name="PlayAnimationComposite"></a>
 **PlayAnimationComposite**
 
 Play a set of *_Device.chroma Animations. With `loop` set to false, the animations will play once. With `loop` set to true, the animations will loop.
@@ -104,6 +105,7 @@ void UChromaSDKPluginBPLibrary::PlayAnimationComposite(const FString& animationN
 ```
 <br>
 
+<a name="StopAnimationComposite"></a>
 **StopAnimationComposite**
 
 Stop a set of *_Device.chroma Animations
@@ -114,6 +116,7 @@ void UChromaSDKPluginBPLibrary::StopAnimationComposite(const FString& animationN
 <br>
 
 
+<a name="PlayAnimation"></a>
 **PlayAnimation**
 
 Play the *.chroma Animation. With `loop` set to false, the animation will play once. With `loop` set to true, the animation will loop.
@@ -124,6 +127,7 @@ void UChromaSDKPluginBPLibrary::PlayAnimation(const FString& animationName, bool
 <br>
 
 
+<a name="IsAnimationPlaying"></a>
 **IsAnimationPlaying**
 
 Is the *.chroma Animation playing?
@@ -134,6 +138,7 @@ bool UChromaSDKPluginBPLibrary::IsAnimationPlaying(const FString& animationName)
 <br>
 
 
+<a name="IsAnimationTypePlaying"></a>
 **IsAnimationTypePlaying**
 
 Is the Animation type playing?"
@@ -144,6 +149,7 @@ bool UChromaSDKPluginBPLibrary::IsAnimationTypePlaying(const EChromaSDKDeviceEnu
 <br>
 
 
+<a name="PlayAnimations"></a>
 **PlayAnimations**
 
 Play an array of *.chroma Animations
@@ -154,6 +160,7 @@ void UChromaSDKPluginBPLibrary::PlayAnimations(const TArray<FString>& animationN
 <br>
 
 
+<a name="StopAnimation"></a>
 **StopAnimation**
 
 Stop the *.chroma Animation
@@ -164,6 +171,7 @@ void UChromaSDKPluginBPLibrary::StopAnimation(const FString& animationName);
 <br>
 
 
+<a name="StopAnimations"></a>
 **StopAnimations**
 
 Stop an array *.chroma Animations
@@ -174,6 +182,7 @@ void UChromaSDKPluginBPLibrary::StopAnimations(const TArray<FString>& animationN
 <br>
 
 
+<a name="StopAnimationType"></a>
 **StopAnimationType**
 
 Stop playing the Animation type
@@ -184,6 +193,7 @@ void UChromaSDKPluginBPLibrary::StopAnimationType(const EChromaSDKDeviceEnum& de
 <br>
 
 
+<a name="SetKeyColorName"></a>
 **SetKeyColorName**
 
 Set the animation frame's key to the supplied color
@@ -195,6 +205,7 @@ void UChromaSDKPluginBPLibrary::SetKeyColorName(const FString& animationName,
 <br>
 
 
+<a name="SetKeysColorName"></a>
 **SetKeysColorName**
 
 Set the animation frame to the supplied color for a set of keys
@@ -205,6 +216,7 @@ void UChromaSDKPluginBPLibrary::SetKeysColorName(const FString& animationName,
 <br>
 
 
+<a name="SetKeyColorAllFramesName"></a>
 **SetKeyColorAllFramesName**
 
 Set the key to the supplied color for all animation frames
@@ -215,6 +227,7 @@ void UChromaSDKPluginBPLibrary::SetKeyColorAllFramesName(const FString& animatio
 <br>
 
 
+<a name="SetKeysColorAllFramesName"></a>
 **SetKeysColorAllFramesName**
 
 Set the keys to the supplied color for all animation frames
@@ -225,6 +238,7 @@ void UChromaSDKPluginBPLibrary::SetKeysColorAllFramesName(const FString& animati
 <br>
 
 
+<a name="CopyKeyColorName"></a>
 **CopyKeyColorName**
 
 Copy color from a source animation to a target animation for a key
@@ -235,6 +249,7 @@ void UChromaSDKPluginBPLibrary::CopyKeyColorName(const FString& sourceAnimationN
 <br>
 
 
+<a name="CopyKeysColorName"></a>
 **CopyKeysColorName**
 
 Copy color from a source animation to a target animation for a set of keys
@@ -245,6 +260,7 @@ void UChromaSDKPluginBPLibrary::CopyKeysColorName(const FString& sourceAnimation
 <br>
 
 
+<a name="CopyKeysColorAllFramesName"></a>
 **CopyKeysColorAllFramesName**
 
 Copy color from a source animation to a target animation for a set of keys for all frames
@@ -255,6 +271,7 @@ void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& source
 <br>
 
 
+<a name="GetFrameCountName"></a>
 **GetFrameCountName**
 
 Get the .chroma animation frame count
