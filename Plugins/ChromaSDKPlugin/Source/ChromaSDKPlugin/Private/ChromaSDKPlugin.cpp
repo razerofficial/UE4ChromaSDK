@@ -771,6 +771,42 @@ void FChromaSDKPluginModule::SetKeyColorName(const char* path, int frameId, int 
 	SetKeyColor(animationId, frameId, rzkey, color);
 }
 
+COLORREF FChromaSDKPluginModule::GetKeyColor(int animationId, int frameId, int rzkey)
+{
+	StopAnimation(animationId);
+	AnimationBase* animation = GetAnimationInstance(animationId);
+	if (nullptr == animation)
+	{
+		return 0;
+	}
+	if (animation->GetDeviceType() == EChromaSDKDeviceTypeEnum::DE_2D &&
+		animation->GetDeviceId() == (int)EChromaSDKDevice2DEnum::DE_Keyboard)
+	{
+		Animation2D* animation2D = (Animation2D*)(animation);
+		vector<FChromaSDKColorFrame2D>& frames = animation2D->GetFrames();
+		if (frameId >= 0 &&
+			frameId < frames.size())
+		{
+			FChromaSDKColorFrame2D& frame = frames[frameId];
+			FLinearColor& color = frame.Colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)];
+			return ToBGR(color);
+		}
+	}
+	return 0;
+}
+
+COLORREF FChromaSDKPluginModule::GetKeyColorName(const char* path, int frameId, int rzkey)
+{
+	int animationId = GetAnimation(path);
+	if (animationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("GetKeyColorName: Animation not found! %s"), *FString(UTF8_TO_TCHAR(path)));
+		return 0;
+	}
+	return GetKeyColor(animationId, frameId, rzkey);
+}
+
+
 void FChromaSDKPluginModule::CopyKeyColor(int sourceAnimationId, int targetAnimationId, int frameId, int rzkey)
 {
 	StopAnimation(targetAnimationId);
@@ -834,6 +870,76 @@ void FChromaSDKPluginModule::CopyKeyColorName(const char* sourceAnimation, const
 	}
 	CopyKeyColor(sourceAnimationId, targetAnimationId, frameId, rzkey);
 }
+
+
+void FChromaSDKPluginModule::CopyNonZeroKeyColor(int sourceAnimationId, int targetAnimationId, int frameId, int rzkey)
+{
+	StopAnimation(targetAnimationId);
+	AnimationBase* sourceAnimation = GetAnimationInstance(sourceAnimationId);
+	if (nullptr == sourceAnimation)
+	{
+		return;
+	}
+	AnimationBase* targetAnimation = GetAnimationInstance(targetAnimationId);
+	if (nullptr == targetAnimation)
+	{
+		return;
+	}
+	if (sourceAnimation->GetDeviceType() != EChromaSDKDeviceTypeEnum::DE_2D ||
+		sourceAnimation->GetDeviceId() != (int)EChromaSDKDevice2DEnum::DE_Keyboard)
+	{
+		return;
+	}
+	if (targetAnimation->GetDeviceType() != EChromaSDKDeviceTypeEnum::DE_2D ||
+		targetAnimation->GetDeviceId() != (int)EChromaSDKDevice2DEnum::DE_Keyboard)
+	{
+		return;
+	}
+	if (frameId < 0)
+	{
+		return;
+	}
+	Animation2D* sourceAnimation2D = (Animation2D*)(sourceAnimation);
+	Animation2D* targetAnimation2D = (Animation2D*)(targetAnimation);
+	vector<FChromaSDKColorFrame2D>& sourceFrames = sourceAnimation2D->GetFrames();
+	vector<FChromaSDKColorFrame2D>& targetFrames = targetAnimation2D->GetFrames();
+	if (sourceFrames.size() == 0)
+	{
+		return;
+	}
+	if (targetFrames.size() == 0)
+	{
+		return;
+	}
+	if (frameId < targetFrames.size())
+	{
+		FChromaSDKColorFrame2D& sourceFrame = sourceFrames[frameId % sourceFrames.size()];
+		FChromaSDKColorFrame2D& targetFrame = targetFrames[frameId];
+		FLinearColor& color = sourceFrame.Colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)];
+		if (ToBGR(color) != 0)
+		{
+			targetFrame.Colors[HIBYTE(rzkey)].Colors[LOBYTE(rzkey)] = color;
+		}
+	}
+}
+
+void FChromaSDKPluginModule::CopyNonZeroKeyColorName(const char* sourceAnimation, const char* targetAnimation, int frameId, int rzkey)
+{
+	int sourceAnimationId = GetAnimation(sourceAnimation);
+	if (sourceAnimationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CopyNonZeroKeyColorName: Source Animation not found! %s"), *FString(UTF8_TO_TCHAR(sourceAnimation)));
+		return;
+	}
+	int targetAnimationId = GetAnimation(targetAnimation);
+	if (targetAnimationId < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CopyNonZeroKeyColorName: Target Animation not found! %s"), *FString(UTF8_TO_TCHAR(targetAnimation)));
+		return;
+	}
+	CopyNonZeroKeyColor(sourceAnimationId, targetAnimationId, frameId, rzkey);
+}
+
 
 void FChromaSDKPluginModule::LoadAnimation(int animationId)
 {

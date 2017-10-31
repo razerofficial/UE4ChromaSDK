@@ -92,8 +92,12 @@ public:
 	int GetAnimationFrameCountName(const char* path);
 	void SetKeyColor(int animationId, int frameId, int rzkey, COLORREF color);
 	void SetKeyColorName(const char* path, int frameId, int rzkey, COLORREF color);
+	COLORREF GetKeyColor(int animationId, int frameId, int rzkey);
+	COLORREF GetKeyColorName(const char* path, int frameId, int rzkey);
 	void CopyKeyColor(int sourceAnimationId, int targetAnimationId, int frameId, int rzkey);
 	void CopyKeyColorName(const char* sourceAnimation, const char* targetAnimation, int frameId, int rzkey);
+	void CopyNonZeroKeyColor(int sourceAnimationId, int targetAnimationId, int frameId, int rzkey);
+	void CopyNonZeroKeyColorName(const char* sourceAnimation, const char* targetAnimation, int frameId, int rzkey);
 	void LoadAnimation(int animationId);
 	void LoadAnimationName(const char* path);
 	void UnloadAnimation(int animationId);
