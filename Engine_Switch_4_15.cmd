@@ -5,4 +5,5 @@ IF NOT EXIST %APP% ECHO UnrealEngineVersionChanger needs to be compiled!
 IF EXIST %APP% CALL "UnrealEngineVersionChanger\bin\Debug\UnrealEngineVersionChanger.exe" 4.15
 COPY /Y UE4ChromaSDK_4_15.uproject UE4ChromaSDK.uproject
 CALL SwitchEngineVersion.cmd
+START "" OpenPluginBinaries.cmd
 "C:\Program Files\7-Zip\7zFM.exe" "%CD%\ChromaSDKPlugin_4_15.zip\ChromaSDKPlugin\Binaries\Win64\"
