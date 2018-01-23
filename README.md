@@ -61,7 +61,7 @@
 
 **Set of Animations**
 
-A set of animations refers to the following given an `AnimationName`. 
+A set of animations refers to the following given an `AnimationName`.
 
 ```
 AnimationName_ChromaLink.chroma
@@ -76,14 +76,22 @@ AnimationName_Mousepad.chroma
 <a name="api"></a>
 ## API
 
+[ChromaSDKPluginBPLibrary](tree/master/Plugins/ChromaSDKPlugin/Source/ChromaSDKPlugin/Public/ChromaSDKPluginBPLibrary.h) - Blueprint Library
+
+* [ClearAnimationType](#ClearAnimationType)
+* [ClearAll](#ClearAll)
 * [CopyKeyColorName](#CopyKeyColorName)
 * [CopyKeysColorName](#CopyKeysColorName)
 * [CopyKeysColorAllFramesName](#CopyKeysColorAllFramesName)
 * [CopyNonZeroKeyColorName](#CopyNonZeroKeyColorName)
 * [CopyNonZeroKeysColorName](#CopyNonZeroKeysColorName)
 * [CopyNonZeroKeysColorAllFramesName](#CopyNonZeroKeysColorAllFramesName)
+* [GetAnimationCount](#GetAnimationCount)
+* [GetAnimationIdByIndex](#GetAnimationIdByIndex)
+* [GetAnimationName](#GetAnimationName)
 * [GetFrameCountName](#GetFrameCountName)
 * [GetKeyColorName](#GetKeyColorName)
+* [GetPlayingAnimationCount](#GetPlayingAnimationCount)
 * [IsAnimationPlaying](#IsAnimationPlaying)
 * [IsAnimationTypePlaying](#IsAnimationTypePlaying)
 * [PlayAnimation](#PlayAnimation)
@@ -93,6 +101,7 @@ AnimationName_Mousepad.chroma
 * [SetKeyColorName](#SetKeyColorName)
 * [SetKeysColorAllFramesName](#SetKeysColorAllFramesName)
 * [SetKeysColorName](#SetKeysColorName)
+* [StopAll](#StopAll)
 * [StopAnimation](#StopAnimation)
 * [StopAnimations](#StopAnimations)
 * [StopAnimationType](#StopAnimationType)
@@ -581,10 +590,10 @@ enum class EChromaSDKMouseLed : uint8
 
 1. bool UChromaSDKPluginBPLibrary::IsPlatformWindows()
     * Returns true if the platform is windows. Although this call works on all platforms, all the remaining BP methods only work on the Windows platform
-    
+
 2. int UChromaSDKPluginBPLibrary::ChromaSDKInit()
     * Returns the result of calling ChromaSDK::Init(). Initializes the ChromaSDK.
-    
+
 3. int UChromaSDKPluginBPLibrary::ChromaSDKUnInit()
     * Returns the result of calling ChromaSDK::UnInit. Uninitializes the ChromaSDK.
 
@@ -602,7 +611,7 @@ enum class EChromaSDKMouseLed : uint8
 
 8. int UChromaSDKPluginBPLibrary::ChromaSDKSetEffect(const FChromaSDKGuid&amp; effectId)
     * Returns the result of calling ChromaSDK::SetEffect given the effect identifier. Activates the given effect.
-    
+
 9. int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid&amp; effectId)
     * Returns the result of calling ChromaSDK::DeleteEffect given the effect identifier. Deletes the given effect.
 
@@ -689,7 +698,7 @@ If the `Windows` platform is detected, the `ChromaSDKUninit` custom event is cal
 **int UChromaSDKPluginBPLibrary::ChromaSDKInit()**
 
 `Init` returns the result of calling ChromaSDK::Init(). Initializes the ChromaSDK. A result of zero indicates success. Upon success, effects can be created, set, and deleted.
-    
+
 ![image_17](images/image_17.png)
 
 ### UnInit
@@ -751,7 +760,7 @@ After an effect has been deleted, check the result for success. After effects ha
 `SetEffect` returns the result of calling ChromaSDK::SetEffect given the effect identifier. Activates the given effect.
 
 ![image_21](images/image_21.png)
-    
+
 ### DeleteEffect
 
 **int UChromaSDKPluginBPLibrary::ChromaSDKDeleteEffect(const FChromaSDKGuid&amp; effectId)**
@@ -783,7 +792,7 @@ After an effect has been deleted, check the result for success. After effects ha
 `CreateRandomColors1D` returns a one-dimensional random color array given the device.
 
 ![image_25](images/image_25.png)
-    
+
 ### CreateRandomColors2D
 
 **TArray&lt;FChromaSDKColors&gt; CreateRandomColors2D(const EChromaSDKDevice2DEnum&amp; device)**
