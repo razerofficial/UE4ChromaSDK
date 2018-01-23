@@ -76,7 +76,7 @@ AnimationName_Mousepad.chroma
 <a name="api"></a>
 ## API
 
-[ChromaSDKPluginBPLibrary](tree/master/Plugins/ChromaSDKPlugin/Source/ChromaSDKPlugin/Public/ChromaSDKPluginBPLibrary.h) - Blueprint Library
+[ChromaSDKPluginBPLibrary](Plugins/ChromaSDKPlugin/Source/ChromaSDKPlugin/Public/ChromaSDKPluginBPLibrary.h) - Blueprint Library
 
 * [ClearAnimationType](#ClearAnimationType)
 * [ClearAll](#ClearAll)
