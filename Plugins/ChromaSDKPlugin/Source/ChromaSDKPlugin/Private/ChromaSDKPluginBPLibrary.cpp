@@ -787,6 +787,16 @@ int UChromaSDKPluginBPLibrary::GetAnimationId(const FString& animationName)
 #endif
 }
 
+FString UChromaSDKPluginBPLibrary::GetAnimationName(const int animationId)
+{
+#if PLATFORM_WINDOWS
+	FString result = FChromaSDKPluginModule::Get().GetAnimationName(animationId);
+	return result;
+#else
+	return TEXT("");
+#endif
+}
+
 void UChromaSDKPluginBPLibrary::LoadAnimation(const int animationId)
 {
 #if PLATFORM_WINDOWS
@@ -1252,6 +1262,80 @@ void UChromaSDKPluginBPLibrary::StopAnimationType(const EChromaSDKDeviceEnum& de
 		FChromaSDKPluginModule::Get().StopAnimationType((int)EChromaSDKDeviceTypeEnum::DE_1D, (int)EChromaSDKDevice1DEnum::DE_Mousepad);
 		break;
 	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::StopAll()
+{
+#if PLATFORM_WINDOWS
+	StopAnimationType(EChromaSDKDeviceEnum::DE_ChromaLink);
+	StopAnimationType(EChromaSDKDeviceEnum::DE_Headset);
+	StopAnimationType(EChromaSDKDeviceEnum::DE_Keyboard);
+	StopAnimationType(EChromaSDKDeviceEnum::DE_Keypad);
+	StopAnimationType(EChromaSDKDeviceEnum::DE_Mouse);
+	StopAnimationType(EChromaSDKDeviceEnum::DE_Mousepad);
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::ClearAnimationType(const EChromaSDKDeviceEnum& device)
+{
+#if PLATFORM_WINDOWS
+	StopAnimationType(device);
+
+	FChromaSDKEffectResult result = ChromaSDKCreateEffectNone(device);
+	if (result.Result == 0)
+	{
+		ChromaSDKSetEffect(result.EffectId);
+		ChromaSDKDeleteEffect(result.EffectId);
+	}
+#endif
+}
+
+void UChromaSDKPluginBPLibrary::ClearAll()
+{
+#if PLATFORM_WINDOWS
+	ClearAnimationType(EChromaSDKDeviceEnum::DE_ChromaLink);
+	ClearAnimationType(EChromaSDKDeviceEnum::DE_Headset);
+	ClearAnimationType(EChromaSDKDeviceEnum::DE_Keyboard);
+	ClearAnimationType(EChromaSDKDeviceEnum::DE_Keypad);
+	ClearAnimationType(EChromaSDKDeviceEnum::DE_Mouse);
+	ClearAnimationType(EChromaSDKDeviceEnum::DE_Mousepad);
+#endif
+}
+
+int UChromaSDKPluginBPLibrary::GetAnimationCount()
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().GetAnimationCount();
+#else
+	return -1;
+#endif
+}
+
+int UChromaSDKPluginBPLibrary::GetAnimationIdByIndex(int index)
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().GetAnimationId(index);
+#else
+	return -1;
+#endif
+}
+
+int UChromaSDKPluginBPLibrary::GetPlayingAnimationCount()
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().GetPlayingAnimationCount();
+#else
+	return -1;
+#endif
+}
+
+int UChromaSDKPluginBPLibrary::GetPlayingAnimationId(int index)
+{
+#if PLATFORM_WINDOWS
+	return FChromaSDKPluginModule::Get().GetPlayingAnimationId(index);
+#else
+	return -1;
 #endif
 }
 

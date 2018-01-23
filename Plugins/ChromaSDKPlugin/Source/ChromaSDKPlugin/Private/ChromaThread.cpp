@@ -41,12 +41,31 @@ void ChromaThread::ChromaWorker()
 		std::lock_guard<std::mutex> guard(_mMutex);
 
 		// update animations
+		vector<AnimationBase*> doneList = vector<AnimationBase*>();
 		for (unsigned int i = 0; i < _mAnimations.size(); ++i)
 		{
 			AnimationBase* animation = _mAnimations[i];
 			if (animation != nullptr)
 			{
 				animation->Update(deltaTime);
+				// no need to update animations that are no longer playing
+				if (!animation->IsPlaying())
+				{
+					doneList.push_back(animation);
+				}
+			}
+		}
+
+		for (int i = 0; i < doneList.size(); ++i)
+		{
+			AnimationBase* animation = doneList[i];
+			if (animation != nullptr)
+			{
+				auto it = find(_mAnimations.begin(), _mAnimations.end(), animation);
+				if (it != _mAnimations.end())
+				{
+					_mAnimations.erase(it);
+				}
 			}
 		}
 
@@ -101,4 +120,28 @@ void ChromaThread::RemoveAnimation(AnimationBase* animation)
 			_mAnimations.erase(it);
 		}
 	}
+}
+
+int ChromaThread::GetAnimationCount()
+{
+	lock_guard<mutex> guard(_mMutex);
+	return _mAnimations.size();
+}
+
+int ChromaThread::GetAnimationId(int index)
+{
+	lock_guard<mutex> guard(_mMutex);
+	if (index < 0)
+	{
+		return -1;
+	}
+	if (index < _mAnimations.size())
+	{
+		AnimationBase* animation = _mAnimations[index];
+		if (animation != nullptr)
+		{
+			return FChromaSDKPluginModule::Get().GetAnimationIdFromInstance(animation);
+		}
+	}
+	return -1;
 }

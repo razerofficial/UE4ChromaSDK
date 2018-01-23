@@ -79,7 +79,13 @@ public:
 	int CloseAnimation(int animationId);
 	int CloseAnimationName(const char* path);
 	int GetAnimation(const char* path);
+	int GetAnimationIdFromInstance(ChromaSDK::AnimationBase* animation);
 	ChromaSDK::AnimationBase* GetAnimationInstance(int animationId);
+	const char* GetAnimationName(int animationId);
+	int GetAnimationCount();
+	int GetAnimationId(int index);
+	int GetPlayingAnimationCount();
+	int GetPlayingAnimationId(int index);
 	void PlayAnimation(int animationId, bool loop);
 	void PlayAnimationName(const char* path, bool loop);
 	void StopAnimation(int animationId);

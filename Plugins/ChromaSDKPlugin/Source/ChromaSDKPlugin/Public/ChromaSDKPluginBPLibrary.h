@@ -98,6 +98,9 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionL
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetAnimationId", Keywords = "Get the animation id"), Category = "ChromaSDK")
 	static int GetAnimationId(const FString& animationName);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetAnimationName", Keywords = "Get the animation name"), Category = "ChromaSDK")
+	static FString GetAnimationName(const int animationId);
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "LoadAnimation", Keywords = "Load the *.chroma Animation"), Category = "ChromaSDK")
 	static void LoadAnimation(const int animationId);
 
@@ -124,6 +127,27 @@ class CHROMASDKPLUGIN_API UChromaSDKPluginBPLibrary : public UBlueprintFunctionL
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAnimationType", Keywords = "Stop playing the Animation type"), Category = "ChromaSDK")
 	static void StopAnimationType(const EChromaSDKDeviceEnum& device);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "StopAll", Keywords = "Stop playing all animations"), Category = "ChromaSDK")
+	static void StopAll();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "ClearAnimationType", Keywords = "Clear the device"), Category = "ChromaSDK")
+	static void ClearAnimationType(const EChromaSDKDeviceEnum& device);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "ClearAll", Keywords = "Clear all devices"), Category = "ChromaSDK")
+	static void ClearAll();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetAnimationCount", Keywords = "Get the number of open animations"), Category = "ChromaSDK")
+	static int GetAnimationCount();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetAnimationIdByIndex", Keywords = "Get the animationId for the open animation index"), Category = "ChromaSDK")
+	static int GetAnimationIdByIndex(int index);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetPlayingAnimationCount", Keywords = "Get the number of playing animations"), Category = "ChromaSDK")
+	static int GetPlayingAnimationCount();
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetPlayingAnimationId", Keywords = "Get the animationId for the playing animation index"), Category = "ChromaSDK")
+	static int GetPlayingAnimationId(int index);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "IsAnimationPlaying", Keywords = "Is the *.chroma Animation playing?"), Category = "ChromaSDK")
 	static bool IsAnimationPlaying(const FString& animationName);

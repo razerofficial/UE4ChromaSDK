@@ -708,6 +708,23 @@ int FChromaSDKPluginModule::CloseAnimationName(const char* path)
 	return CloseAnimation(animationId);
 }
 
+int FChromaSDKPluginModule::GetAnimationIdFromInstance(AnimationBase* animation)
+{
+	if (animation == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("GetAnimationIdFromInstance: Invalid animation!"));
+		return -1;
+	}
+	for (int index = 0; index < _mAnimations.size(); ++index)
+	{
+		if (_mAnimations[index] == animation)
+		{
+			return index;
+		}
+	}
+	return -1;
+}
+
 AnimationBase* FChromaSDKPluginModule::GetAnimationInstance(int animationId)
 {
 	if (_mAnimations.find(animationId) != _mAnimations.end())
@@ -994,6 +1011,57 @@ int FChromaSDKPluginModule::GetAnimation(const char* path)
 		}
 	}
 	return OpenAnimation(path);
+}
+
+const char* FChromaSDKPluginModule::GetAnimationName(int animationId)
+{
+	if (animationId < 0)
+	{
+		return "";
+	}
+	AnimationBase* animation = GetAnimationInstance(animationId);
+	if (animation == nullptr)
+	{
+		return "";
+	}
+	return animation->GetName().c_str();
+}
+
+int FChromaSDKPluginModule::GetAnimationCount()
+{
+	return _mAnimationMapID.size();
+}
+
+int FChromaSDKPluginModule::GetAnimationId(int index)
+{
+	int i = 0;
+	for (std::map<string, int>::iterator it = _mAnimationMapID.begin(); it != _mAnimationMapID.end(); ++it)
+	{
+		if (index == i)
+		{
+			return (*it).second;
+		}
+		++i;
+	}
+	return -1;
+}
+
+int FChromaSDKPluginModule::GetPlayingAnimationCount()
+{
+	if (ChromaThread::Instance() == nullptr)
+	{
+		return 0;
+	}
+	return ChromaThread::Instance()->GetAnimationCount();
+}
+
+int FChromaSDKPluginModule::GetPlayingAnimationId(int index)
+{
+	if (ChromaThread::Instance() == nullptr)
+	{
+		return -1;
+	}
+	return ChromaThread::Instance()->GetAnimationId(index);
 }
 
 void FChromaSDKPluginModule::PlayAnimation(int animationId, bool loop)
