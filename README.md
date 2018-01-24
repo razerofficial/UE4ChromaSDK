@@ -92,6 +92,7 @@ AnimationName_Mousepad.chroma
 * [GetFrameCountName](#GetFrameCountName)
 * [GetKeyColorName](#GetKeyColorName)
 * [GetPlayingAnimationCount](#GetPlayingAnimationCount)
+* [GetPlayingAnimationId](#GetPlayingAnimationId)
 * [IsAnimationPlaying](#IsAnimationPlaying)
 * [IsAnimationTypePlaying](#IsAnimationTypePlaying)
 * [PlayAnimation](#PlayAnimation)
