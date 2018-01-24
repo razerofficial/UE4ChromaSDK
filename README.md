@@ -78,8 +78,8 @@ AnimationName_Mousepad.chroma
 
 [ChromaSDKPluginBPLibrary](Plugins/ChromaSDKPlugin/Source/ChromaSDKPlugin/Public/ChromaSDKPluginBPLibrary.h) - Blueprint Library
 
-* [ClearAnimationType](#ClearAnimationType)
 * [ClearAll](#ClearAll)
+* [ClearAnimationType](#ClearAnimationType)
 * [CopyKeyColorName](#CopyKeyColorName)
 * [CopyKeysColorName](#CopyKeysColorName)
 * [CopyKeysColorAllFramesName](#CopyKeysColorAllFramesName)
@@ -107,6 +107,66 @@ AnimationName_Mousepad.chroma
 * [StopAnimationType](#StopAnimationType)
 * [StopAnimationComposite](#StopAnimationComposite)
 
+
+<a name="ClearAll"></a>
+**ClearAll**
+
+`ClearAll` will issue a `CLEAR` effect for all devices.
+
+```c++
+void UChromaSDKPluginBPLibrary::ClearAll();
+```
+<br>
+
+<a name="ClearAnimationType"></a>
+**ClearAnimationType**
+
+`ClearAnimationType` will issue a `CLEAR` effect for the given device.
+
+```c++
+void UChromaSDKPluginBPLibrary::ClearAnimationType(const EChromaSDKDeviceEnum& device);
+```
+<br>
+
+<a name="GetAnimationCount"></a>
+**GetAnimationCount**
+
+`GetAnimationCount` will return the number of open animations.
+
+```c++
+int UChromaSDKPluginBPLibrary::GetAnimationCount();
+```
+<br>
+
+<a name="GetAnimationIdByIndex"></a>
+**GetAnimationIdByIndex**
+
+`GetAnimationIdByIndex` will return the `animationId` given the index of the open animation. The index is zero-based and less than the number returned by `GetAnimationCount`. Use `GetAnimationName` to get the name of the animation.
+
+```c++
+int UChromaSDKPluginBPLibrary::GetAnimationIdByIndex(int index);
+```
+<br>
+
+<a name="GetPlayingAnimationCount"></a>
+**GetPlayingAnimationCount**
+
+`GetPlayingAnimationCount` will return the number of playing animations.
+
+```c++
+int UChromaSDKPluginBPLibrary::GetPlayingAnimationCount();
+```
+<br>
+
+<a name="GetPlayingAnimationId"></a>
+**GetPlayingAnimationId**
+
+`GetPlayingAnimationId` will return the `animationId` given the index of the playing animation. The index is zero-based and less than the number returned by `GetPlayingAnimationCount`. Use `GetAnimationName` to get the name of the animation.
+
+```c++
+int UChromaSDKPluginBPLibrary::GetPlayingAnimationId(int index);
+```
+<br>
 
 <a name="PlayAnimationComposite"></a>
 **PlayAnimationComposite**
@@ -202,6 +262,17 @@ Stop playing the Animation type
 
 ```c++
 void UChromaSDKPluginBPLibrary::StopAnimationType(const EChromaSDKDeviceEnum& device);
+```
+<br>
+
+
+<a name="StopAll"></a>
+**StopAll**
+
+`StopAll` will automatically stop all animations that are playing.
+
+```c++
+void UChromaSDKPluginBPLibrary::StopAll();
 ```
 <br>
 
