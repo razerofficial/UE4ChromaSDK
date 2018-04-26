@@ -378,7 +378,8 @@ void UChromaSDKPluginBPLibrary::CopyKeysColorAllFramesName(const FString& source
 **CopyNonZeroAllKeysAllFramesName**
 
 ```c++
-void UChromaSDKPluginBPLibrary::CopyNonZeroAllKeysAllFramesName(const FString& sourceAnimationName, const FString& targetAnimationName);
+void UChromaSDKPluginBPLibrary::CopyNonZeroAllKeysAllFramesName(const FString& sourceAnimationName,
+  const FString& targetAnimationName);
 ```
 
 
