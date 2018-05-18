@@ -1,5 +1,11 @@
 # ChromaSDKPlugin - Unreal Engine 4 (UE4) Blueprint library to control lighting for (Razer Chroma)
 
+---
+
+**Note: UE4ChromaSDK is the older plugin and you probably want [UE4ChromaSDKRT](https://github.com/RazerOfficial/UE4ChromaSDKRT) instead.**
+
+---
+
 **Table of Contents**
 
 * [See Also](#see-also)
