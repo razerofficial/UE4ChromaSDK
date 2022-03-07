@@ -1,8 +1,10 @@
+# Deprecated
+
+* Note: Visit the [Chroma Animation Guide](https://chroma.razer.com/ChromaGuide/) to find the latest supported plugin for Chroma RGB.
+
+* Note: Go to [UE4_XDK_SampleApp](https://github.com/razerofficial/UE4_XDK_SampleApp) for the updated UE4 Chroma SDK plugin.
+
 # ChromaSDKPlugin - Unreal Engine 4 (UE4) Blueprint library to control lighting for (Razer Chroma)
-
----
-
-**Note: UE4ChromaSDK is the older plugin and you probably want [UE4ChromaSDKRT](https://github.com/RazerOfficial/UE4ChromaSDKRT) instead.**
 
 ---
 
@@ -26,25 +28,13 @@
 <a name="see-also"></a>
 ## See Also
 
-**Apps:**
+**Docs:**
 
-- [ChromaClientForDiscord](https://github.com/tgraupmann/ChromaDiscordApp) - Add Chroma lighting to the Discord App events
-
-- [ChromaClientForMixer](https://github.com/tgraupmann/ChromaClientForMixer) - Add Chroma lighting to the Mixer streaming experience
-
-- [ChromaClientForTwitch](https://github.com/tgraupmann/ChromaTwitchExtension) - Add Chroma lighting to the Twitch streaming experience
+- [Chroma Animation Guide](http://chroma.razer.com/ChromaGuide/) - Visual examples of the Chroma Animation API methods
 
 **Plugins:**
 
 - [CChromaEditor](https://github.com/RazerOfficial/CChromaEditor) - C++ native MFC library for playing and editing Chroma animations
-
-- [GameMakerChromaExtension](https://github.com/RazerOfficial/GameMakerChromaExtension) - GameMaker extension to control lighting for Razer Chroma
-
-- [HTML5ChromaSDK](https://github.com/RazerOfficial/HTML5ChromaSDK) - JavaScript library for playing Chroma animations
-
-- [UE4ChromaSDKRT](https://github.com/RazerOfficial/UE4ChromaSDKRT) - UE4 runtime module with Blueprint library for the ChromaSDK
-
-- [UnityNativeChromaSDK](https://github.com/RazerOfficial/UnityNativeChromaSDK) - Unity native library for the ChromaSDK
 
 <a name="frameworks-supported"></a>
 ## Frameworks supported
